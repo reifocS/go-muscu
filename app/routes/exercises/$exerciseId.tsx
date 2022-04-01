@@ -2,40 +2,39 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { redirect } from "remix";
 import { json, useLoaderData, useCatch, Form } from "remix";
 import invariant from "tiny-invariant";
-import { getWorkout, deleteWorkout, Workout } from "~/models/workout.server";
+import { getExercise, deleteExercise, Exercise } from "~/models/exercise.server";
 import { requireUserId } from "~/session.server";
 
 type LoaderData = {
-  workout: Workout;
+  exercise: Exercise;
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
-  invariant(params.workoutId, "workoutId not found");
+  invariant(params.exerciseId, "exerciseId not found");
 
-  const workout = await getWorkout({ userId, id: params.workoutId });
-  if (!workout) {
+  const ex = await getExercise({ userId, id: params.exerciseId });
+  if (!ex) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json<LoaderData>({ workout });
+  return json<LoaderData>({ exercise: ex });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
-  invariant(params.workoutId, "workoutId not found");
-  console.log(params.workoutId)
+  invariant(params.exerciseId, "exerciseId not found");
 
-  await deleteWorkout({ userId, id: params.workoutId });
+  await deleteExercise({ userId, id: params.exerciseId });
 
-  return redirect("/workout");
+  return redirect("/exercises");
 };
 
-export default function WorkoutDetailsPage() {
+export default function ExerciseDetailsPage() {
   const data = useLoaderData() as LoaderData;
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">{new Date(data.workout.date).toLocaleDateString()}</h3>
+      <h3 className="text-2xl font-bold">{data.exercise.title}</h3>
       <hr className="my-4" />
       <Form method="post">
         <button

@@ -12,6 +12,13 @@ export function getWorkout({
 }) {
   return prisma.workout.findFirst({
     where: { id, userId },
+    include: {
+      set: {
+        include: {
+          series: true
+        }
+      },
+    }
   });
 }
 
