@@ -40,6 +40,36 @@ async function seed() {
     },
   });
 
+  const workout = await prisma.workout.create({
+    data: {
+      userId: user.id,
+      date: new Date(),
+      duration: 0,
+    }
+  })
+
+
+  const benchPress = await prisma.exercise.create({
+    data: {
+      title: "Bench press",
+      userId: user.id
+    }
+  })
+
+  const setBench = await prisma.set.create({
+    data: {
+      exerciseId: benchPress.id,
+      workoutId: workout.id
+    }
+  })
+
+  await prisma.series.create({
+    data: {
+      setId: setBench.id,
+      repetitions: 10,
+      weigth: 90
+    }
+  })
   console.log(`Database has been seeded. 🌱`);
 }
 

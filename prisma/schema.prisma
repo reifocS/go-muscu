@@ -14,8 +14,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password Password?
-  notes    Note[]
+  password  Password?
+  notes     Note[]
+  exercices Exercise[]
+  workouts  Workout[]
 }
 
 model Password {
@@ -35,4 +37,38 @@ model Note {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+}
+
+model Exercise {
+  id     String @id @default(cuid())
+  title  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  set    Set[]
+}
+
+model Workout {
+  id       String   @id @default(cuid())
+  date     DateTime
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId   String
+  duration Float?
+  set      Set[]
+}
+
+model Set {
+  id         String   @id @default(cuid())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  workout    Workout  @relation(fields: [workoutId], references: [id])
+  workoutId  String
+  series     Series[]
+}
+
+model Series {
+  id          String @id @default(cuid())
+  repetitions Int
+  weigth      Float
+  set         Set    @relation(fields: [setId], references: [id])
+  setId       String
 }
