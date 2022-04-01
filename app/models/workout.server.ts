@@ -45,7 +45,7 @@ export function deleteWorkout({
   id,
   userId,
 }: Pick<Workout, "id"> & { userId: User["id"] }) {
-  return prisma.note.deleteMany({
+  return prisma.workout.deleteMany({
     where: { id, userId },
   });
 }
