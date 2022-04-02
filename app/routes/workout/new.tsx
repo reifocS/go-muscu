@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, json, redirect, useActionData } from "remix";
+import { Form, json, redirect, useActionData, useCatch } from "remix";
 import type { ActionFunction } from "remix";
 
 import { createWorkout } from "~/models/workout.server";
@@ -81,4 +81,9 @@ export default function NewNotePage() {
       </div>
     </Form>
   );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+
+  return <div>An unexpected error occurred: {error.message}</div>;
 }
