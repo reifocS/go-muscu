@@ -6,8 +6,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  Link,
-  Form,
 } from "remix";
 import { useOptionalUser } from "~/utils";
 

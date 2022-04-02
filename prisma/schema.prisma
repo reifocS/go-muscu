@@ -48,12 +48,13 @@ model Exercise {
 }
 
 model Workout {
-  id       String   @id @default(cuid())
+  id       String         @id @default(cuid())
   date     DateTime
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId   String
   duration Float?
   set      Set[]
+  tags     TagOnWorkout[]
 }
 
 model Set {
@@ -71,4 +72,19 @@ model Series {
   weigth      Float
   set         Set    @relation(fields: [setId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   setId       String
+}
+
+model Tag {
+  id       String         @id @default(cuid())
+  label    String
+  workouts TagOnWorkout[]
+}
+
+model TagOnWorkout {
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     String
+  workout   Workout @relation(fields: [workoutId], references: [id])
+  workoutId String
+
+  @@id([tagId, workoutId])
 }

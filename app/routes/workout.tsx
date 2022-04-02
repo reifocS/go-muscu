@@ -22,7 +22,7 @@ export default function WorkoutPage() {
   return (
     <div>
       <main>
-        <div>
+        {/*<div>
           <Link to="new">
             + New workout
           </Link>
@@ -49,6 +49,7 @@ export default function WorkoutPage() {
         <div>
           <Outlet />
         </div>
+*/}
       </main>
     </div>
   );

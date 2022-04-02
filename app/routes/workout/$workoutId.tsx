@@ -151,7 +151,7 @@ export default function WorkoutDetailsPage() {
   const transition = useTransition();
   return (
     <div>
-      <h3>
+      <h3 className="font-bold">
         {new Date(data.workout.date).toLocaleDateString()}
       </h3>
       {data.workout.set.map((set) => (
@@ -160,11 +160,7 @@ export default function WorkoutDetailsPage() {
             {set.exercise.title}{" "}
             <Form method="post" style={{ display: "inline" }}>
               <input type="hidden" value={set.id} name="setId"></input>{" "}
-              <button
-                type="submit"
-                name="_action"
-                value="delete_set"
-              >
+              <button type="submit" name="_action" value="delete_set">
                 remove
               </button>
             </Form>
@@ -178,29 +174,24 @@ export default function WorkoutDetailsPage() {
                     name="rep"
                     placeholder="rep"
                     defaultValue={s.repetitions}
-                    type="number" min={0}
+                    type="number"
+                    min={0}
                   ></input>
                   <input
                     name="weight"
                     placeholder="weigth"
                     defaultValue={s.weigth}
-                    type="number" step="0.01" min={0}
+                    type="number"
+                    step="0.01"
+                    min={0}
                   ></input>
-                  <button
-                    type="submit"
-                    name="_action"
-                    value="edit_series"
-                  >
+                  <button type="submit" name="_action" value="edit_series">
                     edit
                   </button>{" "}
                 </Form>
                 <Form method="post" style={{ display: "inline" }}>
                   <input type="hidden" value={s.id} name="id"></input>
-                  <button
-                    type="submit"
-                    name="_action"
-                    value="delete_series"
-                  >
+                  <button type="submit" name="_action" value="delete_series">
                     delete
                   </button>
                 </Form>
@@ -209,23 +200,16 @@ export default function WorkoutDetailsPage() {
           </ul>
           <Form method="post">
             <input type="hidden" name="setId" value={set.id}></input>
-            <input
-              name="rep"
-              placeholder="rep"
-              type="number" min={0}
-
-            ></input>
+            <input name="rep" placeholder="rep" type="number" min={0}></input>
             &nbsp;*&nbsp;
             <input
               name="weight"
               placeholder="weigth"
-              type="number" step="0.01" min={0}
+              type="number"
+              step="0.01"
+              min={0}
             ></input>{" "}
-            <button
-              type="submit"
-              name="_action"
-              value="add_series"
-            >
+            <button type="submit" name="_action" value="add_series">
               +
             </button>
           </Form>
@@ -243,11 +227,7 @@ export default function WorkoutDetailsPage() {
                 <div>{exercise.title}</div>
                 <Form method="post" style={{ display: "inline" }}>
                   <input type="hidden" name="exerciseId" value={exercise.id} />
-                  <button
-                    type="submit"
-                    name="_action"
-                    value="add_exercise"
-                  >
+                  <button type="submit" name="_action" value="add_exercise">
                     Add
                   </button>
                 </Form>
@@ -258,11 +238,7 @@ export default function WorkoutDetailsPage() {
 
       <hr />
       <Form method="post">
-        <button
-          type="submit"
-          name="_action"
-          value="delete_workout"
-        >
+        <button type="submit" name="_action" value="delete_workout">
           Delete
         </button>
       </Form>

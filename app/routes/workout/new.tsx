@@ -84,6 +84,5 @@ export default function NewNotePage() {
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
-
   return <div>An unexpected error occurred: {error.message}</div>;
 }
