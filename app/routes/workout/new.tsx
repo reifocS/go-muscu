@@ -54,6 +54,7 @@ export default function NewNotePage() {
           <span>Date: </span>
           <input
             ref={dateRef}
+            defaultValue={new Date().toISOString().split("T")[0]}
             type="date"
             name="date"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"

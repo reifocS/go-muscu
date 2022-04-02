@@ -2,7 +2,11 @@ import type { LoaderFunction, ActionFunction } from "remix";
 import { redirect } from "remix";
 import { json, useLoaderData, useCatch, Form } from "remix";
 import invariant from "tiny-invariant";
-import { getExercise, deleteExercise, Exercise } from "~/models/exercise.server";
+import {
+  getExercise,
+  deleteExercise,
+  Exercise,
+} from "~/models/exercise.server";
 import { requireUserId } from "~/session.server";
 
 type LoaderData = {

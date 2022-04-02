@@ -58,9 +58,9 @@ model Workout {
 
 model Set {
   id         String   @id @default(cuid())
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exerciseId String
-  workout    Workout  @relation(fields: [workoutId], references: [id])
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   workoutId  String
   series     Series[]
 }
@@ -69,6 +69,6 @@ model Series {
   id          String @id @default(cuid())
   repetitions Int
   weigth      Float
-  set         Set    @relation(fields: [setId], references: [id])
+  set         Set    @relation(fields: [setId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   setId       String
 }
