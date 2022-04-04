@@ -8,6 +8,7 @@ import {
   Outlet,
   ActionFunction,
   Form,
+  Link,
   redirect,
 } from "remix";
 import type { LoaderFunction } from "remix";
@@ -30,7 +31,7 @@ type WorkoutWithExercise = Workout & {
 
 type LoaderData = {
   dateMap: Record<string, WorkoutWithExercise>;
-  exerciseList: Array<{ title: string }>;
+  exerciseList: Array<{ title: string, id: string }>;
 };
 
 type ActionData = {
