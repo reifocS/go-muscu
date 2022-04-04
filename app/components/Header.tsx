@@ -65,10 +65,17 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="mt-4 block text-gray-200 hover:text-white lg:mt-0 lg:inline-block"
+                  className="mt-4 mr-4 block text-gray-200 hover:text-white lg:mt-0 lg:inline-block"
                   to="/exercises"
                 >
                   Exercises
+                </NavLink>
+                <NavLink
+                  style={({ isActive }) => (isActive ? activeStyle : {})}
+                  className="mt-4 block text-gray-200 hover:text-white lg:mt-0 lg:inline-block"
+                  to="/calendar"
+                >
+                  Calendar
                 </NavLink>
               </>
             ) : (
