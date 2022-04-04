@@ -139,15 +139,17 @@ const Cell = ({
       {workout ? (
         <NavLink to={workout.id}>
           <span className="text-red-700">{day?.format("DD") ?? ""}</span>
-          <div>
+          <div className="flex">
             {workout.set.map((s, i) => (
-              <span key={i}>
-                {
-                  colors[
-                    exerciseList.findIndex((e) => e.title === s.exercise.title)
-                  ]
-                }
-              </span>
+              <div key={i} style={{
+                width: 10,
+                height: 10,
+                borderRadius: 6,
+                backgroundColor: colors[
+                  exerciseList.findIndex((e) => e.title === s.exercise.title)
+                ]
+              }}>
+              </div>
             ))}
           </div>
         </NavLink>
