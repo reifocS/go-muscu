@@ -75,22 +75,24 @@ export default function Calendar() {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <div>
-        <ul>
-          {data.exerciseList.map((e, index) =>
-            <li key={e.id} className="flex mt-2">
-              <Link to={`../exercises/${e.id}`} className="flex items-center">
-                {e.title}&nbsp;&nbsp;
-              <div style={{ width: 15, height: 15, borderRadius: 8, backgroundColor: colors[index] }}></div>
-              </Link>
-            </li>)}
-        </ul>
-      </div>
       <TableMonth
         startDate={startDate}
         dateMap={data.dateMap}
         exerciseList={data.exerciseList}
       />
+      
+      <div className="flex inline-flex">
+        {data.exerciseList.map((e, index) =>
+          <div key={e.title} className="flex items-center px-2">
+            {e.title}
+            <div
+              className="rounded-full w-3.5 h-3.5 ml-1.5"
+              style={{backgroundColor: colors[index] }}
+            ></div>
+          </div>
+        )}
+      </div>
+
       <br />
       <div className="flex items-center">
         <button
@@ -146,17 +148,13 @@ const Cell = ({
   }
 
   return (
-    <td className={`px-2 py-2 ${isPast && "text-gray-500"} text-xs`}>
+    <td className={`px-2 py-2 h-full ${isPast && "text-gray-500"} text-xs`}>
       {workout ? (
         <NavLink to={workout.id}>
-          <span className="text-red-700">{day?.format("DD") ?? ""}</span>
-          <div className="flex">
+          <span className="font-bold md:text-lg">{day?.format("DD") ?? ""}</span>
+          <div className="flex justify-center">
             {workout.set.map((s, i) => (
-              <div key={i} style={{
-                width: 10,
-                height: 10,
-                marginRight: 6,
-                borderRadius: 6,
+              <div key={i} className="rounded-full w-2.5 h-2.5 mx-[1px]" style={{
                 backgroundColor: colors[
                   exerciseList.findIndex((e) => e.title === s.exercise.title)
                 ]
@@ -172,7 +170,7 @@ const Cell = ({
             type="hidden"
             value={day.format("MM/DD/YYYY")}
           ></input>
-          <button type="submit">{day?.format("DD") ?? ""}</button>
+          <button className="md:text-lg" type="submit">{day?.format("DD") ?? ""}</button>
         </Form>
       )}
     </td>
@@ -193,7 +191,7 @@ const Week = ({
   exerciseList: LoaderData["exerciseList"];
 }) => {
   return (
-    <tr className="">
+    <tr className="h-10 md:h-20 lg:h-24">
       {weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
         const isPast = daysInMonth[day]?.isBefore(startDate);
