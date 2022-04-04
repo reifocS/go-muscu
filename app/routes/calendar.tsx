@@ -100,18 +100,20 @@ const Cell = ({ day, isPast, workoutId }: { day?: Dayjs, isPast: boolean, workou
     <td
       className={`px-2 py-2 ${isPast && "text-gray-500"} text-xs`}
     >
-      {day?.format("DD") ?? ""}
-      <br />
       {
         workoutId ? <NavLink
           to={workoutId}
         >
-          see
+          <span className="text-red-700">
+            {day?.format("DD") ?? ""}
+          </span>
         </NavLink>
           :
           <Form method="post">
             <input name="date" type="hidden" value={day.format("MM/DD/YYYY")}></input>
-            <button type="submit">create</button>
+            <button type="submit">
+              {day?.format("DD") ?? ""}
+            </button>
           </Form>
       }
     </td>
