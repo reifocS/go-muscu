@@ -12,6 +12,18 @@ export function getExercise({
 }) {
   return prisma.exercise.findFirst({
     where: { id, userId },
+    include: {
+      set: {
+        include: {
+          series: true,
+          workout: {
+            select: {
+              date: true,
+            },
+          },
+        },
+      },
+    },
   });
 }
 

@@ -23,9 +23,7 @@ export default function WorkoutPage() {
     <div>
       <main>
         <div>
-          <Link to="new">
-            + New workout
-          </Link>
+          <Link to="new">+ New workout</Link>
 
           <hr />
 
@@ -35,9 +33,7 @@ export default function WorkoutPage() {
             <ol>
               {data.workoutList.map((workout) => (
                 <li key={workout.id}>
-                  <NavLink
-                    to={workout.id}
-                  >
+                  <NavLink to={workout.id}>
                     {new Date(workout.date).toLocaleDateString()}
                   </NavLink>
                 </li>

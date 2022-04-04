@@ -6,9 +6,7 @@ export default function Index() {
   return (
     <main>
       <h1>Workouts</h1>
-      {!user && <Link to="login">
-        Log in
-      </Link>}
+      {!user && <Link to="login">Log in</Link>}
     </main>
   );
 }

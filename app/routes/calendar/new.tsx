@@ -1,21 +1,20 @@
 import dayjs from "dayjs";
-import { useSearchParams, Link } from "remix"
+import { useSearchParams, Link } from "remix";
 
 export default function newWorkout() {
   const [searchParams] = useSearchParams();
   const date = searchParams.get("date");
 
-  return <div className="absolute w-full h-80 bg-red-500">
-    <div>
-      new at {dayjs(date).format("DD/MM")}
-      <br></br>
-      <Link to="..">
-        back
-    </Link>
+  return (
+    <div className="absolute h-80 w-full bg-red-500">
+      <div>
+        new at {dayjs(date).format("DD/MM")}
+        <br></br>
+        <Link to="..">back</Link>
+      </div>
     </div>
-  </div>
+  );
 }
-
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
