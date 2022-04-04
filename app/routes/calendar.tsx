@@ -32,11 +32,11 @@ export default function Calendar() {
       <br />
       <div className="flex items-center">
         <button
-          className="px-4 py-2"
+          className="px-2 py-2"
           onClick={() => setStartDate(prev => prev.subtract(1, "month"))}>{"<"}</button>
         <h3>{startDate.format("MMMM")}</h3>
         <button
-          className="px-4 py-2"
+          className="px-2 py-2"
           onClick={() => setStartDate(prev => prev.add(1, "month"))}>{">"}</button>
       </div>
       <Outlet />
@@ -50,7 +50,7 @@ const TableHead = () => {
   return (
     <thead className="bg-gray-50">
       <tr>
-        {daysInWeek.map(d => <th key={d} className="px-4 py-2 text-md text-gray-500">{d}</th>
+        {daysInWeek.map(d => <th key={d} className="px-2 py-2 text-xs text-gray-500">{d}</th>
         )}
       </tr>
     </thead>
@@ -64,7 +64,7 @@ const Cell = ({ day, isPast, workoutId }: { day?: Dayjs, isPast: boolean, workou
   if (!day) {
     return (
       <td
-        className={`px-4 py-2 opacity-0`}
+        className={`px-2 py-2 opacity-0`}
       >
         X
       </td>
@@ -73,7 +73,7 @@ const Cell = ({ day, isPast, workoutId }: { day?: Dayjs, isPast: boolean, workou
 
   return (
     <td
-      className={`px-4 py-2 ${isPast && "text-gray-500"} text-sm`}
+      className={`px-2 py-2 ${isPast && "text-gray-500"} text-xs`}
     >
       {day?.format("DD") ?? ""}
       <br />
