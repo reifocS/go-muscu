@@ -1,6 +1,6 @@
 import { User } from ".prisma/client";
-import { useEffect, useState } from "react";
-import { Form, Links, NavLink } from "remix";
+import { useState } from "react";
+import { Form, NavLink } from "remix";
 
 export function Header({ user }: { user?: User }) {
   return <Nav loggedIn={user !== undefined} />;
@@ -9,7 +9,7 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const links = ["Notes", "Exercise", "Calendar"]
+const links = ["Notes", "Exercise", "Calendar", "Daily"]
 
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
@@ -52,7 +52,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 {links.map(l => <NavLink
                   key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to={`/${l}`}
                 >
                   {l}
@@ -62,14 +62,14 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block text-gray-200 hover:text-white md:inline-block"
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/join"
                 >
                   Sign Up
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block text-gray-200 hover:text-white md:inline-block"
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/login"
                 >
                   Login

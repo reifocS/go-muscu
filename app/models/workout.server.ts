@@ -4,6 +4,19 @@ import { prisma } from "~/db.server";
 
 export type { Workout } from "@prisma/client";
 
+
+export function getDailyWorkout({ dateEnd, dateStart, userId }: { userId: User["id"], dateStart: Date, dateEnd: Date }) {
+  return prisma.workout.findFirst({
+    where: {
+      userId,
+      date: {
+        gte: dateStart,
+        lt: dateEnd
+      }
+    }
+  })
+}
+
 export function getWorkout({
   id,
   userId,
