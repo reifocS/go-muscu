@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.menu-item {
+    @apply block text-gray-200 hover:text-white lg:mt-0 lg:inline-block;
+}

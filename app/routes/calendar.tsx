@@ -18,8 +18,7 @@ import {
   getWorkoutList,
   Workout,
 } from "~/models/workout.server";
-import { getExerciseTitleOrdered, Exercise } from "~/models/exercise.server";
-import { data } from "msw/lib/types/context";
+import { getExerciseTitleOrdered } from "~/models/exercise.server";
 
 type WorkoutWithExercise = Workout & {
   set: {
@@ -77,8 +76,8 @@ export default function Calendar() {
     <div className="flex w-full flex-col items-center">
       <div>
         <ul>
-          {data.exerciseList.map((e, index) => <li key={e.title} className="flex items-center">
-            {e.title}&nbsp;&nbsp;<div style={{ width: 15, height: 15, backgroundColor: colors[index] }}></div>
+          {data.exerciseList.map((e, index) => <li key={e.title} className="flex items-center mt-2">
+            {e.title}&nbsp;&nbsp;<div style={{ width: 15, height: 15, borderRadius: 8, backgroundColor: colors[index] }}></div>
           </li>)}
         </ul>
       </div>
@@ -151,6 +150,7 @@ const Cell = ({
               <div key={i} style={{
                 width: 10,
                 height: 10,
+                marginRight: 6,
                 borderRadius: 6,
                 backgroundColor: colors[
                   exerciseList.findIndex((e) => e.title === s.exercise.title)
@@ -235,23 +235,20 @@ const TableMonth = ({
 }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
-  return (
-    <table className="mt-2 table-fixed divide-y divide-gray-300 border">
-      <TableHead />
-      <tbody className="divide-y divide-gray-300 bg-white text-center">
-        {weeks.map((_, i) => {
-          return (
-            <Week
-              exerciseList={exerciseList}
-              key={i}
-              weekNumber={i}
-              startDate={startDate}
-              daysInMonth={allDaysInMonth}
-              dateMap={dateMap}
-            />
-          );
-        })}
-      </tbody>
-    </table>
-  );
-};
+  return (<table
+    className="table-fixed divide-y divide-gray-300 mt-2 border w-full">
+
+    <TableHead />
+    <tbody className="bg-white divide-y divide-gray-300 text-center">
+      {weeks.map((_, i) => {
+        return (
+          <Week key={i} weekNumber={i} startDate={startDate} daysInMonth={allDaysInMonth}
+            exerciseList={exerciseList}
+            dateMap={dateMap}
+          />
+        )
+      })}
+    </tbody>
+  </table>
+  )
+}
