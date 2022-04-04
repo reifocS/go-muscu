@@ -7,7 +7,7 @@ export type { Exercise } from "@prisma/client";
 export function getExerciseTitleOrdered({ userId }: { userId: User["id"] }) {
   return prisma.exercise.findMany({
     where: { userId },
-    select: { title: true },
+    select: { title: true, id: true },
     orderBy: {
       title: "asc",
     },

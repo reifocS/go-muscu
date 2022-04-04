@@ -8,6 +8,7 @@ import {
   Outlet,
   ActionFunction,
   Form,
+  Link,
   redirect,
 } from "remix";
 import type { LoaderFunction } from "remix";
@@ -30,7 +31,7 @@ type WorkoutWithExercise = Workout & {
 
 type LoaderData = {
   dateMap: Record<string, WorkoutWithExercise>;
-  exerciseList: Array<{ title: string }>;
+  exerciseList: Array<{ title: string, id: string }>;
 };
 
 type ActionData = {
@@ -76,9 +77,13 @@ export default function Calendar() {
     <div className="flex w-full flex-col items-center">
       <div>
         <ul>
-          {data.exerciseList.map((e, index) => <li key={e.title} className="flex items-center mt-2">
-            {e.title}&nbsp;&nbsp;<div style={{ width: 15, height: 15, borderRadius: 8, backgroundColor: colors[index] }}></div>
-          </li>)}
+          {data.exerciseList.map((e, index) =>
+            <li key={e.id} className="flex mt-2">
+              <Link to={`../exercises/${e.id}`} className="flex items-center">
+                {e.title}&nbsp;&nbsp;
+              <div style={{ width: 15, height: 15, borderRadius: 8, backgroundColor: colors[index] }}></div>
+              </Link>
+            </li>)}
         </ul>
       </div>
       <TableMonth
