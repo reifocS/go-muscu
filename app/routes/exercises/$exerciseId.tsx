@@ -7,11 +7,12 @@ import {
   getExercise,
   deleteExercise,
   Exercise,
+  updateExercise,
 } from "~/models/exercise.server";
 import type { Series } from "~/models/series.server";
 import { requireUserId } from "~/session.server";
-import { renderToString } from "react-dom/server";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 type LoaderData = {
   exercise: Exercise & {
@@ -38,7 +39,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
   invariant(params.exerciseId, "exerciseId not found");
+  const formData = await request.formData();
+  const { _action } = Object.fromEntries(formData);
+  if (_action === "edit") {
+    const title = formData.get("title");
 
+    if (typeof title !== "string") {
+      return json(
+        { errors: { exerciseId: "title is required" } },
+        { status: 400 }
+      );
+    }
+    return updateExercise({ title, id: params.exerciseId })
+  }
   await deleteExercise({ userId, id: params.exerciseId });
 
   return redirect("/exercises");
@@ -49,7 +62,16 @@ export default function ExerciseDetailsPage() {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">{data.exercise.title}</h3>
+      <Form method="post">
+        <input name="title"
+          className="text-2xl font-bold shadow appearance-none border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          defaultValue={data.exercise.title}></input>
+        <button
+          name="_action"
+          className="bg-teal-600 text-white hover:text-teal-800 text-sm py-1 px-2 rounded"
+          value="edit"
+          type={"submit"}>edit</button>
+      </Form>
       <hr className="my-4" />
       <ul className="list-inside">
         {data.exercise.set.map((s) => {

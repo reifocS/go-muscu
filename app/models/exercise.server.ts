@@ -13,6 +13,14 @@ export function getExerciseTitleOrdered({ userId }: { userId: User["id"] }) {
     },
   });
 }
+export function updateExercise({ id, title }: { id: string, title: string }) {
+  return prisma.exercise.update({
+    where: { id },
+    data: {
+      title
+    }
+  })
+}
 
 export function getExercise({
   id,
