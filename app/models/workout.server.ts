@@ -15,10 +15,13 @@ export function getWorkout({
     include: {
       set: {
         include: {
-          series: true
-        }
+          series: true,
+          exercise: {
+            select: { title: true },
+          },
+        },
       },
-    }
+    },
   });
 }
 

@@ -1,4 +1,4 @@
-import { Form, json, useLoaderData, Outlet, Link, NavLink } from "remix";
+import { json, useLoaderData, Outlet, Link, NavLink } from "remix";
 import type { LoaderFunction } from "remix";
 
 import { requireUserId } from "~/session.server";
@@ -20,27 +20,20 @@ export default function WorkoutPage() {
   const user = useUser();
 
   return (
-    <div className="flex h-full min-h-screen flex-col">
-      <main className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50">
-          <Link to="new" className="block p-4 text-xl text-blue-500">
-            + New workout
-          </Link>
+    <div>
+      <main>
+        <div>
+          <Link to="new">+ New workout</Link>
 
           <hr />
 
           {data.workoutList.length === 0 ? (
-            <p className="p-4">No workout yet</p>
+            <p>No workout yet</p>
           ) : (
             <ol>
               {data.workoutList.map((workout) => (
                 <li key={workout.id}>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={workout.id}
-                  >
+                  <NavLink to={workout.id}>
                     {new Date(workout.date).toLocaleDateString()}
                   </NavLink>
                 </li>
@@ -49,7 +42,7 @@ export default function WorkoutPage() {
           )}
         </div>
 
-        <div className="flex-1 p-6">
+        <div>
           <Outlet />
         </div>
       </main>

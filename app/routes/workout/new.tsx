@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, json, redirect, useActionData } from "remix";
+import { Form, json, redirect, useActionData, useCatch } from "remix";
 import type { ActionFunction } from "remix";
 
 import { createWorkout } from "~/models/workout.server";
@@ -54,6 +54,7 @@ export default function NewNotePage() {
           <span>Date: </span>
           <input
             ref={dateRef}
+            defaultValue={new Date().toISOString().split("T")[0]}
             type="date"
             name="date"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
@@ -80,4 +81,8 @@ export default function NewNotePage() {
       </div>
     </Form>
   );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <div>An unexpected error occurred: {error.message}</div>;
 }
