@@ -49,6 +49,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to="/notes"
                 >
@@ -56,6 +57,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to="/workout"
                 >
@@ -63,6 +65,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to="/exercises"
                 >
@@ -70,7 +73,8 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                    className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  onClick={() => setDisplay((prev) => !prev)}
+                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to="/calendar"
                 >
                   Calendar
@@ -80,6 +84,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="block text-gray-200 hover:text-white md:inline-block"
                   to="/join"
                 >
@@ -87,6 +92,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="block text-gray-200 hover:text-white md:inline-block"
                   to="/login"
                 >
