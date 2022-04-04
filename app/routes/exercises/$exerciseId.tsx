@@ -51,15 +51,15 @@ export default function ExerciseDetailsPage() {
     <div>
       <h3 className="text-2xl font-bold">{data.exercise.title}</h3>
       <hr className="my-4" />
-      <ul>
+      <ul className="list-inside">
         {data.exercise.set.map((s) => {
           return (
-            <li key={s.id}>
-              {dayjs(s.workout.date).format("DD/MM")}
-              <ul>
+            <li className="list-item" key={s.id}>
+              <div className="font-bold">{dayjs(s.workout.date).format("DD/MM")}</div>
+              <ul className="list-inside">
                 {s.series.map((series) => {
                   return (
-                    <li key={series.id}>
+                    <li className="list-item" key={series.id}>
                       {series.repetitions}*{series.weigth}
                     </li>
                   );

@@ -75,6 +75,13 @@ export default function Calendar() {
 
   return (
     <div className="flex w-full flex-col items-center">
+      <div>
+        <ul>
+          {data.exerciseList.map((e, index) => <li key={e.title} className="flex items-center">
+            {e.title}&nbsp;&nbsp;<div style={{ width: 15, height: 15, backgroundColor: colors[index] }}></div>
+          </li>)}
+        </ul>
+      </div>
       <TableMonth
         startDate={startDate}
         dateMap={data.dateMap}
