@@ -187,22 +187,19 @@ const TableMonth = ({
 }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
-  return (
-    <table className="mt-2 table-fixed divide-y divide-gray-300 border">
-      <TableHead />
-      <tbody className="divide-y divide-gray-300 bg-white text-center">
-        {weeks.map((_, i) => {
-          return (
-            <Week
-              key={i}
-              weekNumber={i}
-              startDate={startDate}
-              daysInMonth={allDaysInMonth}
-              dateMap={dateMap}
-            />
-          );
-        })}
-      </tbody>
-    </table>
-  );
-};
+  return (<table
+    className="table-fixed divide-y divide-gray-300 mt-2 border w-full">
+
+    <TableHead />
+    <tbody className="bg-white divide-y divide-gray-300 text-center">
+      {weeks.map((_, i) => {
+        return (
+          <Week key={i} weekNumber={i} startDate={startDate} daysInMonth={allDaysInMonth}
+            dateMap={dateMap}
+          />
+        )
+      })}
+    </tbody>
+  </table>
+  )
+}

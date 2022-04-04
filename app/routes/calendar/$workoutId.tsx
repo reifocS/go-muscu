@@ -149,7 +149,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
   return (
-    <div>
+    <div className="absolute bg-white h-[400px] m-2 p-2 w-full">
       <h3 className="font-bold">
         {new Date(data.workout.date).toLocaleDateString()}
       </h3>
@@ -234,13 +234,16 @@ export default function WorkoutDetailsPage() {
             );
           })}
       </ul>
+        
+      <div className="absolute bottom-0 w-full">
+        <hr />
 
-      <hr />
-      <Form method="post">
-        <button type="submit" name="_action" value="delete_workout">
-          Delete
-        </button>
-      </Form>
+        <Form method="post" >
+          <button type="submit" name="_action" value="delete_workout">
+            Delete
+          </button>
+        </Form>
+      </div>
     </div>
   );
 }
