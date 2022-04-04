@@ -147,10 +147,10 @@ const Cell = ({
   }
 
   return (
-    <td className={`px-2 py-2 ${isPast && "text-gray-500"} text-xs`}>
+    <td className={`px-2 py-2 h-full ${isPast && "text-gray-500"} text-xs`}>
       {workout ? (
         <NavLink to={workout.id}>
-          <span className="text-red-700">{day?.format("DD") ?? ""}</span>
+          <span className="font-bold md:text-lg">{day?.format("DD") ?? ""}</span>
           <div className="flex justify-center">
             {workout.set.map((s, i) => (
               <div key={i} className="rounded-full w-2.5 h-2.5 mx-[1px]" style={{
@@ -169,7 +169,7 @@ const Cell = ({
             type="hidden"
             value={day.format("MM/DD/YYYY")}
           ></input>
-          <button type="submit">{day?.format("DD") ?? ""}</button>
+          <button className="md:text-lg" type="submit">{day?.format("DD") ?? ""}</button>
         </Form>
       )}
     </td>
@@ -190,7 +190,7 @@ const Week = ({
   exerciseList: LoaderData["exerciseList"];
 }) => {
   return (
-    <tr className="">
+    <tr className="h-10 md:h-20 lg:h-24">
       {weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
         const isPast = daysInMonth[day]?.isBefore(startDate);
