@@ -74,18 +74,24 @@ export default function Calendar() {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <div>
-        <ul>
-          {data.exerciseList.map((e, index) => <li key={e.title} className="flex items-center mt-2">
-            {e.title}&nbsp;&nbsp;<div style={{ width: 15, height: 15, borderRadius: 8, backgroundColor: colors[index] }}></div>
-          </li>)}
-        </ul>
-      </div>
       <TableMonth
         startDate={startDate}
         dateMap={data.dateMap}
         exerciseList={data.exerciseList}
       />
+      
+      <div className="flex inline-flex">
+        {data.exerciseList.map((e, index) =>
+          <div key={e.title} className="flex items-center px-2">
+            {e.title}
+            <div
+              className="rounded-full w-3.5 h-3.5 ml-1.5"
+              style={{backgroundColor: colors[index] }}
+            ></div>
+          </div>
+        )}
+      </div>
+
       <br />
       <div className="flex items-center">
         <button
@@ -145,13 +151,9 @@ const Cell = ({
       {workout ? (
         <NavLink to={workout.id}>
           <span className="text-red-700">{day?.format("DD") ?? ""}</span>
-          <div className="flex">
+          <div className="flex justify-center">
             {workout.set.map((s, i) => (
-              <div key={i} style={{
-                width: 10,
-                height: 10,
-                marginRight: 6,
-                borderRadius: 6,
+              <div key={i} className="rounded-full w-2.5 h-2.5 mx-[1px]" style={{
                 backgroundColor: colors[
                   exerciseList.findIndex((e) => e.title === s.exercise.title)
                 ]
