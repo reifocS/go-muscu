@@ -1,6 +1,6 @@
 import { User } from ".prisma/client";
 import { useEffect, useState } from "react";
-import { Form, NavLink } from "remix";
+import { Form, Links, NavLink } from "remix";
 
 export function Header({ user }: { user?: User }) {
   return <Nav loggedIn={user !== undefined} />;
@@ -8,6 +8,8 @@ export function Header({ user }: { user?: User }) {
 const activeStyle = {
   textDecoration: "underline",
 };
+
+const links = ["Notes", "Exercise", "Calendar"]
 
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
@@ -47,34 +49,14 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
           <div className="text-sm md:flex-grow">
             {loggedIn ? (
               <>
-                <NavLink
+                {links.map(l => <NavLink
+                  key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
                   className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
-                  to="/notes"
+                  to={`/${l}`}
                 >
-                  Notes
-                </NavLink>
-                <NavLink
-                  style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
-                  to="/workout"
-                >
-                  Workout
-                </NavLink>
-                <NavLink
-                  style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
-                  to="/exercises"
-                >
-                  Exercises
-                </NavLink>
-                <NavLink
-                  style={({ isActive }) => (isActive ? activeStyle : {})}
-                    className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
-                  to="/calendar"
-                >
-                  Calendar
-                </NavLink>
+                  {l}
+                </NavLink>)}
               </>
             ) : (
               <>
