@@ -63,14 +63,18 @@ export default function ExerciseDetailsPage() {
   return (
     <div>
       <Form method="post">
-        <input name="title"
-          className="text-2xl font-bold shadow appearance-none border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          defaultValue={data.exercise.title}></input>
-        <button
-          name="_action"
-          className="bg-teal-600 text-white hover:text-teal-800 text-sm py-1 px-2 rounded"
-          value="edit"
-          type={"submit"}>edit</button>
+        <div className="flex flex-wrap">
+          <input name="title"
+            key={data.exercise.id}
+            className="text-md px-1 py-1 md:text-md font-bold shadow appearance-none border rounded mr-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            defaultValue={data.exercise.title}></input>
+          <button
+            name="_action"
+            className="bg-teal-600 text-white hover:text-teal-800 text-sm py-1 px-2 rounded"
+            value="edit"
+            type={"submit"}>edit</button>
+        </div>
+
       </Form>
       <hr className="my-4" />
       <ul className="list-inside">
