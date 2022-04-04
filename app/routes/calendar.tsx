@@ -1,25 +1,46 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
+import { json, useLoaderData, NavLink, Outlet } from "remix";
+import type { LoaderFunction } from "remix";
+
+import { requireUserId } from "~/session.server";
+import { getWorkoutList } from "~/models/workout.server";
+
+type LoaderData = {
+  dateMap: Record<string, string>
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
+  const workoutList = await getWorkoutList({ userId });
+  const dateMap: Record<string, string> = {};
+  for (const w of workoutList) {
+    dateMap[w.date.getTime()] = w.id;
+  }
+  return json<LoaderData>({ dateMap });
+};
 
 
-function App() {
-  /*
-  const start = useStore(selectorStart)
-  const nextMonth = useStore(selectorPrev)
-  const prevMonth = useStore(selectorPrev)
-  const dayInMonth = start.daysInMonth();
-  const weekInMonth = Math.floor(dayInMonth / 7);
-*/
+export default function Calendar() {
+
+  const data = useLoaderData() as LoaderData;
   const [startDate, setStartDate] = useState(() => dayjs().startOf("month"))
 
   return (
-    <>
-      <TableMonth startDate={startDate} />
+    <div className="w-full flex items-center flex-col">
+      <TableMonth startDate={startDate} dateMap={data.dateMap} />
       <br />
-      <h3>{startDate.format("MMMM")}</h3>
-      <button onClick={() => setStartDate(prev => prev.subtract(1, "month"))}>{"<"}</button>
-      <button onClick={() => setStartDate(prev => prev.add(1, "month"))}>{">"}</button>
-    </>
+      <div className="flex items-center">
+        <button
+          className="px-4 py-2"
+          onClick={() => setStartDate(prev => prev.subtract(1, "month"))}>{"<"}</button>
+        <h3>{startDate.format("MMMM")}</h3>
+        <button
+          className="px-4 py-2"
+          onClick={() => setStartDate(prev => prev.add(1, "month"))}>{">"}</button>
+      </div>
+      <Outlet />
+    </div>
   );
 }
 
@@ -29,7 +50,7 @@ const TableHead = () => {
   return (
     <thead className="bg-gray-50">
       <tr>
-        {daysInWeek.map(d => <th key={d} className="px-6 py-2 text-md text-gray-500">{d}</th>
+        {daysInWeek.map(d => <th key={d} className="px-4 py-2 text-md text-gray-500">{d}</th>
         )}
       </tr>
     </thead>
@@ -38,23 +59,51 @@ const TableHead = () => {
 
 const weekArray: Array<number> = Array(7).fill(0);
 
-const Cell = ({ day, isPast }: { day?: Dayjs, isPast: boolean }) => {
+const Cell = ({ day, isPast, workoutId }: { day?: Dayjs, isPast: boolean, workoutId?: string }) => {
+
+  if (!day) {
+    return (
+      <td
+        className={`px-4 py-2 opacity-0`}
+      >
+        X
+      </td>
+    )
+  }
 
   return (
     <td
-      className={`px-6 py-4 ${isPast && "text-gray-500"}`}
-    >{day?.format("DD") ?? ""}</td>
+      className={`px-4 py-2 ${isPast && "text-gray-500"} text-sm`}
+    >
+      {day?.format("DD") ?? ""}
+      <br />
+      {
+        workoutId ? <NavLink
+          to={workoutId}
+        >
+          see
+        </NavLink>
+          :
+          <NavLink
+            to="new"
+            className="italic"
+          >
+            create
+        </NavLink>
+      }
+    </td>
   )
 }
 
-const Week = ({ weekNumber, daysInMonth, startDate }: { weekNumber: number, daysInMonth: Array<Dayjs>, startDate: Dayjs }) => {
-  return <tr className="whitespace-nowrap">
+const Week = ({ weekNumber, daysInMonth, startDate, dateMap }: { weekNumber: number, daysInMonth: Array<Dayjs>, startDate: Dayjs, dateMap: LoaderData["dateMap"] }) => {
+  return <tr className="">
     {
       weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
         const isPast = daysInMonth[day]?.isBefore(startDate);
+        const workoutId = dateMap[daysInMonth[day]?.toDate().getTime()];
         return (
-          <Cell day={daysInMonth[day]} key={index} isPast={isPast} />
+          <Cell day={daysInMonth[day]} key={index} isPast={isPast} workoutId={workoutId} />
         )
       })}
   </tr>
@@ -74,22 +123,22 @@ const getAllDaysInMonth = (startDate: dayjs.Dayjs, daysInMonth: number): Array<D
 
 const weeks = Array(6).fill(0);
 
-const TableMonth = ({ startDate }: { startDate: dayjs.Dayjs }) => {
+const TableMonth = ({ startDate, dateMap }: { startDate: dayjs.Dayjs, dateMap: LoaderData["dateMap"] }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
   return (<table
-    className="w-full table-auto divide-y divide-gray-300 ">
+    className="table-fixed divide-y divide-gray-300 mt-2 border">
 
     <TableHead />
     <tbody className="bg-white divide-y divide-gray-300 text-center">
       {weeks.map((_, i) => {
         return (
-          <Week key={i} weekNumber={i} startDate={startDate} daysInMonth={allDaysInMonth} />
+          <Week key={i} weekNumber={i} startDate={startDate} daysInMonth={allDaysInMonth}
+            dateMap={dateMap}
+          />
         )
       })}
     </tbody>
   </table>
   )
 }
-
-export default App;
