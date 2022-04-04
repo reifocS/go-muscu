@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
+import { colors } from "~/utils";
 import {
   json,
   useLoaderData,
@@ -12,10 +13,25 @@ import {
 import type { LoaderFunction } from "remix";
 
 import { requireUserId } from "~/session.server";
-import { createWorkout, getWorkoutList } from "~/models/workout.server";
+import {
+  createWorkout,
+  getWorkoutList,
+  Workout,
+} from "~/models/workout.server";
+import { getExerciseTitleOrdered, Exercise } from "~/models/exercise.server";
+import { data } from "msw/lib/types/context";
+
+type WorkoutWithExercise = Workout & {
+  set: {
+    exercise: {
+      title: string;
+    };
+  }[];
+};
 
 type LoaderData = {
-  dateMap: Record<string, string>;
+  dateMap: Record<string, WorkoutWithExercise>;
+  exerciseList: Array<{ title: string }>;
 };
 
 type ActionData = {
@@ -45,11 +61,12 @@ export const action: ActionFunction = async ({ request }) => {
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
   const workoutList = await getWorkoutList({ userId });
-  const dateMap: Record<string, string> = {};
+  const exerciseList = await getExerciseTitleOrdered({ userId });
+  const dateMap: Record<string, WorkoutWithExercise> = {};
   for (const w of workoutList) {
-    dateMap[w.date.getTime()] = w.id;
+    dateMap[w.date.getTime()] = w;
   }
-  return json<LoaderData>({ dateMap });
+  return json<LoaderData>({ dateMap, exerciseList });
 };
 
 export default function Calendar() {
@@ -58,7 +75,11 @@ export default function Calendar() {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <TableMonth startDate={startDate} dateMap={data.dateMap} />
+      <TableMonth
+        startDate={startDate}
+        dateMap={data.dateMap}
+        exerciseList={data.exerciseList}
+      />
       <br />
       <div className="flex items-center">
         <button
@@ -101,11 +122,13 @@ const weekArray: Array<number> = Array(7).fill(0);
 const Cell = ({
   day,
   isPast,
-  workoutId,
+  workout,
+  exerciseList,
 }: {
   day?: Dayjs;
   isPast: boolean;
-  workoutId?: string;
+  workout?: WorkoutWithExercise;
+  exerciseList: LoaderData["exerciseList"];
 }) => {
   if (!day) {
     return <td className={`px-2 py-2 opacity-0`}>X</td>;
@@ -113,9 +136,20 @@ const Cell = ({
 
   return (
     <td className={`px-2 py-2 ${isPast && "text-gray-500"} text-xs`}>
-      {workoutId ? (
-        <NavLink to={workoutId}>
+      {workout ? (
+        <NavLink to={workout.id}>
           <span className="text-red-700">{day?.format("DD") ?? ""}</span>
+          <div>
+            {workout.set.map((s, i) => (
+              <span key={i}>
+                {
+                  colors[
+                    exerciseList.findIndex((e) => e.title === s.exercise.title)
+                  ]
+                }
+              </span>
+            ))}
+          </div>
         </NavLink>
       ) : (
         <Form method="post">
@@ -136,24 +170,27 @@ const Week = ({
   daysInMonth,
   startDate,
   dateMap,
+  exerciseList,
 }: {
   weekNumber: number;
   daysInMonth: Array<Dayjs>;
   startDate: Dayjs;
   dateMap: LoaderData["dateMap"];
+  exerciseList: LoaderData["exerciseList"];
 }) => {
   return (
     <tr className="">
       {weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
         const isPast = daysInMonth[day]?.isBefore(startDate);
-        const workoutId = dateMap[daysInMonth[day]?.toDate().getTime()];
+        const workout = dateMap[daysInMonth[day]?.toDate().getTime()];
         return (
           <Cell
+            exerciseList={exerciseList}
             day={daysInMonth[day]}
             key={index}
             isPast={isPast}
-            workoutId={workoutId}
+            workout={workout}
           />
         );
       })}
@@ -181,9 +218,11 @@ const weeks = Array(6).fill(0);
 const TableMonth = ({
   startDate,
   dateMap,
+  exerciseList,
 }: {
   startDate: dayjs.Dayjs;
   dateMap: LoaderData["dateMap"];
+  exerciseList: LoaderData["exerciseList"];
 }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
@@ -194,6 +233,7 @@ const TableMonth = ({
         {weeks.map((_, i) => {
           return (
             <Week
+              exerciseList={exerciseList}
               key={i}
               weekNumber={i}
               startDate={startDate}

@@ -28,8 +28,18 @@ export function getWorkout({
 export function getWorkoutList({ userId }: { userId: User["id"] }) {
   return prisma.workout.findMany({
     where: { userId },
-    select: { id: true, date: true },
     orderBy: { date: "desc" },
+    include: {
+      set: {
+        select: {
+          exercise: {
+            select: {
+              title: true,
+            },
+          },
+        },
+      },
+    },
   });
 }
 

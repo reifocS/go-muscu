@@ -1,5 +1,5 @@
 import type { LoaderFunction, ActionFunction } from "remix";
-import type { Set } from "~/models/set.server"
+import type { Set } from "~/models/set.server";
 import { redirect } from "remix";
 import { json, useLoaderData, useCatch, Form } from "remix";
 import invariant from "tiny-invariant";
@@ -13,7 +13,6 @@ import { requireUserId } from "~/session.server";
 import { renderToString } from "react-dom/server";
 import dayjs from "dayjs";
 
-
 type LoaderData = {
   exercise: Exercise & {
     set: (Set & {
@@ -21,8 +20,8 @@ type LoaderData = {
       workout: {
         date: Date;
       };
-    })[]
-  }
+    })[];
+  };
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -53,21 +52,21 @@ export default function ExerciseDetailsPage() {
       <h3 className="text-2xl font-bold">{data.exercise.title}</h3>
       <hr className="my-4" />
       <ul>
-        {data.exercise.set.map(s => {
+        {data.exercise.set.map((s) => {
           return (
             <li key={s.id}>
               {dayjs(s.workout.date).format("DD/MM")}
               <ul>
-                {s.series.map(series => {
+                {s.series.map((series) => {
                   return (
                     <li key={series.id}>
                       {series.repetitions}*{series.weigth}
                     </li>
-                  )
+                  );
                 })}
               </ul>
             </li>
-          )
+          );
         })}
       </ul>
 

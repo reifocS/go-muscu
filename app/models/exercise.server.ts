@@ -4,6 +4,16 @@ import { prisma } from "~/db.server";
 
 export type { Exercise } from "@prisma/client";
 
+export function getExerciseTitleOrdered({ userId }: { userId: User["id"] }) {
+  return prisma.exercise.findMany({
+    where: { userId },
+    select: { title: true },
+    orderBy: {
+      title: "asc",
+    },
+  });
+}
+
 export function getExercise({
   id,
   userId,
