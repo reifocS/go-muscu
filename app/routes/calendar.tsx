@@ -1,14 +1,39 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
-import { json, useLoaderData, NavLink, Outlet } from "remix";
+import { json, useLoaderData, NavLink, Outlet, ActionFunction, Form, redirect } from "remix";
 import type { LoaderFunction } from "remix";
 
 import { requireUserId } from "~/session.server";
-import { getWorkoutList } from "~/models/workout.server";
+import { createWorkout, getWorkoutList } from "~/models/workout.server";
 
 type LoaderData = {
   dateMap: Record<string, string>
 };
+
+type ActionData = {
+  errors?: {
+    date?: string;
+  };
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
+
+  const formData = await request.formData();
+  const date = formData.get("date");
+
+  if (typeof date !== "string") {
+    return json<ActionData>(
+      { errors: { date: "Date is required" } },
+      { status: 400 }
+    );
+  }
+
+  const workout = await createWorkout({ date: new Date(date), userId });
+
+  return redirect(`/calendar/${workout.id}`);;
+};
+
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
@@ -84,12 +109,10 @@ const Cell = ({ day, isPast, workoutId }: { day?: Dayjs, isPast: boolean, workou
           see
         </NavLink>
           :
-          <NavLink
-            to="new"
-            className="italic"
-          >
-            create
-        </NavLink>
+          <Form method="post">
+            <input name="date" type="hidden" value={day.format("MM/DD/YYYY")}></input>
+            <button type="submit">create</button>
+          </Form>
       }
     </td>
   )
