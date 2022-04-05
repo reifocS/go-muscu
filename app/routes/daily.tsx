@@ -33,16 +33,17 @@ export default function Index() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <main>
-      <h1>Workouts</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      {!user && <Link to="login">Log in</Link>}
+    <main className="p-4">
       <div className={`${data.dailyWorkout ? "hidden" : ""}`}>
         <Form method="post">
-          <button type="submit">Create workout</button>
+
+          <button
+            className="h-10 px-3 m-1 text-green-100 transition-colors duration-150 bg-green-700 rounded-lg focus:shadow-outline hover:bg-green-800"
+            type="submit">Tiens, voila pour toi!</button>
         </Form>
       </div>
       <Outlet />
+
     </main>
   );
 }

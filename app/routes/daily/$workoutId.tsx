@@ -12,6 +12,7 @@ import {
   updateSerie,
 } from "~/models/series.server";
 import { getExerciseList } from "~/models/exercise.server";
+import Carrousel from "~/components/Carrousel";
 
 type LoaderData = {
   workout: Workout & {
@@ -56,6 +57,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(params.workoutId, "workoutId not found");
 
   if (_action === "delete_workout") {
+    console.log(params.workoutId)
     await deleteWorkout({ userId, id: params.workoutId });
     return redirect("/daily");
   }
@@ -149,106 +151,87 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
   return (
-    <div
-    >
-      <div className="bg-white p-2 w-full h-[100%] rounded-lg bg-white">
-        <div className="flex justify-between">
+    <
+      >  <Form method="post" >
+        <div className="flex flex-1 justify-between items-center">
           <h3 className="font-bold">
             {new Date(data.workout.date).toLocaleDateString()}
           </h3>
-        </div>
-
-        {data.workout.set.map((set) => (
-          <div key={set.id}>
-            <div>
-              {set.exercise.title}{" "}
-              <Form method="post" style={{ display: "inline" }}>
-                <input type="hidden" value={set.id} name="setId"></input>{" "}
-                <button type="submit" name="_action" value="delete_set">
-                  remove
-                </button>
-              </Form>
-            </div>
-            <ul>
-              {set.series.map((s) => (
-                <li key={s.id}>
-                  <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" value={s.id} name="id"></input>
-                    <input
-                      name="rep"
-                      placeholder="rep"
-                      defaultValue={s.repetitions}
-                      type="number"
-                      min={0}
-                    ></input>
-                    <input
-                      name="weight"
-                      placeholder="weigth"
-                      defaultValue={s.weigth}
-                      type="number"
-                      step="0.01"
-                      min={0}
-                    ></input>
-                    <button type="submit" name="_action" value="edit_series">
-                      edit
-                    </button>{" "}
-                  </Form>
-                  <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" value={s.id} name="id"></input>
-                    <button type="submit" name="_action" value="delete_series">
-                      delete
-                    </button>
-                  </Form>
-                </li>
-              ))}
-            </ul>
-            <Form method="post">
-              <input type="hidden" name="setId" value={set.id}></input>
-              <input name="rep" placeholder="rep" type="number" min={0}></input>
-              &nbsp;*&nbsp;
-              <input
-                name="weight"
-                placeholder="weigth"
-                type="number"
-                step="0.01"
-                min={0}
-              ></input>{" "}
-              <button type="submit" name="_action" value="add_series">
-                +
-              </button>
-            </Form>
-          </div>
-        ))}
-        <br />
-        <ul>
-          {data.exerciseList
-            .filter(
-              (ex) => !data.workout.set.find((set) => set.exerciseId === ex.id)
-            )
-            .map((exercise) => {
-              return (
-                <li key={exercise.id}>
-                  <div>{exercise.title}</div>
-                  <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" name="exerciseId" value={exercise.id} />
-                    <button type="submit" name="_action" value="add_exercise">
-                      Add
-                    </button>
-                  </Form>
-                </li>
-              );
-            })}
-        </ul>
-
-        <hr />
-
-        <Form method="post" >
-          <button type="submit" name="_action" value="delete_workout">
+          <button type="submit"
+            className="h-8 px-3 m-1 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"
+            name="_action"
+            value="delete_workout">
             Delete
           </button>
-        </Form>
-      </div>
-    </div>
+        </div>
+
+      </Form>
+      <Carrousel elementList={data.exerciseList
+        .filter(
+          (ex) => !data.workout.set.find((set) => set.exerciseId === ex.id)
+        )} />
+      {data.workout.set.map((set) => (
+        <div key={set.id}>
+          <div>
+            {set.exercise.title}{" "}
+            <Form method="post" style={{ display: "inline" }}>
+              <input type="hidden" value={set.id} name="setId"></input>{" "}
+              <button type="submit" name="_action" value="delete_set">
+                remove
+                </button>
+            </Form>
+          </div>
+          <ul>
+            {set.series.map((s) => (
+              <li key={s.id}>
+                <Form method="post" style={{ display: "inline" }}>
+                  <input type="hidden" value={s.id} name="id"></input>
+                  <input
+                    name="rep"
+                    placeholder="rep"
+                    defaultValue={s.repetitions}
+                    type="number"
+                    min={0}
+                  ></input>
+                  <input
+                    name="weight"
+                    placeholder="weigth"
+                    defaultValue={s.weigth}
+                    type="number"
+                    step="0.01"
+                    min={0}
+                  ></input>
+                  <button type="submit" name="_action" value="edit_series">
+                    edit
+                    </button>{" "}
+                </Form>
+                <Form method="post" style={{ display: "inline" }}>
+                  <input type="hidden" value={s.id} name="id"></input>
+                  <button type="submit" name="_action" value="delete_series">
+                    delete
+                    </button>
+                </Form>
+              </li>
+            ))}
+          </ul>
+          <Form method="post">
+            <input type="hidden" name="setId" value={set.id}></input>
+            <input name="rep" placeholder="rep" type="number" min={0}></input>
+              &nbsp;*&nbsp;
+              <input
+              name="weight"
+              placeholder="weigth"
+              type="number"
+              step="0.01"
+              min={0}
+            ></input>{" "}
+            <button type="submit" name="_action" value="add_series">
+              +
+              </button>
+          </Form>
+        </div>
+      ))}
+    </>
   );
 }
 
