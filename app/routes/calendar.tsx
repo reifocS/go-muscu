@@ -84,7 +84,7 @@ export default function Calendar() {
       <div className="flex inline-flex">
         {data.exerciseList.map((e, index) =>
           <div key={e.title} className="px-2">
-            <Link className="flex items-center " to={`../exercises/${e.id}`}>
+            <Link className="flex items-center " to={`../exercise/${e.id}`}>
               {e.title}
               <div
                 className="rounded-full w-3.5 h-3.5 ml-1.5"

@@ -54,7 +54,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
   await deleteExercise({ userId, id: params.exerciseId });
 
-  return redirect("/exercises");
+  return redirect("/exercise");
 };
 
 export default function ExerciseDetailsPage() {

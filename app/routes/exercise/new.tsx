@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const ex = await createExercise({ title, userId });
 
-  return redirect(`/exercises/${ex.id}`);
+  return redirect(`/exercise/${ex.id}`);
 };
 
 export default function NewExercisePage() {
