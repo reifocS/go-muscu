@@ -26,7 +26,8 @@ function Card({ el, itemId }: { el: { title: string, id: string }, itemId: strin
   return <Form key={itemId} method="post" tabIndex={0} className="flex">
     <input type="hidden" name="exerciseId" value={el.id} />
     <button type="submit" name="_action"
-      className="px-5 m-2 text-blue-100 transition-colors duration-150 
+      className="px-5 m-2 text-blue-100 transition-colors duration-150
+      font-bold
           bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700"
       value="add_exercise">
       {el.title}
