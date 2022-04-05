@@ -52,6 +52,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 {links.map(l => <NavLink
                   key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay(false)}
                   className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to={`/${l.toLowerCase()}`}
                 >
@@ -62,12 +63,14 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay(false)}
                   className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/join"
                 >
                   Sign Up
                 </NavLink>
                 <NavLink
+                  onClick={() => setDisplay(false)}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
                   className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/login"
