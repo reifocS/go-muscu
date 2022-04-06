@@ -1,17 +1,11 @@
-import type { LoaderFunction, ActionFunction } from "remix";
-import { redirect, Link} from "remix";
-import { json, useLoaderData, useCatch, Form, useTransition } from "remix";
+import type {ActionFunction, LoaderFunction} from "remix";
+import {Form, json, Link, redirect, useCatch, useLoaderData} from "remix";
 import invariant from "tiny-invariant";
-import { getWorkout, deleteWorkout, Workout } from "~/models/workout.server";
-import { requireUserId } from "~/session.server";
-import { Set, createSet, deleteSet } from "~/models/set.server";
-import {
-  createSeries,
-  deleteSeries,
-  Series,
-  updateSerie,
-} from "~/models/series.server";
-import { getExerciseList } from "~/models/exercise.server";
+import {deleteWorkout, getWorkout, Workout} from "~/models/workout.server";
+import {requireUserId} from "~/session.server";
+import {createSet, deleteSet, Set} from "~/models/set.server";
+import {createSeries, deleteSeries, Series, updateSerie,} from "~/models/series.server";
+import {getExerciseList} from "~/models/exercise.server";
 
 type LoaderData = {
   workout: Workout & {

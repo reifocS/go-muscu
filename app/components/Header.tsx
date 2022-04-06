@@ -1,6 +1,6 @@
 import { User } from ".prisma/client";
-import { useEffect, useState } from "react";
-import { Form, Links, NavLink } from "remix";
+import { useState } from "react";
+import { Form, NavLink } from "remix";
 
 export function Header({ user }: { user?: User }) {
   return <Nav loggedIn={user !== undefined} />;
@@ -9,7 +9,7 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const links = ["Notes", "Exercise", "Calendar"]
+const links = ["Notes", "Exercise", "Calendar", "Daily"]
 
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
@@ -23,7 +23,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
           <div className="mr-6 flex flex-shrink-0 items-center text-white">
             {/*<svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>*/}
             <NavLink to="/" className="text-xl font-semibold tracking-tight">
-              Workout
+                GO MUSCU!!
             </NavLink>
           </div>
           <div className="block md:hidden">
@@ -52,8 +52,9 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 {links.map(l => <NavLink
                   key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
-                  to={`/${l}`}
+                  onClick={() => setDisplay(false)}
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  to={`/${l.toLowerCase()}`}
                 >
                   {l}
                 </NavLink>)}
@@ -62,14 +63,16 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block text-gray-200 hover:text-white md:inline-block"
+                  onClick={() => setDisplay(false)}
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/join"
                 >
                   Sign Up
                 </NavLink>
                 <NavLink
+                  onClick={() => setDisplay(false)}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block text-gray-200 hover:text-white md:inline-block"
+                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
                   to="/login"
                 >
                   Login

@@ -1,18 +1,11 @@
-import type { LoaderFunction, ActionFunction } from "remix";
-import type { Set } from "~/models/set.server";
-import { redirect } from "remix";
-import { json, useLoaderData, useCatch, Form } from "remix";
+import type {ActionFunction, LoaderFunction} from "remix";
+import {Form, json, redirect, useCatch, useLoaderData} from "remix";
+import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
-import {
-  getExercise,
-  deleteExercise,
-  Exercise,
-  updateExercise,
-} from "~/models/exercise.server";
-import type { Series } from "~/models/series.server";
-import { requireUserId } from "~/session.server";
+import {deleteExercise, Exercise, getExercise, updateExercise,} from "~/models/exercise.server";
+import type {Series} from "~/models/series.server";
+import {requireUserId} from "~/session.server";
 import dayjs from "dayjs";
-import { useState } from "react";
 
 type LoaderData = {
   exercise: Exercise & {

@@ -1,9 +1,9 @@
-import { Form, json, useLoaderData, Outlet, Link, NavLink } from "remix";
-import type { LoaderFunction } from "remix";
+import type {LoaderFunction} from "remix";
+import {json, Link, NavLink, Outlet, useLoaderData} from "remix";
 
-import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
-import { getExerciseList } from "~/models/exercise.server";
+import {requireUserId} from "~/session.server";
+import {useUser} from "~/utils";
+import {getExerciseList} from "~/models/exercise.server";
 
 type LoaderData = {
   exerciseList: Awaited<ReturnType<typeof getExerciseList>>;

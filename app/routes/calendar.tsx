@@ -1,25 +1,12 @@
-import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
-import { colors } from "~/utils";
-import {
-  json,
-  useLoaderData,
-  NavLink,
-  Outlet,
-  ActionFunction,
-  Form,
-  Link,
-  redirect,
-} from "remix";
-import type { LoaderFunction } from "remix";
+import dayjs, {Dayjs} from "dayjs";
+import {useState} from "react";
+import {colors} from "~/utils";
+import type {LoaderFunction} from "remix";
+import {ActionFunction, Form, json, Link, NavLink, Outlet, redirect, useLoaderData,} from "remix";
 
-import { requireUserId } from "~/session.server";
-import {
-  createWorkout,
-  getWorkoutList,
-  Workout,
-} from "~/models/workout.server";
-import { getExerciseTitleOrdered } from "~/models/exercise.server";
+import {requireUserId} from "~/session.server";
+import {createWorkout, getWorkoutList, Workout,} from "~/models/workout.server";
+import {getExerciseTitleOrdered} from "~/models/exercise.server";
 
 type WorkoutWithExercise = Workout & {
   set: {
@@ -81,7 +68,7 @@ export default function Calendar() {
         exerciseList={data.exerciseList}
       />
 
-      <div className="flex inline-flex">
+      <div className="flex flex-wrap">
         {data.exerciseList.map((e, index) =>
           <div key={e.title} className="px-2">
             <Link className="flex items-center " to={`../exercise/${e.id}`}>

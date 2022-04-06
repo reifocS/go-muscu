@@ -1,9 +1,9 @@
-import { json, useLoaderData, Outlet, Link, NavLink } from "remix";
-import type { LoaderFunction } from "remix";
+import type {LoaderFunction} from "remix";
+import {json, Link, NavLink, Outlet, useLoaderData} from "remix";
 
-import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
-import { getWorkoutList } from "~/models/workout.server";
+import {requireUserId} from "~/session.server";
+import {useUser} from "~/utils";
+import {getWorkoutList} from "~/models/workout.server";
 
 type LoaderData = {
   workoutList: Awaited<ReturnType<typeof getWorkoutList>>;

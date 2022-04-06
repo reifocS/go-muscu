@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { useSearchParams, Link } from "remix";
+import {Link, useSearchParams} from "remix";
 
-export default function newWorkout() {
+export default function NewWorkout() {
   const [searchParams] = useSearchParams();
   const date = searchParams.get("date");
 
