@@ -146,7 +146,7 @@ export const action: ActionFunction = async ({request, params}) => {
 
 
 const TableRow = ({series}: { series: Series }) => {
-    return <tr className="h-10 md:h-20 lg:h-24">
+    return <tr className="h-10">
         <td className={`px-2 py-2 h-full text-xs`}>
             {series.repetitions}
         </td>
@@ -160,11 +160,13 @@ const TableRow = ({series}: { series: Series }) => {
 }
 
 function AddSeries({set}: { set: Set }) {
-    return <tr className="h-10 md:h-20 lg:h-24">
+    return <tr className="h-10">
         <td className={`px-2 py-2 h-full text-xs`}>
-            <input type="hidden" name="setId" value={set.id} form={set.id}
+            <input type="hidden"
+                   name="setId" value={set.id} form={set.id}
             />
             <input name="rep" placeholder="rep" type="number" form={set.id}
+                   className={"w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-1 transition-colors duration-200 ease-in-out"}
                    min={0}/>
         </td>
         <td className={`px-2 py-2 h-full text-xs`}>
@@ -173,6 +175,7 @@ function AddSeries({set}: { set: Set }) {
                 placeholder="weight"
                 type="number"
                 step="0.01"
+                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-1 transition-colors duration-200 ease-in-out"
                 form={set.id}
                 min={0}
             />
@@ -273,26 +276,28 @@ export default function WorkoutDetailsPage() {
             {
                 data.workout.set.map(s => <div className="my-2" key={s.id}
                 >
-                    <div className="flex justify-between items-center">
-                        <h3 className="font-bold">{s.exercise.title}</h3>
+                    <div className="flex justify-center items-center">
+                        <h3 className="font-bold mr-2">{s.exercise.title}</h3>
                         <Form method="post">
                             <input type="hidden" value={s.id} name="setId"></input>{" "}
                             <button
-                                className="px-3 m-1 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"
+                                className="p-1 m-1 text-red-100 transition-colors duration-150 bg-red-700 rounded-lg focus:shadow-outline hover:bg-red-800"
                                 type="submit" name="_action" value="delete_set">
-                                x
+                                remove
                             </button>
                         </Form>
                     </div>
                     <Form className="hidden" method="post" id={s.id}/>
-                    <table
-                        className="table-fixed divide-y divide-gray-300 mt-2 border w-full">
-                        <TableHead/>
-                        <tbody className="text-center">
-                        {s.series.map(series => <TableRow series={series} key={series.id}/>)}
-                        <AddSeries set={s}/>
-                        </tbody>
-                    </table>
+                    <div className="flex items-center justify-center">
+                        <table
+                            className="table-fixed divide-y divide-gray-300 mt-2 border">
+                            <TableHead/>
+                            <tbody className="text-center">
+                            {s.series.map(series => <TableRow series={series} key={series.id}/>)}
+                            <AddSeries set={s}/>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>)
             }
 

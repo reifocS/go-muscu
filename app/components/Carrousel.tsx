@@ -5,7 +5,7 @@ import { Form } from "remix";
 export default function Carrousel({ elementList }:
   { elementList: Array<{ title: string, id: string }> }) {
   return <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}
-    scrollContainerClassName="flex"
+    scrollContainerClassName="flex justify-center"
     itemClassName="flex"
   >
     {elementList.map((el) => (
@@ -42,7 +42,7 @@ function LeftArrow() {
     React.useContext(VisibilityContext);
 
   return (
-    <button disabled={isFirstItemVisible} onClick={() => scrollPrev()}>
+    <button className="px-3" disabled={isFirstItemVisible} onClick={() => scrollPrev()}>
       {"<"}
     </button>
   );
@@ -52,7 +52,7 @@ function RightArrow() {
   const { isLastItemVisible, scrollNext } = React.useContext(VisibilityContext);
 
   return (
-    <button disabled={isLastItemVisible} onClick={() => scrollNext()}>
+    <button className="px-3" disabled={isLastItemVisible} onClick={() => scrollNext()}>
       {">"}
     </button>
   );
