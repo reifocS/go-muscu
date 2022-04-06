@@ -5,7 +5,7 @@ import { Form } from "remix";
 export default function Carrousel({ elementList }:
   { elementList: Array<{ title: string, id: string }> }) {
   return <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}
-    scrollContainerClassName="flex justify-center"
+    scrollContainerClassName="lg:flex lg:justify-center"
     itemClassName="flex"
   >
     {elementList.map((el) => (
