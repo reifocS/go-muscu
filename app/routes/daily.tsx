@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import { ActionFunction, Form, json, Link, LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
-import { createWorkout, getDailyWorkout, Workout } from "~/models/workout.server";
-import { requireUserId } from "~/session.server";
-import { useOptionalUser } from "~/utils";
+import {ActionFunction, Form, json, LoaderFunction, Outlet, redirect, useLoaderData} from "remix";
+import {createWorkout, getDailyWorkout, Workout} from "~/models/workout.server";
+import {requireUserId} from "~/session.server";
+import {useOptionalUser} from "~/utils";
 
 type LoaderData = {
   dailyWorkout: Workout | null

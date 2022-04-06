@@ -1,17 +1,11 @@
-import type { LoaderFunction, ActionFunction } from "remix";
-import { redirect, Link } from "remix";
-import { json, useLoaderData, useCatch, Form, useTransition } from "remix";
+import type {ActionFunction, LoaderFunction} from "remix";
+import {Form, json, redirect, useCatch, useLoaderData} from "remix";
 import invariant from "tiny-invariant";
-import { getWorkout, deleteWorkout, Workout } from "~/models/workout.server";
-import { requireUserId } from "~/session.server";
-import { Set, createSet, deleteSet } from "~/models/set.server";
-import {
-  createSeries,
-  deleteSeries,
-  Series,
-  updateSerie,
-} from "~/models/series.server";
-import { getExerciseList } from "~/models/exercise.server";
+import {deleteWorkout, getWorkout, Workout} from "~/models/workout.server";
+import {requireUserId} from "~/session.server";
+import {createSet, deleteSet, Set} from "~/models/set.server";
+import {createSeries, deleteSeries, Series, updateSerie,} from "~/models/series.server";
+import {getExerciseList} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 
 type LoaderData = {
@@ -170,7 +164,7 @@ export default function WorkoutDetailsPage() {
         .filter(
           (ex) => !data.workout.set.find((set) => set.exerciseId === ex.id)
         )} />
-      {data.workout.set.map((set) => (
+      {/*data.workout.set.map((set) => (
         <div key={set.id}>
           <div>
             {set.exercise.title}{" "}
@@ -185,7 +179,7 @@ export default function WorkoutDetailsPage() {
             {set.series.map((s) => (
               <li key={s.id}>
                 <Form method="post" style={{ display: "inline" }}>
-                  <input type="hidden" value={s.id} name="id"></input>
+                  <input type="hidden" value={s.id} name="id"/>
                   <input
                     name="rep"
                     placeholder="rep"
@@ -230,7 +224,7 @@ export default function WorkoutDetailsPage() {
               </button>
           </Form>
         </div>
-      ))}
+      ))*/}
     </>
   );
 }

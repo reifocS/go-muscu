@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useSearchParams, Link } from "remix";
+import {Link, useSearchParams} from "remix";
 
 export default function newWorkout() {
   const [searchParams] = useSearchParams();
