@@ -22,8 +22,8 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
         <div className="p-2 flex bg-gray-500 flex-wrap items-center justify-between">
           <div className="mr-6 flex flex-shrink-0 items-center text-white">
             {/*<svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>*/}
-            <NavLink to="/" className="text-xl font-semibold tracking-tight">
-              Workout
+            <NavLink to="/calendar" className="text-xl font-semibold tracking-tight">
+              Go-Muscu
             </NavLink>
           </div>
           <div className="block md:hidden">
@@ -52,16 +52,42 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 {links.map(l => <NavLink
                   key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
                   to={`/${l}`}
                 >
-                  {l}
-                </NavLink>)}
+                  Notes
+                </NavLink>
+                <NavLink
+                  style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
+                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  to="/workout"
+                >
+                  Workout
+                </NavLink>
+                <NavLink
+                  style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
+                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  to="/exercises"
+                >
+                  Exercises
+                </NavLink>
+                <NavLink
+                  style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
+                  className="@apply block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  to="/calendar"
+                >
+                  Calendar
+                </NavLink>
               </>
             ) : (
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="block text-gray-200 hover:text-white md:inline-block"
                   to="/join"
                 >
@@ -69,6 +95,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 </NavLink>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
+                  onClick={() => setDisplay((prev) => !prev)}
                   className="block text-gray-200 hover:text-white md:inline-block"
                   to="/login"
                 >
