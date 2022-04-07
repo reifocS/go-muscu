@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { ActionFunction, LoaderFunction } from "remix";
+import { ActionFunction, LoaderFunction, useTransition } from "remix";
 import { Form, json, redirect, useCatch, useLoaderData } from "remix";
 import {
   deleteWorkout,
@@ -215,6 +215,7 @@ function AddSeries({ set }: { set: Set }) {
 
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
+
   return (
     <>
       {" "}

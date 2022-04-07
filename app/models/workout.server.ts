@@ -83,6 +83,7 @@ export function createWorkout({
     
     },
     select: {
+      id: true,
       set: {
         include: {
            series: true,
