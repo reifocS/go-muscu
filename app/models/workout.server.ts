@@ -13,7 +13,17 @@ export function getDailyWorkout({ dateEnd, dateStart, userId }: { userId: User["
         gte: dateStart,
         lt: dateEnd
       }
-    }
+    },
+     include: {
+      set: {
+        include: {
+          series: true,
+          exercise: {
+            select: { title: true },
+          },
+        },
+      },
+    },
   })
 }
 
@@ -70,9 +80,22 @@ export function createWorkout({
           id: userId,
         },
       },
+    
     },
+    select: {
+      set: {
+        include: {
+           series: true,
+          exercise: {
+            select: { title: true },
+          },
+        }
+      }
+
+    }
   });
 }
+
 
 export function deleteWorkout({
   id,
