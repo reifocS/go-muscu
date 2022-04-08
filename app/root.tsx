@@ -13,8 +13,8 @@ import React from "react";
 import { useOptionalUser } from "~/utils";
 import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
 
-import tailwindStylesheetUrl from "app/styles/tailwind.css";
-import tailwindGlobalCss from "app/styles/global.css";
+import tailwindStylesheetUrl from "./styles/tailwind.css";
+import tailwindGlobalCss from "./styles/global.css";
 
 import { getUser } from "./session.server";
 import { Header } from "./components/Header";
