@@ -242,7 +242,7 @@ export default function WorkoutDetailsPage() {
         />
       </div>
 
-      <div className="h-[calc(100vh-140px)] overflow-auto">
+      <div className="h-[calc(100vh-210px)] overflow-auto">
         {optimistWorkoutSet.map((s, i) => {
           let optimistSeries = s.series;
           if (
@@ -299,7 +299,7 @@ export default function WorkoutDetailsPage() {
         })}
       </div>
 
-      <div className="focus:shadow-outline absolute  bottom-0 flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
+      <div className="focus:shadow-outline flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
         <button className="h-[70px] w-full text-lg font-bold">Démarrer</button>
       </div>
     </div>
