@@ -142,7 +142,7 @@ const TableRow = ({ series }: { series: Series }) => {
     <tr className="h-10">
       <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
       <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
-      <td className="h-[50px] w-[100px] bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
+      <td className="h-[50px] bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
         <Form method="post">
           <input
             type="text"
@@ -284,17 +284,13 @@ export default function WorkoutDetailsPage() {
 
                 <Form className="hidden" method="post" id={s.id} />
                 <div className="flex items-center justify-center">
-                  <table className="table-fixed divide-y border">
+                  <table className="w-full table-fixed divide-y border">
                     <TableHead />
-                    <tbody className="text-center">
-                      {optimistSeries.map((series) => (
-                        <TableRow series={series} key={series.id} />
-                      ))}
-                      <AddSeries
-                        set={s}
-                        disabled={transition.submission != null}
-                      />
-                    </tbody>
+                    <TableBody
+                      optimistSeries={optimistSeries}
+                      disabled={transition.submission != null}
+                      set={s}
+                    />
                   </table>
                 </div>
               </details>
@@ -314,11 +310,30 @@ const TableHead = () => {
   return (
     <thead className="bg-gray-50">
       <tr>
-        <th className="px-2 py-2 text-xs text-gray-500">Rep</th>
+        <th className="px-2 py-2 text-xs text-gray-500">Repetitions</th>
         <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
         <th className="px-2 py-2 text-xs text-gray-500">Action</th>
       </tr>
     </thead>
+  );
+};
+
+const TableBody = ({
+  optimistSeries,
+  disabled,
+  set,
+}: {
+  optimistSeries: Series[];
+  disabled: boolean;
+  set: WorkoutSet;
+}) => {
+  return (
+    <tbody className="text-center">
+      {optimistSeries.map((series) => (
+        <TableRow series={series} key={series.id} />
+      ))}
+      <AddSeries set={set} disabled={disabled} />
+    </tbody>
   );
 };
 
