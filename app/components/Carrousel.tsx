@@ -44,7 +44,7 @@ function Card({
       <button
         type="submit"
         name="_action"
-        className="focus:shadow-outline m-1 rounded-lg bg-blue-600 p-7 text-lg font-bold
+        className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-blue-600 text-lg font-bold
           text-white transition-colors duration-150 hover:bg-blue-700"
         value="add_exercise"
       >
