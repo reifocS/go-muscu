@@ -240,53 +240,59 @@ export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
 
   return (
-    <>
-      <div className="px-1 py-5">
+    <div className="w-full overflow-hidden">
+      <div className="h-[100px] overflow-hidden p-2">
         <Carrousel
           workoutId={data.workout.id}
           elementList={data.exerciseList}
         />
       </div>
 
-      {data.workout.set.map((s, i) => (
-        <div className="0" key={s.id}>
-          <details
-            open={i === data.workout.set.length - 1}
-            className="bg-white"
-          >
-            <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
-              <h3 className="px-5 text-lg font-bold">
-                {i}. {s.exercise.title}
-              </h3>
-              <Form method="post">
-                <input type="hidden" value={s.id} name="setId"></input>{" "}
-                <button
-                  className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                  type="submit"
-                  name="_action"
-                  value="delete_set"
-                >
-                  x
-                </button>
-              </Form>
-            </summary>
+      <div className="h-[calc(100vh-210px)] overflow-auto">
+        {data.workout.set.map((s, i) => (
+          <div className="0" key={s.id}>
+            <details
+              open={i === data.workout.set.length - 1}
+              className="bg-white"
+            >
+              <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
+                <h3 className="px-5 text-lg font-bold">
+                  {i}. {s.exercise.title}
+                </h3>
+                <Form method="post">
+                  <input type="hidden" value={s.id} name="setId"></input>{" "}
+                  <button
+                    className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                    type="submit"
+                    name="_action"
+                    value="delete_set"
+                  >
+                    x
+                  </button>
+                </Form>
+              </summary>
 
-            <Form className="hidden" method="post" id={s.id} />
-            <div className="flex items-center justify-center">
-              <table className="table-fixed divide-y border">
-                <TableHead />
-                <tbody className="text-center">
-                  {s.series.map((series) => (
-                    <TableRow series={series} key={series.id} />
-                  ))}
-                  <AddSeries set={s} />
-                </tbody>
-              </table>
-            </div>
-          </details>
-        </div>
-      ))}
-    </>
+              <Form className="hidden" method="post" id={s.id} />
+              <div className="flex items-center justify-center">
+                <table className="table-fixed divide-y border">
+                  <TableHead />
+                  <tbody className="text-center">
+                    {s.series.map((series) => (
+                      <TableRow series={series} key={series.id} />
+                    ))}
+                    <AddSeries set={s} />
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </div>
+        ))}
+      </div>
+
+      <div className="focus:shadow-outline absolute  bottom-0 flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
+        <button className="h-[70px] w-full text-lg font-bold">Démarrer</button>
+      </div>
+    </div>
   );
 }
 
