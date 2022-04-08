@@ -142,7 +142,7 @@ const TableRow = ({ series }: { series: Series }) => {
     <tr className="h-10">
       <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
       <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
-      <td className="h-[50px] bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
+      <td className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
         <Form method="post">
           <input
             type="text"
@@ -153,7 +153,7 @@ const TableRow = ({ series }: { series: Series }) => {
           />
 
           <button
-            className="font-bold "
+            className="h-[50px] w-full font-bold"
             type="submit"
             name="_action"
             value="delete_series"
@@ -191,14 +191,14 @@ function AddSeries({ set, disabled }: { set: Set; disabled: boolean }) {
           min={0}
         />
       </td>
-      <td className="h-[50px] w-[100px] bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
+      <td className="bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
         <button
           type="submit"
           name="_action"
           form={set.id}
           disabled={disabled}
           value="add_series"
-          className="text-lg font-bold "
+          className="h-[50px] w-[100px]  text-lg font-bold "
         >
           +
         </button>
