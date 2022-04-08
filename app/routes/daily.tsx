@@ -148,7 +148,7 @@ const TableRow = ({ series }: { series: Series }) => {
   );
 };
 
-function AddSeries({ set }: { set: Set }) {
+function AddSeries({ set, disabled }: { set: Set, disabled: boolean }) {
   return (
     <tr className="h-10">
       <td className={`h-full px-2 py-2 text-xs`}>
@@ -176,7 +176,9 @@ function AddSeries({ set }: { set: Set }) {
         />
       </td>
       <td className={`h-full px-2 py-2 text-xs`}>
-        <button type="submit" name="_action" form={set.id} value="add_series">
+        <button type="submit"
+          disabled={disabled}
+          name="_action" form={set.id} value="add_series">
           +
         </button>
       </td>
@@ -250,7 +252,7 @@ export default function WorkoutDetailsPage() {
                       <TableRow series={series} key={series.id} />
                     )
                   })}
-                  <AddSeries set={s} />
+                  <AddSeries set={s} disabled={transition.submission != null} />
                 </tbody>
               </table>
             </div>
