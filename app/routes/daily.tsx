@@ -170,9 +170,28 @@ export const action: ActionFunction = async ({ request, params }) => {
 const TableRow = ({ series }: { series: Series }) => {
   return (
     <tr className="h-10">
-      <td className={`h-full px-2 py-2 text-xs`}>{series.repetitions}</td>
-      <td className={`h-full px-2 py-2 text-xs`}>{series.weigth}</td>
-      <td className={`h-full px-2 py-2 text-xs`}>edit</td>
+      <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
+      <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
+      <td className="h-[50px] w-[100px] bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
+        <Form method="post">
+          <input
+            type="text"
+            className="hidden"
+            name="id"
+            value={series.id}
+            readOnly
+          />
+
+          <button
+            className="font-bold "
+            type="submit"
+            name="_action"
+            value="delete_series"
+          >
+            x
+          </button>
+        </Form>
+      </td>
     </tr>
   );
 };
@@ -180,20 +199,18 @@ const TableRow = ({ series }: { series: Series }) => {
 function AddSeries({ set }: { set: Set }) {
   return (
     <tr className="h-10">
-      <td className={`h-full px-2 py-2 text-xs`}>
+      <td className="h-full px-2 py-2 text-xs">
         <input type="hidden" name="setId" value={set.id} form={set.id} />
         <input
           name="rep"
           placeholder="rep"
           type="number"
           form={set.id}
-          className={
-            "w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          }
+          className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
           min={0}
         />
       </td>
-      <td className={`h-full px-2 py-2 text-xs`}>
+      <td className="h-full px-2 py-2 text-xs">
         <input
           name="weight"
           placeholder="weight"
@@ -204,8 +221,14 @@ function AddSeries({ set }: { set: Set }) {
           min={0}
         />
       </td>
-      <td className={`h-full px-2 py-2 text-xs`}>
-        <button type="submit" name="_action" form={set.id} value="add_series">
+      <td className="h-[50px] w-[100px] bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
+        <button
+          type="submit"
+          name="_action"
+          form={set.id}
+          value="add_series"
+          className="text-lg font-bold "
+        >
           +
         </button>
       </td>
@@ -218,42 +241,49 @@ export default function WorkoutDetailsPage() {
 
   return (
     <>
-      {" "}
-      <Form method="post">
-        <h3 className="font-bold p-4">
-          {new Date(data.workout.date).toLocaleDateString()}
-        </h3>
+      <div className="px-1 py-5">
+        <Carrousel
+          workoutId={data.workout.id}
+          elementList={data.exerciseList}
+        />
+      </div>
 
-      </Form>
-      <Carrousel workoutId={data.workout.id} elementList={data.exerciseList} />
-      {data.workout.set.map((s) => (
-        <div className="my-2" key={s.id}>
-          <div className="flex items-center justify-center">
-            <h3 className="mr-2 font-bold">{s.exercise.title}</h3>
-            <Form method="post">
-              <input type="hidden" value={s.id} name="setId"></input>{" "}
-              <button
-                className="focus:shadow-outline m-1 rounded-lg bg-red-700 p-1 text-red-100 transition-colors duration-150 hover:bg-red-800"
-                type="submit"
-                name="_action"
-                value="delete_set"
-              >
-                remove
-              </button>
-            </Form>
-          </div>
-          <Form className="hidden" method="post" id={s.id} />
-          <div className="flex items-center justify-center">
-            <table className="mt-2 table-fixed divide-y divide-gray-300 border">
-              <TableHead />
-              <tbody className="text-center">
-                {s.series.map((series) => (
-                  <TableRow series={series} key={series.id} />
-                ))}
-                <AddSeries set={s} />
-              </tbody>
-            </table>
-          </div>
+      {data.workout.set.map((s, i) => (
+        <div className="0" key={s.id}>
+          <details
+            open={i === data.workout.set.length - 1}
+            className="bg-white"
+          >
+            <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
+              <h3 className="px-5 text-lg font-bold">
+                {i}. {s.exercise.title}
+              </h3>
+              <Form method="post">
+                <input type="hidden" value={s.id} name="setId"></input>{" "}
+                <button
+                  className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                  type="submit"
+                  name="_action"
+                  value="delete_set"
+                >
+                  x
+                </button>
+              </Form>
+            </summary>
+
+            <Form className="hidden" method="post" id={s.id} />
+            <div className="flex items-center justify-center">
+              <table className="table-fixed divide-y border">
+                <TableHead />
+                <tbody className="text-center">
+                  {s.series.map((series) => (
+                    <TableRow series={series} key={series.id} />
+                  ))}
+                  <AddSeries set={s} />
+                </tbody>
+              </table>
+            </div>
+          </details>
         </div>
       ))}
     </>
