@@ -9,11 +9,7 @@ import {
 } from "~/models/workout.server";
 import { requireUserId } from "~/session.server";
 import { createSet, deleteSet, Set } from "~/models/set.server";
-import {
-  createSeries,
-  deleteSeries,
-  Series,
-} from "~/models/series.server";
+import { createSeries, deleteSeries, Series } from "~/models/series.server";
 import { getExerciseList } from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 
@@ -170,7 +166,7 @@ const TableRow = ({ series }: { series: Series }) => {
   );
 };
 
-function AddSeries({ set, disabled }: { set: Set, disabled: boolean }) {
+function AddSeries({ set, disabled }: { set: Set; disabled: boolean }) {
   return (
     <tr className="h-10">
       <td className="h-full px-2 py-2 text-xs">
@@ -214,8 +210,10 @@ function AddSeries({ set, disabled }: { set: Set, disabled: boolean }) {
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
   const transition = useTransition();
-  const optimistUpdateData = transition.submission && Object.fromEntries(transition.submission.formData)
-  const optimistAction = optimistUpdateData && optimistUpdateData["_action"] as string
+  const optimistUpdateData =
+    transition.submission && Object.fromEntries(transition.submission.formData);
+  const optimistAction =
+    optimistUpdateData && (optimistUpdateData["_action"] as string);
   let optimistWorkoutSet = data.workout.set;
   if (optimistUpdateData && optimistAction === "add_exercise") {
     optimistWorkoutSet = [
@@ -226,11 +224,15 @@ export default function WorkoutDetailsPage() {
         workoutId: data.workout.id,
         series: [],
         exercise: {
-          title: data.exerciseList.find(e => e.id === optimistUpdateData.exerciseId)?.title || ""
-        }
-      }
-    ]
+          title:
+            data.exerciseList.find(
+              (e) => e.id === optimistUpdateData.exerciseId
+            )?.title || "",
+        },
+      },
+    ];
   }
+
   return (
     <div className="w-full overflow-hidden">
       <div className="h-[100px] overflow-hidden p-2">
@@ -242,55 +244,63 @@ export default function WorkoutDetailsPage() {
 
       <div className="h-[calc(100vh-210px)] overflow-auto">
         {optimistWorkoutSet.map((s, i) => {
-           {optimistWorkoutSet.map((s) => {
-        let optimistSeries = s.series;
-        if (optimistUpdateData &&
-          optimistAction === "add_series"
-          && optimistUpdateData["setId"] === s.id) {
-          optimistSeries = [...optimistSeries, {
-            ...optimistUpdateData as any,
-            id: Math.random().toString(),
-          }]
-        }
-          return (
-          <div className="0" key={s.id}>
-            <details
-              open={i === data.workout.set.length - 1}
-              className="bg-white"
-            >
-              <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
-                <h3 className="px-5 text-lg font-bold">
-                  {i}. {s.exercise.title}
-                </h3>
-                <Form method="post">
-                  <input type="hidden" value={s.id} name="setId"></input>{" "}
-                  <button
-                    className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                    type="submit"
-                    name="_action"
-                    value="delete_set"
-                  >
-                    x
-                  </button>
-                </Form>
-              </summary>
+          let optimistSeries = s.series;
+          if (
+            optimistUpdateData &&
+            optimistAction === "add_series" &&
+            optimistUpdateData["setId"] === s.id
+          ) {
+            optimistSeries = [
+              ...optimistSeries,
+              {
+                ...(optimistUpdateData as any),
+                id: Math.random().toString(),
+              },
+            ];
+          }
 
-              <Form className="hidden" method="post" id={s.id} />
-              <div className="flex items-center justify-center">
-                <table className="table-fixed divide-y border">
-                  <TableHead />
-                  <tbody className="text-center">
-                    {optimistSeries.map((series) => (
-                      <TableRow series={series} key={series.id} />
-                    ))}
-                  <AddSeries set={s} disabled={transition.submission != null} />
-                  </tbody>
-                </table>
-              </div>
-            </details>
-          </div>
-        )}
-                             )}
+          return (
+            <div className="0" key={s.id}>
+              <details
+                open={i === data.workout.set.length - 1}
+                className="bg-white"
+              >
+                <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
+                  <h3 className="px-5 text-lg font-bold">
+                    {i}. {s.exercise.title}
+                  </h3>
+                  <Form method="post">
+                    <input type="hidden" value={s.id} name="setId"></input>{" "}
+                    <button
+                      className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                      type="submit"
+                      name="_action"
+                      value="delete_set"
+                    >
+                      x
+                    </button>
+                  </Form>
+                </summary>
+
+                <Form className="hidden" method="post" id={s.id} />
+                <div className="flex items-center justify-center">
+                  <table className="table-fixed divide-y border">
+                    <TableHead />
+                    <tbody className="text-center">
+                      {optimistSeries.map((series) => (
+                        <TableRow series={series} key={series.id} />
+                      ))}
+                      <AddSeries
+                        set={s}
+                        disabled={transition.submission != null}
+                      />
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            </div>
+          );
+        })}
       </div>
 
       <div className="focus:shadow-outline absolute  bottom-0 flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
