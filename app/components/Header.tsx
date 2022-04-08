@@ -19,17 +19,17 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
       <div className="mt-[40px]"></div>
 
       <nav className="absolute top-0 w-full md:flex md:flex-wrap z-20">
-        <div className="p-2 flex bg-gray-500 flex-wrap items-center justify-between">
+        <div className="p-2 flex bg-blue-500 flex-wrap items-center justify-between">
           <div className="mr-6 flex flex-shrink-0 items-center text-white">
             {/*<svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>*/}
             <NavLink to="/" className="text-xl font-semibold tracking-tight">
-                GO MUSCU!!
+              GO MUSCU!!
             </NavLink>
           </div>
           <div className="block md:hidden">
             <button
               onClick={() => setDisplay((prev) => !prev)}
-              className="flex items-center rounded border border-gray-400 px-5 py-2 text-gray-200 hover:border-white hover:text-white"
+              className="flex items-center rounded border border-gray-400 px-5 py-2 text-white hover:border-white hover:text-gray"
             >
               <svg
                 className="h-3 w-3 fill-current"
@@ -44,7 +44,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
         </div>
 
         <div
-          className={`${!display && 'hidden md:block'} block w-full flex-grow md:flex md:w-auto md:items-center bg-gray-400`}
+          className={`${!display && 'hidden md:block'} block w-full flex-grow md:flex md:w-auto md:items-center bg-blue-400`}
         >
           <div className="text-sm md:flex-grow">
             {loggedIn ? (
@@ -53,7 +53,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                   key={l}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
                   onClick={() => setDisplay(false)}
-                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3 "
+                  className="block text-white hover:text-gray md:inline-block px-5 py-1 md:py-3 "
                   to={`/${l.toLowerCase()}`}
                 >
                   {l}

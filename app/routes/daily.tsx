@@ -220,11 +220,10 @@ export default function WorkoutDetailsPage() {
     <>
       {" "}
       <Form method="post">
-        <div className="flex flex-1 items-center justify-between">
-          <h3 className="font-bold">
-            {new Date(data.workout.date).toLocaleDateString()}
-          </h3>
-        </div>
+        <h3 className="font-bold p-4">
+          {new Date(data.workout.date).toLocaleDateString()}
+        </h3>
+
       </Form>
       <Carrousel workoutId={data.workout.id} elementList={data.exerciseList} />
       {data.workout.set.map((s) => (

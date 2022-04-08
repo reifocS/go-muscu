@@ -14,7 +14,7 @@ export function getDailyWorkout({ dateEnd, dateStart, userId }: { userId: User["
         lt: dateEnd
       }
     },
-     include: {
+    include: {
       set: {
         include: {
           series: true,
@@ -80,13 +80,14 @@ export function createWorkout({
           id: userId,
         },
       },
-    
+
     },
     select: {
       id: true,
+      date: true,
       set: {
         include: {
-           series: true,
+          series: true,
           exercise: {
             select: { title: true },
           },
