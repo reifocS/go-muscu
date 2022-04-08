@@ -13,7 +13,6 @@ import {
   createSeries,
   deleteSeries,
   Series,
-  updateSerie,
 } from "~/models/series.server";
 import { getExerciseList } from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
@@ -28,7 +27,10 @@ type LoaderData = {
   workout: Workout & {
     set: WorkoutSet[];
   };
-  exerciseList: Awaited<ReturnType<typeof getExerciseList>>;
+  exerciseList: {
+    title: string;
+    id: string;
+  }[];
 };
 
 type ActionData = {
@@ -99,39 +101,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     return deleteSeries({ id });
   }
-  if (_action === "edit_series") {
-    const id = formData.get("id");
-    const repetitions = formData.get("rep");
-    const weigth = formData.get("weight");
-    if (typeof id !== "string") {
-      return json<ActionData>(
-        { errors: { id: "id is required" } },
-        { status: 400 }
-      );
-    }
-    if (typeof repetitions !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "rep is required" } },
-        { status: 400 }
-      );
-    }
-    if (typeof weigth !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "weigth is required" } },
-        { status: 400 }
-      );
-    }
 
-    return updateSerie({
-      id,
-      weigth: +weigth,
-      repetitions: +repetitions,
-    });
-  }
   if (_action === "add_series") {
     const setId = formData.get("setId");
-    const repetitions = formData.get("rep");
-    const weigth = formData.get("weight");
+    const repetitions = formData.get("repetitions");
+    const weigth = formData.get("weigth");
     if (typeof setId !== "string") {
       return json<ActionData>(
         { errors: { exerciseId: "setId is required" } },
@@ -196,13 +170,13 @@ const TableRow = ({ series }: { series: Series }) => {
   );
 };
 
-function AddSeries({ set }: { set: Set }) {
+function AddSeries({ set, disabled }: { set: Set, disabled: boolean }) {
   return (
     <tr className="h-10">
       <td className="h-full px-2 py-2 text-xs">
         <input type="hidden" name="setId" value={set.id} form={set.id} />
         <input
-          name="rep"
+          name="repetitions"
           placeholder="rep"
           type="number"
           form={set.id}
@@ -212,8 +186,8 @@ function AddSeries({ set }: { set: Set }) {
       </td>
       <td className="h-full px-2 py-2 text-xs">
         <input
-          name="weight"
-          placeholder="weight"
+          name="weigth"
+          placeholder="poids"
           type="number"
           step="0.01"
           className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
@@ -226,6 +200,7 @@ function AddSeries({ set }: { set: Set }) {
           type="submit"
           name="_action"
           form={set.id}
+          disabled={disabled}
           value="add_series"
           className="text-lg font-bold "
         >
@@ -238,7 +213,24 @@ function AddSeries({ set }: { set: Set }) {
 
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
-
+  const transition = useTransition();
+  const optimistUpdateData = transition.submission && Object.fromEntries(transition.submission.formData)
+  const optimistAction = optimistUpdateData && optimistUpdateData["_action"] as string
+  let optimistWorkoutSet = data.workout.set;
+  if (optimistUpdateData && optimistAction === "add_exercise") {
+    optimistWorkoutSet = [
+      ...optimistWorkoutSet,
+      {
+        id: Math.random().toString(),
+        exerciseId: optimistUpdateData.exerciseId as string,
+        workoutId: data.workout.id,
+        series: [],
+        exercise: {
+          title: data.exerciseList.find(e => e.id === optimistUpdateData.exerciseId)?.title || ""
+        }
+      }
+    ]
+  }
   return (
     <div className="w-full overflow-hidden">
       <div className="h-[100px] overflow-hidden p-2">
@@ -249,7 +241,18 @@ export default function WorkoutDetailsPage() {
       </div>
 
       <div className="h-[calc(100vh-210px)] overflow-auto">
-        {data.workout.set.map((s, i) => (
+        {data.workout.set.map((s, i) => {
+           {optimistWorkoutSet.map((s) => {
+        let optimistSeries = s.series;
+        if (optimistUpdateData &&
+          optimistAction === "add_series"
+          && optimistUpdateData["setId"] === s.id) {
+          optimistSeries = [...optimistSeries, {
+            ...optimistUpdateData as any,
+            id: Math.random().toString(),
+          }]
+        }
+          return (
           <div className="0" key={s.id}>
             <details
               open={i === data.workout.set.length - 1}
@@ -277,16 +280,17 @@ export default function WorkoutDetailsPage() {
                 <table className="table-fixed divide-y border">
                   <TableHead />
                   <tbody className="text-center">
-                    {s.series.map((series) => (
+                    {optimistSeries.map((series) => (
                       <TableRow series={series} key={series.id} />
                     ))}
-                    <AddSeries set={s} />
+                  <AddSeries set={s} disabled={transition.submission != null} />
                   </tbody>
                 </table>
               </div>
             </details>
           </div>
-        ))}
+        )}
+                             )}
       </div>
 
       <div className="focus:shadow-outline absolute  bottom-0 flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
@@ -301,7 +305,7 @@ const TableHead = () => {
     <thead className="bg-gray-50">
       <tr>
         <th className="px-2 py-2 text-xs text-gray-500">Rep</th>
-        <th className="px-2 py-2 text-xs text-gray-500">Weight</th>
+        <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
         <th className="px-2 py-2 text-xs text-gray-500">Action</th>
       </tr>
     </thead>

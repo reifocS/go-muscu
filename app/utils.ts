@@ -46,7 +46,7 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
-export const colors: ReadonlyArray<string> = ["blue", "green", "yellow"];
+export const colors: ReadonlyArray<string> = ["blue", "green", "yellow", "orange", "purple", "lightblue", "gray", "pink"];
 
 
 export function stringToColour(str: string) {
