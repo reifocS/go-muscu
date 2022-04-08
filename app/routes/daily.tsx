@@ -27,7 +27,10 @@ type LoaderData = {
   workout: Workout & {
     set: WorkoutSet[];
   };
-  exerciseList: Awaited<ReturnType<typeof getExerciseList>>;
+  exerciseList: {
+    title: string;
+    id: string;
+  }[];
 };
 
 type ActionData = {
@@ -201,7 +204,7 @@ export default function WorkoutDetailsPage() {
         workoutId: data.workout.id,
         series: [],
         exercise: {
-          title: data.exerciseList.find(e => e.id === optimistUpdateData.exerciseId)?.title
+          title: data.exerciseList.find(e => e.id === optimistUpdateData.exerciseId)?.title || ""
         }
       }
     ]
