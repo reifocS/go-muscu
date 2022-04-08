@@ -241,7 +241,7 @@ export default function WorkoutDetailsPage() {
       </div>
 
       <div className="h-[calc(100vh-210px)] overflow-auto">
-        {data.workout.set.map((s, i) => {
+        {optimistWorkoutSet.map((s, i) => {
            {optimistWorkoutSet.map((s) => {
         let optimistSeries = s.series;
         if (optimistUpdateData &&
