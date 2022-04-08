@@ -1,12 +1,12 @@
-import dayjs, {Dayjs} from "dayjs";
-import {useState} from "react";
-import {colors} from "~/utils";
-import type {LoaderFunction} from "remix";
-import {ActionFunction, Form, json, Link, NavLink, Outlet, redirect, useLoaderData,} from "remix";
+import dayjs, { Dayjs } from "dayjs";
+import { useState } from "react";
+import { colors } from "~/utils";
+import type { LoaderFunction } from "remix";
+import { ActionFunction, Form, json, Link, NavLink, Outlet, redirect, useLoaderData, } from "remix";
 
-import {requireUserId} from "~/session.server";
-import {createWorkout, getWorkoutList, Workout,} from "~/models/workout.server";
-import {getExerciseTitleOrdered} from "~/models/exercise.server";
+import { requireUserId } from "~/session.server";
+import { createWorkout, getWorkoutList, Workout, } from "~/models/workout.server";
+import { getExerciseTitleOrdered } from "~/models/exercise.server";
 
 type WorkoutWithExercise = Workout & {
   set: {
@@ -45,13 +45,18 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/calendar/${workout.id}`);
 };
 
+const DATE_FORMAT = "MM/DD/YYYY"
+
+const getKey = (date: Date) => dayjs(date).format(DATE_FORMAT)
+
+
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
   const workoutList = await getWorkoutList({ userId });
   const exerciseList = await getExerciseTitleOrdered({ userId });
   const dateMap: Record<string, WorkoutWithExercise> = {};
   for (const w of workoutList) {
-    dateMap[w.date.getTime()] = w;
+    dateMap[getKey(w.date)] = w;
   }
   return json<LoaderData>({ dateMap, exerciseList });
 };
@@ -184,7 +189,7 @@ const Week = ({
       {weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
         const isPast = daysInMonth[day]?.isBefore(startDate);
-        const workout = dateMap[daysInMonth[day]?.toDate().getTime()];
+        const workout = dateMap[daysInMonth[day]?.format(DATE_FORMAT)];
         return (
           <Cell
             exerciseList={exerciseList}
