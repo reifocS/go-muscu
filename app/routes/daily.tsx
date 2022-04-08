@@ -189,7 +189,6 @@ export default function WorkoutDetailsPage() {
   const transition = useTransition();
   const optimistUpdateData = transition.submission && Object.fromEntries(transition.submission.formData)
   const optimistAction = optimistUpdateData && optimistUpdateData["_action"] as string
-  console.log(optimistUpdateData);
   let optimistWorkoutSet = data.workout.set;
   if (optimistUpdateData && optimistAction === "add_exercise") {
     optimistWorkoutSet = [
