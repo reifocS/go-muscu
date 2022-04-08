@@ -12,14 +12,16 @@ import { useOptionalUser } from "~/utils";
 import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import  tailwindGlobalCss from "./styles/global.css"
+import tailwindGlobalCss from "./styles/global.css";
 
 import { getUser } from "./session.server";
 import { Header } from "./components/Header";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }
-    , { rel: "stylesheet", href: tailwindGlobalCss }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    { rel: "stylesheet", href: tailwindGlobalCss },
+  ];
 };
 
 export const meta: MetaFunction = () => ({
@@ -46,7 +48,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="relative">
         <Header user={user} />
         <Outlet />
         <ScrollRestoration />

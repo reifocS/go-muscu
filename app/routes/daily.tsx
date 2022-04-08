@@ -242,7 +242,7 @@ export default function WorkoutDetailsPage() {
         />
       </div>
 
-      <div className="h-[calc(100vh-210px)] overflow-auto">
+      <div className="h-[calc(100vh-140px)] overflow-auto">
         {optimistWorkoutSet.map((s, i) => {
           let optimistSeries = s.series;
           if (

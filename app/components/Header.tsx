@@ -9,17 +9,17 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const links = ["Notes", "Exercise", "Calendar", "Daily"]
+const links = ["Notes", "Exercise", "Calendar", "Daily"];
 
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
 
   return (
     <div>
-      <div className="mt-[40px]"></div>
+      <div className="pt-[40px]"></div>
 
-      <nav className="absolute top-0 w-full md:flex md:flex-wrap z-20">
-        <div className="p-2 flex bg-blue-500 flex-wrap items-center justify-between">
+      <nav className="absolute top-0 z-20 w-full md:flex md:flex-wrap">
+        <div className="flex flex-wrap items-center justify-between bg-blue-500 p-2">
           <div className="mr-6 flex flex-shrink-0 items-center text-white">
             {/*<svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>*/}
             <NavLink to="/" className="text-xl font-semibold tracking-tight">
@@ -29,7 +29,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
           <div className="block md:hidden">
             <button
               onClick={() => setDisplay((prev) => !prev)}
-              className="flex items-center rounded border border-gray-400 px-5 py-2 text-white hover:border-white hover:text-gray"
+              className="hover:text-gray flex items-center rounded border border-gray-400 px-5 py-2 text-white hover:border-white"
             >
               <svg
                 className="h-3 w-3 fill-current"
@@ -44,27 +44,31 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
         </div>
 
         <div
-          className={`${!display && 'hidden md:block'} block w-full flex-grow md:flex md:w-auto md:items-center bg-blue-400`}
+          className={`${
+            !display && "hidden md:block"
+          } block w-full flex-grow bg-blue-400 md:flex md:w-auto md:items-center`}
         >
           <div className="text-sm md:flex-grow">
             {loggedIn ? (
               <>
-                {links.map(l => <NavLink
-                  key={l}
-                  style={({ isActive }) => (isActive ? activeStyle : {})}
-                  onClick={() => setDisplay(false)}
-                  className="block text-white hover:text-gray md:inline-block px-5 py-1 md:py-3 "
-                  to={`/${l.toLowerCase()}`}
-                >
-                  {l}
-                </NavLink>)}
+                {links.map((l) => (
+                  <NavLink
+                    key={l}
+                    style={({ isActive }) => (isActive ? activeStyle : {})}
+                    onClick={() => setDisplay(false)}
+                    className="hover:text-gray block px-5 py-1 text-white md:inline-block md:py-3 "
+                    to={`/${l.toLowerCase()}`}
+                  >
+                    {l}
+                  </NavLink>
+                ))}
               </>
             ) : (
               <>
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
                   onClick={() => setDisplay(false)}
-                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
+                  className="block px-5 py-1 text-gray-200 hover:text-white md:inline-block md:py-3"
                   to="/join"
                 >
                   Sign Up
@@ -72,7 +76,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 <NavLink
                   onClick={() => setDisplay(false)}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block text-gray-200 hover:text-white md:inline-block px-5 py-1 md:py-3"
+                  className="block px-5 py-1 text-gray-200 hover:text-white md:inline-block md:py-3"
                   to="/login"
                 >
                   Login
@@ -85,7 +89,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <Form action="/logout" method="post">
                 <button
                   type="submit"
-                  className="mx-5 my-2 md:my-0 inline-block rounded border border-white px-4 py-2 text-sm leading-none text-white hover:border-transparent hover:bg-white hover:text-gray-500 md:mt-0"
+                  className="mx-5 my-2 inline-block rounded border border-white px-4 py-2 text-sm leading-none text-white hover:border-transparent hover:bg-white hover:text-gray-500 md:my-0 md:mt-0"
                 >
                   Logout
                 </button>
