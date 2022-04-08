@@ -189,6 +189,22 @@ export default function WorkoutDetailsPage() {
   const transition = useTransition();
   const optimistUpdateData = transition.submission && Object.fromEntries(transition.submission.formData)
   const optimistAction = optimistUpdateData && optimistUpdateData["_action"] as string
+  console.log(optimistUpdateData);
+  let optimistWorkoutSet = data.workout.set;
+  if (optimistUpdateData && optimistAction === "add_exercise") {
+    optimistWorkoutSet = [
+      ...optimistWorkoutSet,
+      {
+        id: Math.random().toString(),
+        exerciseId: optimistUpdateData.exerciseId as string,
+        workoutId: data.workout.id,
+        series: [],
+        exercise: {
+          title: data.exerciseList.find(e => e.id === optimistUpdateData.exerciseId)?.title
+        }
+      }
+    ]
+  }
   return (
     <>
       {" "}
@@ -199,7 +215,7 @@ export default function WorkoutDetailsPage() {
 
       </Form>
       <Carrousel workoutId={data.workout.id} elementList={data.exerciseList} />
-      {data.workout.set.map((s) => {
+      {optimistWorkoutSet.map((s) => {
         let optimistSeries = s.series;
         if (optimistUpdateData &&
           optimistAction === "add_series"
@@ -235,9 +251,6 @@ export default function WorkoutDetailsPage() {
                       <TableRow series={series} key={series.id} />
                     )
                   })}
-                  {optimistUpdateData && optimistAction === "add_exercise" &&
-                    <TableRow series={optimistUpdateData as any} />
-                  }
                   <AddSeries set={s} />
                 </tbody>
               </table>
