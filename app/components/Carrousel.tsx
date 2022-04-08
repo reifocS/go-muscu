@@ -44,9 +44,8 @@ function Card({
       <button
         type="submit"
         name="_action"
-        className="focus:shadow-outline m-2 rounded-lg bg-blue-600 px-5
-      font-bold
-          text-blue-100 transition-colors duration-150 hover:bg-blue-700"
+        className="focus:shadow-outline m-1 rounded-lg bg-blue-600 p-7 text-lg font-bold
+          text-white transition-colors duration-150 hover:bg-blue-700"
         value="add_exercise"
       >
         {el.title}
@@ -61,7 +60,7 @@ function LeftArrow() {
 
   return (
     <button
-      className="px-3"
+      className="bg-transparent py-5 px-1"
       disabled={isFirstItemVisible}
       onClick={() => scrollPrev()}
     >
@@ -75,7 +74,7 @@ function RightArrow() {
 
   return (
     <button
-      className="px-3"
+      className="bg-transparent py-5 px-1"
       disabled={isLastItemVisible}
       onClick={() => scrollNext()}
     >
