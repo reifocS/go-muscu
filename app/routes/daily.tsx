@@ -13,7 +13,6 @@ import {
   createSeries,
   deleteSeries,
   Series,
-  updateSerie,
 } from "~/models/series.server";
 import { getExerciseList } from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
@@ -99,39 +98,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
     return deleteSeries({ id });
   }
-  if (_action === "edit_series") {
-    const id = formData.get("id");
-    const repetitions = formData.get("rep");
-    const weigth = formData.get("weight");
-    if (typeof id !== "string") {
-      return json<ActionData>(
-        { errors: { id: "id is required" } },
-        { status: 400 }
-      );
-    }
-    if (typeof repetitions !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "rep is required" } },
-        { status: 400 }
-      );
-    }
-    if (typeof weigth !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "weigth is required" } },
-        { status: 400 }
-      );
-    }
 
-    return updateSerie({
-      id,
-      weigth: +weigth,
-      repetitions: +repetitions,
-    });
-  }
   if (_action === "add_series") {
     const setId = formData.get("setId");
-    const repetitions = formData.get("rep");
-    const weigth = formData.get("weight");
+    const repetitions = formData.get("repetitions");
+    const weigth = formData.get("weigth");
     if (typeof setId !== "string") {
       return json<ActionData>(
         { errors: { exerciseId: "setId is required" } },
@@ -183,7 +154,7 @@ function AddSeries({ set }: { set: Set }) {
       <td className={`h-full px-2 py-2 text-xs`}>
         <input type="hidden" name="setId" value={set.id} form={set.id} />
         <input
-          name="rep"
+          name="repetitions"
           placeholder="rep"
           type="number"
           form={set.id}
@@ -195,8 +166,8 @@ function AddSeries({ set }: { set: Set }) {
       </td>
       <td className={`h-full px-2 py-2 text-xs`}>
         <input
-          name="weight"
-          placeholder="weight"
+          name="weigth"
+          placeholder="poids"
           type="number"
           step="0.01"
           className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
@@ -215,7 +186,10 @@ function AddSeries({ set }: { set: Set }) {
 
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
-
+  const transition = useTransition();
+  const optimistUpdateData = transition.submission && Object.fromEntries(transition.submission.formData)
+  const optimistAction = optimistUpdateData && optimistUpdateData["_action"] as string
+  console.log(optimistUpdateData)
   return (
     <>
       {" "}
@@ -226,36 +200,52 @@ export default function WorkoutDetailsPage() {
 
       </Form>
       <Carrousel workoutId={data.workout.id} elementList={data.exerciseList} />
-      {data.workout.set.map((s) => (
-        <div className="my-2" key={s.id}>
-          <div className="flex items-center justify-center">
-            <h3 className="mr-2 font-bold">{s.exercise.title}</h3>
-            <Form method="post">
-              <input type="hidden" value={s.id} name="setId"></input>{" "}
-              <button
-                className="focus:shadow-outline m-1 rounded-lg bg-red-700 p-1 text-red-100 transition-colors duration-150 hover:bg-red-800"
-                type="submit"
-                name="_action"
-                value="delete_set"
-              >
-                remove
+      {data.workout.set.map((s) => {
+        let optimistSeries = s.series;
+        if (optimistUpdateData &&
+          optimistAction === "add_series"
+          && optimistUpdateData["setId"] === s.id) {
+          optimistSeries = [...optimistSeries, {
+            ...optimistUpdateData as any,
+            id: Math.random().toString(),
+          }]
+        }
+        return (
+          <div className="my-2" key={s.id}>
+            <div className="flex items-center justify-center">
+              <h3 className="mr-2 font-bold">{s.exercise.title}</h3>
+              <Form method="post">
+                <input type="hidden" value={s.id} name="setId"></input>{" "}
+                <button
+                  className="focus:shadow-outline m-1 rounded-lg bg-red-700 p-1 text-red-100 transition-colors duration-150 hover:bg-red-800"
+                  type="submit"
+                  name="_action"
+                  value="delete_set"
+                >
+                  remove
               </button>
-            </Form>
+              </Form>
+            </div>
+            <Form className="hidden" method="post" id={s.id} />
+            <div className="flex items-center justify-center">
+              <table className="mt-2 table-fixed divide-y divide-gray-300 border">
+                <TableHead />
+                <tbody className="text-center">
+                  {optimistSeries.map((series) => {
+                    return (
+                      <TableRow series={series} key={series.id} />
+                    )
+                  })}
+                  {optimistUpdateData && optimistAction === "add_exercise" &&
+                    <TableRow series={optimistUpdateData as any} />
+                  }
+                  <AddSeries set={s} />
+                </tbody>
+              </table>
+            </div>
           </div>
-          <Form className="hidden" method="post" id={s.id} />
-          <div className="flex items-center justify-center">
-            <table className="mt-2 table-fixed divide-y divide-gray-300 border">
-              <TableHead />
-              <tbody className="text-center">
-                {s.series.map((series) => (
-                  <TableRow series={series} key={series.id} />
-                ))}
-                <AddSeries set={s} />
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </>
   );
 }
@@ -265,7 +255,7 @@ const TableHead = () => {
     <thead className="bg-gray-50">
       <tr>
         <th className="px-2 py-2 text-xs text-gray-500">Rep</th>
-        <th className="px-2 py-2 text-xs text-gray-500">Weight</th>
+        <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
         <th className="px-2 py-2 text-xs text-gray-500">Action</th>
       </tr>
     </thead>
