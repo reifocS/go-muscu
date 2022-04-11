@@ -76,7 +76,9 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        <Meta /> <Links />
+        <link rel="manifest" href="/manifest/manifest.json" />
+        <Meta />
+        <Links />
       </head>
       <body className="relative">
         <Header user={user} /> <Outlet /> <ScrollRestoration /> <Scripts />
