@@ -75,8 +75,7 @@ export default function App() {
 
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href="/manifest/manifest.json" />
+      <head><link rel="manifest" href="/resources/manifest.json" />
         <Meta />
         <Links />
       </head>
