@@ -2,10 +2,23 @@ import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { colors } from "~/utils";
 import type { LoaderFunction } from "remix";
-import { ActionFunction, Form, json, Link, NavLink, Outlet, redirect, useLoaderData, } from "remix";
+import {
+  ActionFunction,
+  Form,
+  json,
+  Link,
+  NavLink,
+  Outlet,
+  redirect,
+  useLoaderData,
+} from "remix";
 
 import { requireUserId } from "~/session.server";
-import { createWorkout, getWorkoutList, Workout, } from "~/models/workout.server";
+import {
+  createWorkout,
+  getWorkoutList,
+  Workout,
+} from "~/models/workout.server";
 import { getExerciseTitleOrdered } from "~/models/exercise.server";
 
 type WorkoutWithExercise = Workout & {
@@ -18,7 +31,7 @@ type WorkoutWithExercise = Workout & {
 
 type LoaderData = {
   dateMap: Record<string, WorkoutWithExercise>;
-  exerciseList: Array<{ title: string, id: string }>;
+  exerciseList: Array<{ title: string; id: string }>;
 };
 
 type ActionData = {
@@ -45,10 +58,9 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/calendar/${workout.id}`);
 };
 
-const DATE_FORMAT = "MM/DD/YYYY"
+const DATE_FORMAT = "MM/DD/YYYY";
 
-const getKey = (date: Date) => dayjs(date).format(DATE_FORMAT)
-
+const getKey = (date: Date) => dayjs(date).format(DATE_FORMAT);
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
@@ -74,20 +86,19 @@ export default function Calendar() {
       />
 
       <div className="flex flex-wrap">
-        {data.exerciseList.map((e, index) =>
+        {data.exerciseList.map((e, index) => (
           <div key={e.title} className="px-2">
             <Link className="flex items-center " to={`../exercise/${e.id}`}>
               {e.title}
               <div
-                className="rounded-full w-3.5 h-3.5 ml-1.5"
+                className="ml-1.5 h-3.5 w-3.5 rounded-full"
                 style={{ backgroundColor: colors[index] }}
               ></div>
             </Link>
           </div>
-        )}
+        ))}
       </div>
 
-      <br />
       <div className="flex items-center">
         <button
           className="px-2 py-2"
@@ -112,7 +123,7 @@ const daysInWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const TableHead = () => {
   return (
-    <thead className="bg-gray-50">
+    <thead>
       <tr>
         {daysInWeek.map((d) => (
           <th key={d} className="px-2 py-2 text-xs text-gray-500">
@@ -128,32 +139,44 @@ const weekArray: Array<number> = Array(7).fill(0);
 
 const Cell = ({
   day,
-  isPast,
+  isGray,
   workout,
   exerciseList,
 }: {
   day?: Dayjs;
-  isPast: boolean;
+  isGray: boolean;
   workout?: WorkoutWithExercise;
   exerciseList: LoaderData["exerciseList"];
 }) => {
   if (!day) {
-    return <td className={`px-2 py-2 opacity-0`}>X</td>;
+    return null;
   }
 
   return (
-    <td className={`px-2 py-2 h-full ${isPast && "text-gray-500"} text-xs`}>
+    <td
+      className={`h-full px-2 py-3 ${isGray && "text-gray-500"} text-xs  ${
+        dayjs(day).isSame(dayjs(), "day") && "bg-gray-600"
+      }`}
+    >
       {workout ? (
         <NavLink to={workout.id}>
-          <span className="font-bold md:text-lg">{day?.format("DD") ?? ""}</span>
+          <span className="font-bold md:text-lg">
+            {day?.format("DD") ?? ""}
+          </span>
           <div className="flex justify-center">
             {workout.set.map((s, i) => (
-              <div key={i} className="rounded-full w-2.5 h-2.5 mx-[1px]" style={{
-                backgroundColor: colors[
-                  exerciseList.findIndex((e) => e.title === s.exercise.title)
-                ]
-              }}>
-              </div>
+              <div
+                key={i}
+                className="mx-[1px] h-2.5 w-2.5 rounded-full"
+                style={{
+                  backgroundColor:
+                    colors[
+                      exerciseList.findIndex(
+                        (e) => e.title === s.exercise.title
+                      )
+                    ],
+                }}
+              ></div>
             ))}
           </div>
         </NavLink>
@@ -164,7 +187,9 @@ const Cell = ({
             type="hidden"
             value={day.format("MM/DD/YYYY")}
           ></input>
-          <button className="md:text-lg" type="submit">{day?.format("DD") ?? ""}</button>
+          <button className="md:text-lg" type="submit">
+            {day?.format("DD") ?? ""}
+          </button>
         </Form>
       )}
     </td>
@@ -175,12 +200,14 @@ const Week = ({
   weekNumber,
   daysInMonth,
   startDate,
+  endDate,
   dateMap,
   exerciseList,
 }: {
   weekNumber: number;
   daysInMonth: Array<Dayjs>;
   startDate: Dayjs;
+  endDate: Dayjs;
   dateMap: LoaderData["dateMap"];
   exerciseList: LoaderData["exerciseList"];
 }) => {
@@ -188,14 +215,16 @@ const Week = ({
     <tr className="h-10 md:h-20 lg:h-24">
       {weekArray.map((_, index) => {
         const day = weekNumber * 7 + (index + 1);
-        const isPast = daysInMonth[day]?.isBefore(startDate);
+        const isGray =
+          daysInMonth[day]?.isBefore(startDate) ||
+          daysInMonth[day]?.isAfter(endDate);
         const workout = dateMap[daysInMonth[day]?.format(DATE_FORMAT)];
         return (
           <Cell
             exerciseList={exerciseList}
             day={daysInMonth[day]}
             key={index}
-            isPast={isPast}
+            isGray={isGray}
             workout={workout}
           />
         );
@@ -213,8 +242,15 @@ const getAllDaysInMonth = (
   for (let i = firstDayIndex + 1; i > 0; --i) {
     days.push(startDate.subtract(i, "day"));
   }
+
   for (let i = 0; i < daysInMonth; ++i) {
     days.push(startDate.add(i, "day"));
+  }
+
+  const length_days = days.length;
+  const next_month = startDate.add(1, "month");
+  for (let i = 0; i <= 6 * 7 - length_days; i++) {
+    days.push(next_month.add(i, "day"));
   }
   return days;
 };
@@ -232,20 +268,25 @@ const TableMonth = ({
 }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
-  return (<table
-    className="table-fixed divide-y divide-gray-300 mt-2 border w-full">
-
-    <TableHead />
-    <tbody className="bg-white divide-y divide-gray-300 text-center">
-      {weeks.map((_, i) => {
-        return (
-          <Week key={i} weekNumber={i} startDate={startDate} daysInMonth={allDaysInMonth}
-            exerciseList={exerciseList}
-            dateMap={dateMap}
-          />
-        )
-      })}
-    </tbody>
-  </table>
-  )
-}
+  const endDate = startDate.add(1, "month").subtract(1, "day");
+  return (
+    <table className="mt-2 w-full table-fixed divide-y divide-gray-300">
+      <TableHead />
+      <tbody className="divide-y divide-gray-300 text-center">
+        {weeks.map((_, i) => {
+          return (
+            <Week
+              key={i}
+              weekNumber={i}
+              startDate={startDate}
+              endDate={endDate}
+              daysInMonth={allDaysInMonth}
+              exerciseList={exerciseList}
+              dateMap={dateMap}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};

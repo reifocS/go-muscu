@@ -1,10 +1,15 @@
-import type {ActionFunction, LoaderFunction} from "remix";
-import {Form, json, redirect, useCatch, useLoaderData} from "remix";
-import type {Set} from "~/models/set.server";
+import type { ActionFunction, LoaderFunction } from "remix";
+import { Form, json, redirect, useCatch, useLoaderData } from "remix";
+import type { Set } from "~/models/set.server";
 import invariant from "tiny-invariant";
-import {deleteExercise, Exercise, getExercise, updateExercise,} from "~/models/exercise.server";
-import type {Series} from "~/models/series.server";
-import {requireUserId} from "~/session.server";
+import {
+  deleteExercise,
+  Exercise,
+  getExercise,
+  updateExercise,
+} from "~/models/exercise.server";
+import type { Series } from "~/models/series.server";
+import { requireUserId } from "~/session.server";
 import dayjs from "dayjs";
 
 type LoaderData = {
@@ -43,7 +48,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         { status: 400 }
       );
     }
-    return updateExercise({ title, id: params.exerciseId })
+    return updateExercise({ title, id: params.exerciseId });
   }
   await deleteExercise({ userId, id: params.exerciseId });
 
@@ -57,24 +62,30 @@ export default function ExerciseDetailsPage() {
     <div>
       <Form method="post">
         <div className="flex flex-wrap">
-          <input name="title"
+          <input
+            name="title"
             key={data.exercise.id}
-            className="text-md px-1 py-1 md:text-md font-bold shadow appearance-none border rounded mr-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            defaultValue={data.exercise.title}></input>
+            className="text-md md:text-md focus:shadow-outline mr-2 appearance-none rounded border px-1 py-1 font-bold leading-tight text-gray-700 shadow focus:outline-none"
+            defaultValue={data.exercise.title}
+          ></input>
           <button
             name="_action"
-            className="bg-teal-600 text-white hover:text-teal-800 text-sm py-1 px-2 rounded"
+            className="rounded py-1 px-2 text-sm text-white hover:text-teal-800"
             value="edit"
-            type={"submit"}>edit</button>
+            type={"submit"}
+          >
+            edit
+          </button>
         </div>
-
       </Form>
       <hr className="my-4" />
       <ul className="list-inside">
         {data.exercise.set.map((s) => {
           return (
             <li className="list-item" key={s.id}>
-              <div className="font-bold">{dayjs(s.workout.date).format("DD/MM")}</div>
+              <div className="font-bold">
+                {dayjs(s.workout.date).format("DD/MM")}
+              </div>
               <ul className="list-inside">
                 {s.series.map((series) => {
                   return (
@@ -90,10 +101,7 @@ export default function ExerciseDetailsPage() {
       </ul>
 
       <Form method="post">
-        <button
-          type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
+        <button type="submit" className="rounded py-2 px-4 text-white">
           Delete
         </button>
       </Form>

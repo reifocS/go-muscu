@@ -7,8 +7,8 @@ export default function Index() {
   return (
     <main className="absolute top-0 h-screen">
       {!user && (
-        <div className="flex h-full items-center justify-center justify-center">
-          <div className="text-center">
+        <div className="flex h-full items-center">
+          <div className="justify-center text-center">
             <p className="p-5">Please log in to use this application.</p>
             <Link
               to="login"
