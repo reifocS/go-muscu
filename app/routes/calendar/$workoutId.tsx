@@ -1,11 +1,16 @@
-import type {ActionFunction, LoaderFunction} from "remix";
-import {Form, json, Link, redirect, useCatch, useLoaderData} from "remix";
+import type { ActionFunction, LoaderFunction } from "remix";
+import { Form, json, Link, redirect, useCatch, useLoaderData } from "remix";
 import invariant from "tiny-invariant";
-import {deleteWorkout, getWorkout, Workout} from "~/models/workout.server";
-import {requireUserId} from "~/session.server";
-import {createSet, deleteSet, Set} from "~/models/set.server";
-import {createSeries, deleteSeries, Series, updateSerie,} from "~/models/series.server";
-import {getExerciseList} from "~/models/exercise.server";
+import { deleteWorkout, getWorkout, Workout } from "~/models/workout.server";
+import { requireUserId } from "~/session.server";
+import { createSet, deleteSet, Set } from "~/models/set.server";
+import {
+  createSeries,
+  deleteSeries,
+  Series,
+  updateSerie,
+} from "~/models/series.server";
+import { getExerciseList } from "~/models/exercise.server";
 
 type LoaderData = {
   workout: Workout & {
@@ -143,17 +148,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
   return (
-    <div
-      className="bg-[#00000080] absolute h-full w-full pt-[100px] px-[20px] z-10 overflow-hidden"
-    >
-      <div className="bg-white p-2 w-full h-[100%] rounded-lg bg-white">
+    <div className="absolute top-0 z-10 h-screen w-full overflow-hidden bg-[#00000080] px-[20px] pt-[100px]">
+      <div className="h-[100%] w-full rounded-lg bg-gray-900 p-2">
         <div className="flex justify-between">
           <h3 className="font-bold">
             {new Date(data.workout.date).toLocaleDateString()}
           </h3>
           <Link
             to=".."
-            className="px-3 items-center rounded border border-gray-400"
+            className="items-center rounded border border-gray-400 px-3"
           >
             close
           </Link>
@@ -231,7 +234,11 @@ export default function WorkoutDetailsPage() {
                 <li key={exercise.id}>
                   <div>{exercise.title}</div>
                   <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" name="exerciseId" value={exercise.id} />
+                    <input
+                      type="hidden"
+                      name="exerciseId"
+                      value={exercise.id}
+                    />
                     <button type="submit" name="_action" value="add_exercise">
                       Add
                     </button>
@@ -240,10 +247,10 @@ export default function WorkoutDetailsPage() {
               );
             })}
         </ul>
-          
+
         <hr />
 
-        <Form method="post" >
+        <Form method="post">
           <button type="submit" name="_action" value="delete_workout">
             Delete
           </button>

@@ -1,35 +1,21 @@
-import {CSSProperties, FC} from "react";
+import { FC } from "react";
 
 type Props = {
-    isOpen: boolean;
-};
-
-const getStyle = (isOpen: boolean): CSSProperties => {
-    if (isOpen) {
-        return {
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            top: 0,
-            overflow: "hidden",
-            transition: "all 0.5s",
-            backgroundColor: "lightgray",
-            zIndex: 9999
-        };
-    }
-    return {
-        position: "absolute",
-        width: "100%",
-        overflow: "hidden",
-        transition: "all 0.5s",
-        top: "100%",
-        height: 0,
-        bottom: 0
-    };
+  isOpen: boolean;
 };
 
 const Minuteur: FC<Props> = ({ children, isOpen }) => {
-    return <div style={getStyle(isOpen)}>{children}</div>;
+  return (
+    <div
+      className={`absolute top-0 z-10 h-screen w-full overflow-hidden bg-[#00000080] px-[20px] pt-[100px] ${
+        !isOpen && "hidden"
+      }`}
+    >
+      <div className="h-[100%] w-full rounded-lg bg-gray-800 p-2">
+        {children}
+      </div>
+    </div>
+  );
 };
 
 export default Minuteur;
