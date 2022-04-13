@@ -12,7 +12,7 @@ export default function Index() {
             <p className="p-5">Please log in to use this application.</p>
             <Link
               to="login"
-              className="rounded-full bg-gray-600 px-3 py-2 font-bold"
+              className="rounded bg-gray-600 px-8 py-2 font-bold"
             >
               Log in
             </Link>
