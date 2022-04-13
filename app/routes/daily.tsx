@@ -1,354 +1,451 @@
 import dayjs from "dayjs";
-import { ActionFunction, LoaderFunction, useTransition } from "remix";
-import { Form, json, redirect, useCatch, useLoaderData } from "remix";
-import {
-  deleteWorkout,
-  Workout,
-  createWorkout,
-  getDailyWorkout,
-} from "~/models/workout.server";
-import { requireUserId } from "~/session.server";
-import { createSet, deleteSet, Set } from "~/models/set.server";
-import { createSeries, deleteSeries, Series } from "~/models/series.server";
-import { getExerciseList } from "~/models/exercise.server";
+import {ActionFunction, Form, json, LoaderFunction, redirect, useCatch, useLoaderData, useTransition} from "remix";
+import {createWorkout, deleteWorkout, getDailyWorkout, Workout,} from "~/models/workout.server";
+import {requireUserId} from "~/session.server";
+import {createSet, deleteSet, Set} from "~/models/set.server";
+import {createSeries, deleteSeries, Series} from "~/models/series.server";
+import {getExerciseList} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
+import {useState} from "react";
+import Minuteur from "~/components/Minuteur";
+import Chronometre from "~/components/Chronometre";
 
 type WorkoutSet = Set & {
-  series: Series[];
-  exercise: {
-    title: string;
-  };
+    series: Series[];
+    exercise: {
+        title: string;
+    };
 };
 type LoaderData = {
-  workout: Workout & {
-    set: WorkoutSet[];
-  };
-  exerciseList: {
-    title: string;
-    id: string;
-  }[];
+    workout: Workout & {
+        set: WorkoutSet[];
+    };
+    exerciseList: {
+        title: string;
+        id: string;
+    }[];
 };
 
 type ActionData = {
-  errors?: {
-    workoutId?: string;
-    exerciseId?: string;
-    setId?: string;
-    rep?: string;
-    weigth?: string;
-    id?: string;
-  };
+    errors?: {
+        workoutId?: string;
+        exerciseId?: string;
+        setId?: string;
+        rep?: string;
+        weigth?: string;
+        id?: string;
+    };
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+export const loader: LoaderFunction = async ({request, params}) => {
+    const userId = await requireUserId(request);
 
-  const todayMidnight = dayjs().startOf("day");
-  const tomorrowMidnight = dayjs(todayMidnight.add(1));
+    const todayMidnight = dayjs().startOf("day");
+    const tomorrowMidnight = dayjs(todayMidnight.add(1));
 
-  let workout = await getDailyWorkout({
-    userId,
-    dateStart: todayMidnight.toDate(),
-    dateEnd: tomorrowMidnight.toDate(),
-  });
+    let workout = await getDailyWorkout({
+        userId,
+        dateStart: todayMidnight.toDate(),
+        dateEnd: tomorrowMidnight.toDate(),
+    });
 
-  if (!workout) {
-    workout = (await createWorkout({
-      date: todayMidnight.toDate(),
-      userId,
-    })) as LoaderData["workout"];
-  }
+    if (!workout) {
+        workout = (await createWorkout({
+            date: todayMidnight.toDate(),
+            userId,
+        })) as LoaderData["workout"];
+    }
 
-  const exerciseList = await getExerciseList({ userId });
+    const exerciseList = await getExerciseList({userId});
 
-  return json<LoaderData>({ workout, exerciseList });
+    return json<LoaderData>({workout, exerciseList});
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
-  const formData = await request.formData();
-  const { _action } = Object.fromEntries(formData);
-  if (_action === "delete_workout") {
-    const workoutId = formData.get("workoutId");
-    if (!workoutId || typeof workoutId !== "string")
-      throw new Error("No workout id");
-    await deleteWorkout({ userId, id: workoutId });
-    return redirect("/daily");
-  }
-  if (_action === "delete_set") {
-    const setId = formData.get("setId");
+export const action: ActionFunction = async ({request, params}) => {
+    const userId = await requireUserId(request);
+    const formData = await request.formData();
+    const {_action} = Object.fromEntries(formData);
+    if (_action === "delete_workout") {
+        const workoutId = formData.get("workoutId");
+        if (!workoutId || typeof workoutId !== "string")
+            throw new Error("No workout id");
+        await deleteWorkout({userId, id: workoutId});
+        return redirect("/daily");
+    }
+    if (_action === "delete_set") {
+        const setId = formData.get("setId");
 
-    if (typeof setId !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "setId is required" } },
-        { status: 400 }
-      );
+        if (typeof setId !== "string") {
+            return json<ActionData>(
+                {errors: {exerciseId: "setId is required"}},
+                {status: 400}
+            );
+        }
+        return deleteSet({id: setId});
     }
-    return deleteSet({ id: setId });
-  }
-  if (_action === "delete_series") {
-    const id = formData.get("id");
+    if (_action === "delete_series") {
+        const id = formData.get("id");
 
-    if (typeof id !== "string") {
-      return json<ActionData>(
-        { errors: { id: "id is required" } },
-        { status: 400 }
-      );
+        if (typeof id !== "string") {
+            return json<ActionData>(
+                {errors: {id: "id is required"}},
+                {status: 400}
+            );
+        }
+        return deleteSeries({id});
     }
-    return deleteSeries({ id });
-  }
 
-  if (_action === "add_series") {
-    const setId = formData.get("setId");
-    const repetitions = formData.get("repetitions");
-    const weigth = formData.get("weigth");
-    if (typeof setId !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "setId is required" } },
-        { status: 400 }
-      );
+    if (_action === "add_series") {
+        const setId = formData.get("setId");
+        const repetitions = formData.get("repetitions");
+        const weigth = formData.get("weigth");
+        if (typeof setId !== "string") {
+            return json<ActionData>(
+                {errors: {exerciseId: "setId is required"}},
+                {status: 400}
+            );
+        }
+        if (typeof repetitions !== "string") {
+            return json<ActionData>(
+                {errors: {exerciseId: "rep is required"}},
+                {status: 400}
+            );
+        }
+        if (typeof weigth !== "string") {
+            return json<ActionData>(
+                {errors: {exerciseId: "weigth is required"}},
+                {status: 400}
+            );
+        }
+        return createSeries({setId, repetitions: +repetitions, weigth: +weigth});
     }
-    if (typeof repetitions !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "rep is required" } },
-        { status: 400 }
-      );
+    if (_action === "add_exercise") {
+        const exerciseId = formData.get("exerciseId");
+        if (typeof exerciseId !== "string") {
+            return json<ActionData>(
+                {errors: {exerciseId: "exerciseId is required"}},
+                {status: 400}
+            );
+        }
+        const workoutId = formData.get("workoutId");
+        if (!workoutId || typeof workoutId !== "string")
+            throw new Error("No workout id");
+        return createSet({workoutId, exerciseId});
     }
-    if (typeof weigth !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "weigth is required" } },
-        { status: 400 }
-      );
-    }
-    return createSeries({ setId, repetitions: +repetitions, weigth: +weigth });
-  }
-  if (_action === "add_exercise") {
-    const exerciseId = formData.get("exerciseId");
-    if (typeof exerciseId !== "string") {
-      return json<ActionData>(
-        { errors: { exerciseId: "exerciseId is required" } },
-        { status: 400 }
-      );
-    }
-    const workoutId = formData.get("workoutId");
-    if (!workoutId || typeof workoutId !== "string")
-      throw new Error("No workout id");
-    return createSet({ workoutId, exerciseId });
-  }
 };
 
-const TableRow = ({ series }: { series: Series }) => {
-  return (
-    <tr className="h-10">
-      <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
-      <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
-      <td className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
-        <Form method="post">
-          <input
-            type="text"
-            className="hidden"
-            name="id"
-            value={series.id}
-            readOnly
-          />
+const TableRow = ({series}: { series: Series }) => {
+    return (
+        <tr className="h-10">
+            <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
+            <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
+            <td className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
+                <Form method="post">
+                    <input
+                        type="text"
+                        className="hidden"
+                        name="id"
+                        value={series.id}
+                        readOnly
+                    />
 
-          <button
-            className="h-[50px] w-full font-bold"
-            type="submit"
-            name="_action"
-            value="delete_series"
-          >
-            x
-          </button>
-        </Form>
-      </td>
-    </tr>
-  );
+                    <button
+                        className="h-[50px] w-full font-bold"
+                        type="submit"
+                        name="_action"
+                        value="delete_series"
+                    >
+                        x
+                    </button>
+                </Form>
+            </td>
+        </tr>
+    );
 };
 
-function AddSeries({ set, disabled }: { set: Set; disabled: boolean }) {
-  return (
-    <tr className="h-10">
-      <td className="h-full px-2 py-2 text-xs">
-        <input type="hidden" name="setId" value={set.id} form={set.id} />
-        <input
-          name="repetitions"
-          placeholder="rep"
-          type="number"
-          form={set.id}
-          className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          min={0}
-        />
-      </td>
-      <td className="h-full px-2 py-2 text-xs">
-        <input
-          name="weigth"
-          placeholder="poids"
-          type="number"
-          step="0.01"
-          className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-          form={set.id}
-          min={0}
-        />
-      </td>
-      <td className="bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
-        <button
-          type="submit"
-          name="_action"
-          form={set.id}
-          disabled={disabled}
-          value="add_series"
-          className="h-[50px] w-[100px]  text-lg font-bold "
-        >
-          +
-        </button>
-      </td>
-    </tr>
-  );
+function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
+    return (
+        <tr className="h-10">
+            <td className="h-full px-2 py-2 text-xs">
+                <input type="hidden" name="setId" value={set.id} form={set.id}/>
+                <input
+                    name="repetitions"
+                    placeholder="rep"
+                    type="number"
+                    form={set.id}
+                    className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                    min={0}
+                />
+            </td>
+            <td className="h-full px-2 py-2 text-xs">
+                <input
+                    name="weigth"
+                    placeholder="poids"
+                    type="number"
+                    step="0.01"
+                    className="w-full rounded border border-gray-300 bg-white py-1 px-1 text-base text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                    form={set.id}
+                    min={0}
+                />
+            </td>
+            <td className="bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
+                <button
+                    type="submit"
+                    name="_action"
+                    form={set.id}
+                    disabled={disabled}
+                    value="add_series"
+                    className="h-[50px] w-[100px]  text-lg font-bold "
+                >
+                    +
+                </button>
+            </td>
+        </tr>
+    );
 }
 
 export default function WorkoutDetailsPage() {
-  const data = useLoaderData() as LoaderData;
-  const transition = useTransition();
-  const optimistUpdateData =
-    transition.submission && Object.fromEntries(transition.submission.formData);
-  const optimistAction =
-    optimistUpdateData && (optimistUpdateData["_action"] as string);
-  let optimistWorkoutSet = data.workout.set;
-  if (optimistUpdateData && optimistAction === "add_exercise") {
-    optimistWorkoutSet = [
-      ...optimistWorkoutSet,
-      {
-        id: Math.random().toString(),
-        exerciseId: optimistUpdateData.exerciseId as string,
-        workoutId: data.workout.id,
-        series: [],
-        exercise: {
-          title:
-            data.exerciseList.find(
-              (e) => e.id === optimistUpdateData.exerciseId
-            )?.title || "",
-        },
-      },
-    ];
-  }
-
-  return (
-    <div className="w-full overflow-hidden">
-      <div className="h-[100px] overflow-hidden p-2">
-        <Carrousel
-          workoutId={data.workout.id}
-          elementList={data.exerciseList}
-        />
-      </div>
-
-      <div className="h-[calc(100vh-210px)] overflow-auto">
-        {optimistWorkoutSet.map((s, i) => {
-          let optimistSeries = s.series;
-          if (
-            optimistUpdateData &&
-            optimistAction === "add_series" &&
-            optimistUpdateData["setId"] === s.id
-          ) {
-            optimistSeries = [
-              ...optimistSeries,
-              {
-                ...(optimistUpdateData as any),
+    const data = useLoaderData() as LoaderData;
+    const transition = useTransition();
+    const [showDialog, setShowDialog] = useState(false);
+    const [time, setTime] = useState<null | number>(null);
+    const [min, setMin] = useState(0);
+    const [sec, setSeconds] = useState(0);
+    const open = () => setShowDialog(true);
+    const close = () => setShowDialog(false);
+    const optimistUpdateData =
+        transition.submission && Object.fromEntries(transition.submission.formData);
+    const optimistAction =
+        optimistUpdateData && (optimistUpdateData["_action"] as string);
+    let optimistWorkoutSet = data.workout.set;
+    if (optimistUpdateData && optimistAction === "add_exercise") {
+        optimistWorkoutSet = [
+            ...optimistWorkoutSet,
+            {
                 id: Math.random().toString(),
-              },
-            ];
-          }
+                exerciseId: optimistUpdateData.exerciseId as string,
+                workoutId: data.workout.id,
+                series: [],
+                exercise: {
+                    title:
+                        data.exerciseList.find(
+                            (e) => e.id === optimistUpdateData.exerciseId
+                        )?.title || "",
+                },
+            },
+        ];
+    }
 
-          return (
-            <div className="0" key={s.id}>
-              <details
-                open={i === data.workout.set.length - 1}
-                className="bg-white"
-              >
-                <summary className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
-                  <h3 className="px-5 text-lg font-bold">
-                    {i}. {s.exercise.title}
-                  </h3>
-                  <Form method="post">
-                    <input type="hidden" value={s.id} name="setId"></input>{" "}
-                    <button
-                      className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                      type="submit"
-                      name="_action"
-                      value="delete_set"
-                    >
-                      x
-                    </button>
-                  </Form>
-                </summary>
-
-                <Form className="hidden" method="post" id={s.id} />
-                <div className="flex items-center justify-center">
-                  <table className="w-full table-fixed divide-y border">
-                    <TableHead />
-                    <TableBody
-                      optimistSeries={optimistSeries}
-                      disabled={transition.submission != null}
-                      set={s}
-                    />
-                  </table>
-                </div>
-              </details>
+    return (
+        <div className="w-full overflow-hidden">
+            <div className="h-[100px] overflow-hidden p-2">
+                <Carrousel
+                    workoutId={data.workout.id}
+                    elementList={data.exerciseList}
+                />
             </div>
-          );
-        })}
-      </div>
+            <Chronometre count={time} setCount={setTime} />
+            <div className="h-[calc(100vh-210px)] overflow-auto">
+                {optimistWorkoutSet.map((s, i) => {
+                    let optimistSeries = s.series;
+                    if (
+                        optimistUpdateData &&
+                        optimistAction === "add_series" &&
+                        optimistUpdateData["setId"] === s.id
+                    ) {
+                        optimistSeries = [
+                            ...optimistSeries,
+                            {
+                                ...(optimistUpdateData as any),
+                                id: Math.random().toString(),
+                            },
+                        ];
+                    }
 
-      <div className="focus:shadow-outline flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
-        <button className="h-[70px] w-full text-lg font-bold">Démarrer</button>
-      </div>
-    </div>
-  );
+                    return (
+                        <div className="0" key={s.id}>
+                            <details
+                                open={i === data.workout.set.length - 1}
+                                className="bg-white"
+                            >
+                                <summary
+                                    className="flex h-[60px] items-center justify-between border-t-2 border-blue-400 bg-blue-300">
+                                    <h3 className="px-5 text-lg font-bold">
+                                        {i}. {s.exercise.title}
+                                    </h3>
+                                    <Form method="post">
+                                        <input type="hidden" value={s.id} name="setId"></input>{" "}
+                                        <button
+                                            className=" focus:shadow-outline h-[60px] w-[100px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                                            type="submit"
+                                            name="_action"
+                                            value="delete_set"
+                                        >
+                                            x
+                                        </button>
+                                    </Form>
+                                </summary>
+
+                                <Form className="hidden" method="post" id={s.id}/>
+                                <div className="flex items-center justify-center">
+                                    <table className="w-full table-fixed divide-y border">
+                                        <TableHead/>
+                                        <TableBody
+                                            optimistSeries={optimistSeries}
+                                            disabled={transition.submission != null}
+                                            set={s}
+                                        />
+                                    </table>
+                                </div>
+                            </details>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div
+                className="focus:shadow-outline flex w-full items-center justify-center bg-blue-600 font-bold text-white transition-colors duration-150 hover:bg-blue-700">
+                <button className="h-[70px] w-full text-lg font-bold" onClick={open}>Démarrer</button>
+            </div>
+            <Minuteur isOpen={showDialog}>
+                <div className="mt-2 flex flex-col justify-center items-center">
+                    <button
+                        className="self-end mr-2 bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-full"
+                        onClick={close}
+                    >
+                        <span aria-hidden>x</span>
+                    </button>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            setTime(min * 60 + sec);
+                            close();
+                        }}
+                    >
+                        <div className="text-6xl text-center flex w-full items-center justify-center">
+                            <div className="w-25 mx-1 p-2 bg-white rounded-lg">
+                                <input
+                                    value={String(min).padStart(2, "0")}
+                                    onChange={(e) => setMin(+e.target.value)}
+                                    type="number"
+                                    min={0}
+                                    className="w-full text-center font-mono leading-none"
+                                    max={60}
+                                    placeholder="min"
+                                />
+
+                                <div className="font-mono uppercase text-sm leading-none">
+                                    Minutes
+                                </div>
+                            </div>
+                            <div className="text-2xl mx-1">:</div>
+                            <div className="w-25 mx-1 p-2 bg-white  rounded-lg">
+                                <input
+                                    value={String(sec).padStart(2, "0")}
+                                    onChange={(e) => setSeconds(+e.target.value)}
+                                    type="number"
+                                    className="w-full text-center font-mono leading-none"
+                                    min={0}
+                                    max={60}
+                                    placeholder="seconds"
+                                />
+                                <div className="font-mono uppercase text-sm leading-none">
+                                    Seconds
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            className="
+              mt-2
+              bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded
+              flex w-full items-center justify-center text-white"
+                            type="submit"
+                        >
+                            START
+                        </button>
+                    </form>
+
+                    <div className="flex gap-1 mt-3">
+                        <button
+                            type="button"
+                            className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full"
+                            onClick={() => {
+                                setTime(90);
+                                close();
+                            }}
+                        >
+                            1:30
+                        </button>
+                        <button
+                            type="button"
+                            className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full"
+                            onClick={() => {
+                                setTime(2 * 60 + 30);
+                                close();
+                            }}
+                        >
+                            2:30
+                        </button>
+                        <button
+                            type="button"
+                            className="bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full"
+                            onClick={() => {
+                                setTime(3 * 60 + 30);
+                                close();
+                            }}
+                        >
+                            3:30
+                        </button>
+                    </div>
+                </div>
+            </Minuteur>
+        </div>
+    );
 }
 
 const TableHead = () => {
-  return (
-    <thead className="bg-gray-50">
-      <tr>
-        <th className="px-2 py-2 text-xs text-gray-500">Repetitions</th>
-        <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
-        <th className="px-2 py-2 text-xs text-gray-500">Action</th>
-      </tr>
-    </thead>
-  );
+    return (
+        <thead className="bg-gray-50">
+        <tr>
+            <th className="px-2 py-2 text-xs text-gray-500">Repetitions</th>
+            <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
+            <th className="px-2 py-2 text-xs text-gray-500">Action</th>
+        </tr>
+        </thead>
+    );
 };
 
 const TableBody = ({
-  optimistSeries,
-  disabled,
-  set,
-}: {
-  optimistSeries: Series[];
-  disabled: boolean;
-  set: WorkoutSet;
+                       optimistSeries,
+                       disabled,
+                       set,
+                   }: {
+    optimistSeries: Series[];
+    disabled: boolean;
+    set: WorkoutSet;
 }) => {
-  return (
-    <tbody className="text-center">
-      {optimistSeries.map((series) => (
-        <TableRow series={series} key={series.id} />
-      ))}
-      <AddSeries set={set} disabled={disabled} />
-    </tbody>
-  );
+    return (
+        <tbody className="text-center">
+        {optimistSeries.map((series) => (
+            <TableRow series={series} key={series.id}/>
+        ))}
+        <AddSeries set={set} disabled={disabled}/>
+        </tbody>
+    );
 };
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
+export function ErrorBoundary({error}: { error: Error }) {
+    console.error(error);
 
-  return <div>An unexpected error occurred: {error.message}</div>;
+    return <div>An unexpected error occurred: {error.message}</div>;
 }
 
 export function CatchBoundary() {
-  const caught = useCatch();
+    const caught = useCatch();
 
-  if (caught.status === 404) {
-    return <div>Note not found</div>;
-  }
+    if (caught.status === 404) {
+        return <div>Note not found</div>;
+    }
 
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
+    throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }
