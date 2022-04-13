@@ -687,6 +687,22 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 1.5rem;
 }
 
+.h-\[calc\(100vh-410px\)\] {
+  height: calc(100vh - 410px);
+}
+
+.h-\[calc\(100vh-310px\)\] {
+  height: calc(100vh - 310px);
+}
+
+.h-\[calc\(100vh-300px\)\] {
+  height: calc(100vh - 300px);
+}
+
+.h-\[calc\(100vh-290px\)\] {
+  height: calc(100vh - 290px);
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
