@@ -9,3 +9,7 @@
 details > summary::marker {
     content: "";
 }
+
+*:focus {
+    outline: none;
+}
