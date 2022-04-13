@@ -75,11 +75,12 @@ export default function App() {
 
   return (
     <html lang="en">
-      <head><link rel="manifest" href="/resources/manifest.json" />
+      <head>
+        <link rel="manifest" href="/resources/manifest.json" />
         <Meta />
         <Links />
       </head>
-      <body className="relative">
+      <body className="relative bg-gray-800 font-mono">
         <Header user={user} /> <Outlet /> <ScrollRestoration /> <Scripts />
         <LiveReload />
       </body>
