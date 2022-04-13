@@ -80,7 +80,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="relative bg-gray-800 font-mono">
+      <body className="relative bg-gray-800 font-mono text-white">
         <Header user={user} /> <Outlet /> <ScrollRestoration /> <Scripts />
         <LiveReload />
       </body>

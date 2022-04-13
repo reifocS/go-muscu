@@ -56,7 +56,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
             !display && "hidden md:block"
           } block w-full flex-grow bg-gray-700 md:flex md:w-auto md:items-center`}
         >
-          <div className="border-t-2 text-sm md:flex-grow">
+          <div className="border-t-2 text-sm md:flex-grow md:border-0">
             {loggedIn ? (
               <>
                 {links.map((l) => (
@@ -76,7 +76,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 <NavLink
                   style={({ isActive }) => (isActive ? activeStyle : {})}
                   onClick={() => setDisplay(false)}
-                  className="block px-3 py-1 text-white md:inline-block md:py-3"
+                  className="block h-10 px-3 py-2 text-white md:inline-block md:py-3"
                   to="/join"
                 >
                   Sign Up
@@ -84,7 +84,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                 <NavLink
                   onClick={() => setDisplay(false)}
                   style={({ isActive }) => (isActive ? activeStyle : {})}
-                  className="block px-3 py-1 text-white md:inline-block md:py-3"
+                  className="block h-10 px-3 py-2 text-white md:inline-block md:py-3"
                   to="/login"
                 >
                   Login
