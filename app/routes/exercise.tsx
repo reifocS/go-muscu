@@ -1,9 +1,9 @@
-import type {LoaderFunction} from "remix";
-import {json, Link, NavLink, Outlet, useLoaderData} from "remix";
+import type { LoaderFunction } from "remix";
+import { json, Link, NavLink, Outlet, useLoaderData } from "remix";
 
-import {requireUserId} from "~/session.server";
-import {useUser} from "~/utils";
-import {getExerciseList} from "~/models/exercise.server";
+import { requireUserId } from "~/session.server";
+import { useUser } from "~/utils";
+import { getExerciseList } from "~/models/exercise.server";
 
 type LoaderData = {
   exerciseList: Awaited<ReturnType<typeof getExerciseList>>;
@@ -21,9 +21,9 @@ export default function WorkoutPage() {
 
   return (
     <div className="flex h-full min-h-screen flex-col">
-      <main className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50">
-          <Link to="new" className="block p-4 lg:text-xl text-blue-500">
+      <main className="flex h-full">
+        <div className="h-full w-80 border-r">
+          <Link to="new" className="block p-4 text-blue-500 lg:text-xl">
             + New exercise
           </Link>
 
@@ -37,7 +37,7 @@ export default function WorkoutPage() {
                 <li key={exercise.id}>
                   <NavLink
                     className={({ isActive }) =>
-                      `block border-b p-4 lg:text-xl ${isActive ? "bg-white" : ""}`
+                      `block border-b p-4 lg:text-xl`
                     }
                     to={exercise.id}
                   >

@@ -9,7 +9,7 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const links = ["Notes", "Exercise", "Calendar", "Daily"];
+const links = ["Exercise", "Calendar", "Daily"];
 
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
