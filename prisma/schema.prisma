@@ -1,55 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  password  Password?
+  id        String     @id @default(cuid())
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   exercices Exercise[]
+  password  Password?
   workouts  Workout[]
 }
 
 model Password {
-  hash String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  hash   String
   userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Exercise {
   id     String @id @default(cuid())
   title  String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   set    Set[]
 }
 
 model Workout {
   id       String         @id @default(cuid())
   date     DateTime
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId   String
   duration Float?
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   set      Set[]
   tags     TagOnWorkout[]
 }
 
 model Set {
   id         String   @id @default(cuid())
-  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exerciseId String
-  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   workoutId  String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   series     Series[]
 }
 
@@ -57,8 +54,8 @@ model Series {
   id          String @id @default(cuid())
   repetitions Int
   weigth      Float
-  set         Set    @relation(fields: [setId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   setId       String
+  set         Set    @relation(fields: [setId], references: [id], onDelete: Cascade)
 }
 
 model Tag {
@@ -68,10 +65,10 @@ model Tag {
 }
 
 model TagOnWorkout {
-  tag       Tag     @relation(fields: [tagId], references: [id])
   tagId     String
-  workout   Workout @relation(fields: [workoutId], references: [id])
   workoutId String
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  workout   Workout @relation(fields: [workoutId], references: [id])
 
   @@id([tagId, workoutId])
 }
