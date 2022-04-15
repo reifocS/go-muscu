@@ -7,7 +7,7 @@ import {createSeries, deleteSeries, Series} from "~/models/series.server";
 import {getExerciseList} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 import {useState} from "react";
-import Minuteur from "~/components/Minuteur";
+import Popover from "~/components/Popover";
 import Chronometre from "~/components/Chronometre";
 
 type WorkoutSet = Set & {
@@ -314,10 +314,10 @@ export default function WorkoutDetailsPage() {
                     Démarrer
                 </button>
             </div>
-            <Minuteur isOpen={showDialog}>
+            <Popover isOpen={showDialog}>
                 <div className="flex flex-col items-center justify-center">
                     <button
-                        className="self-end rounded-full bg-red-800 py-2 px-4 font-bold text-white hover:bg-red-900"
+                        className="h-8 w-8 self-end rounded-full bg-red-800 pt-0.5 text-center text-xl font-bold text-white hover:bg-red-900"
                         onClick={close}
                     >
                         <span aria-hidden>x</span>
@@ -413,7 +413,7 @@ export default function WorkoutDetailsPage() {
                         </button>
                     </form>
                 </div>
-            </Minuteur>
+            </Popover>
         </div>
     );
 }
