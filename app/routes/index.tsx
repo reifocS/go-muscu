@@ -1,24 +1,13 @@
-import { Link, redirect } from "remix";
-import { useOptionalUser } from "~/utils";
+import { Link, LoaderFunction } from "remix";
+import { redirect } from "remix";
+import { requireUserId } from "~/session.server";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await requireUserId(request);
+  if (user) return redirect("/daily");
+  return redirect("/login");
+};
 
 export default function Index() {
-  const user = useOptionalUser();
-
-  return (
-    <main className="absolute top-0 h-screen">
-      {!user && (
-        <div className="flex h-full items-center">
-          <div className="justify-center text-center">
-            <p className="p-5">Please log in to use this application.</p>
-            <Link
-              to="login"
-              className="rounded bg-gray-600 px-8 py-2 font-bold"
-            >
-              Log in
-            </Link>
-          </div>
-        </div>
-      )}
-    </main>
-  );
+  return <></>;
 }
