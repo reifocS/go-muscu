@@ -10,7 +10,9 @@ import {
   Series,
   updateSerie,
 } from "~/models/series.server";
+import { useState } from "react";
 import { getExerciseList } from "~/models/exercise.server";
+import Popover from "~/components/Popover";
 
 type LoaderData = {
   workout: Workout & {
@@ -148,22 +150,22 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
   return (
-    <div className="absolute top-0 z-10 h-screen w-full overflow-hidden bg-[#00000080] px-[20px] pt-[100px]">
-      <div className="h-[100%] w-full rounded-lg bg-gray-900 p-2">
-        <div className="flex justify-between">
+    <Popover isOpen={true}>
+      <div className="flex w-full flex-col items-center justify-center">
+        <div className="flex w-full justify-between">
           <h3 className="font-bold">
             {new Date(data.workout.date).toLocaleDateString()}
           </h3>
           <Link
             to=".."
-            className="items-center rounded border border-gray-400 px-3"
+            className="h-8 w-8 rounded-full bg-red-800 pt-0.5 text-center text-xl font-bold text-white hover:bg-red-900"
           >
-            close
+            <span aria-hidden>x</span>
           </Link>
         </div>
 
         {data.workout.set.map((set) => (
-          <div key={set.id}>
+          <div key={set.id} className="w-full">
             <div>
               {set.exercise.title}{" "}
               <Form method="post" style={{ display: "inline" }}>
@@ -176,48 +178,73 @@ export default function WorkoutDetailsPage() {
             <ul>
               {set.series.map((s) => (
                 <li key={s.id}>
-                  <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" value={s.id} name="id"></input>
-                    <input
-                      name="rep"
-                      placeholder="rep"
-                      defaultValue={s.repetitions}
-                      type="number"
-                      min={0}
-                    ></input>
-                    <input
-                      name="weight"
-                      placeholder="weigth"
-                      defaultValue={s.weigth}
-                      type="number"
-                      step="0.01"
-                      min={0}
-                    ></input>
-                    <button type="submit" name="_action" value="edit_series">
-                      edit
-                    </button>{" "}
-                  </Form>
-                  <Form method="post" style={{ display: "inline" }}>
-                    <input type="hidden" value={s.id} name="id"></input>
-                    <button type="submit" name="_action" value="delete_series">
-                      delete
-                    </button>
-                  </Form>
+                  <div className="table w-full">
+                    <Form method="post" className="flex w-full">
+                      <input type="hidden" value={s.id} name="id"></input>
+                      <input
+                        name="rep"
+                        placeholder="rep"
+                        defaultValue={s.repetitions}
+                        type="number"
+                        className="w-[40%] bg-gray-900"
+                        min={0}
+                      ></input>
+                      <input
+                        name="weight"
+                        placeholder="weigth"
+                        defaultValue={s.weigth}
+                        type="number"
+                        step="0.01"
+                        className="w-[50%] bg-gray-900"
+                        min={0}
+                      ></input>
+                      <button
+                        type="submit"
+                        name="_action"
+                        value="edit_series"
+                        className="w-[35px] bg-blue-600"
+                      >
+                        edit
+                      </button>{" "}
+                    </Form>
+                    <Form method="post" className="flex w-[35px]">
+                      <input type="hidden" value={s.id} name="id"></input>
+                      <button
+                        type="submit"
+                        name="_action"
+                        value="delete_series"
+                        className="w-[35px] bg-red-700"
+                      >
+                        delete
+                      </button>
+                    </Form>
+                  </div>
                 </li>
               ))}
             </ul>
-            <Form method="post">
+            <Form method="post" className="flex w-full overflow-hidden">
               <input type="hidden" name="setId" value={set.id}></input>
-              <input name="rep" placeholder="rep" type="number" min={0}></input>
-              &nbsp;*&nbsp;
+              <input
+                name="rep"
+                className="w-[40%] bg-gray-900"
+                placeholder="reps"
+                type="number"
+                min={0}
+              ></input>
               <input
                 name="weight"
                 placeholder="weigth"
                 type="number"
                 step="0.01"
+                className="w-[40%] bg-gray-900"
                 min={0}
               ></input>{" "}
-              <button type="submit" name="_action" value="add_series">
+              <button
+                type="submit"
+                name="_action"
+                value="add_series"
+                className="w-[70px] bg-blue-600"
+              >
                 +
               </button>
             </Form>
@@ -256,7 +283,7 @@ export default function WorkoutDetailsPage() {
           </button>
         </Form>
       </div>
-    </div>
+    </Popover>
   );
 }
 
