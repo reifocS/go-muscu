@@ -46,18 +46,26 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
-export const colors: ReadonlyArray<string> = ["blue", "green", "yellow", "orange", "purple", "lightblue", "gray", "pink"];
-
+export const colors: ReadonlyArray<string> = [
+  "blue",
+  "green",
+  "yellow",
+  "orange",
+  "purple",
+  "lightblue",
+  "gray",
+  "pink",
+];
 
 export function stringToColour(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  let colour = '#';
+  let colour = "#";
   for (let i = 0; i < 3; i++) {
-    let value = (hash >> (i * 8)) & 0xFF;
-    colour += ('00' + value.toString(16)).substr(-2);
+    let value = (hash >> (i * 8)) & 0xff;
+    colour += ("00" + value.toString(16)).substr(-2);
   }
   return colour;
 }

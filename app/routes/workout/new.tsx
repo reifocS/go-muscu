@@ -1,9 +1,9 @@
 import * as React from "react";
-import type {ActionFunction} from "remix";
-import {Form, json, redirect, useActionData} from "remix";
+import type { ActionFunction } from "remix";
+import { Form, json, redirect, useActionData } from "remix";
 
-import {createWorkout} from "~/models/workout.server";
-import {requireUserId} from "~/session.server";
+import { createWorkout } from "~/models/workout.server";
+import { requireUserId } from "~/session.server";
 
 type ActionData = {
   errors?: {

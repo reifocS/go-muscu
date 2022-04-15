@@ -1,6 +1,6 @@
 import type { Password, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import {createExercise} from "~/models/exercise.server";
+import { createExercise } from "~/models/exercise.server";
 
 import { prisma } from "~/db.server";
 
@@ -28,15 +28,13 @@ export async function createUser(email: User["email"], password: string) {
     },
   });
 
-  const base_exercices = [
-    "Développé couché",
-    "Tractions",
-    "Squats",
-  ]
+  const base_exercices = ["Développé couché", "Tractions", "Squats"];
 
-  base_exercices.map(async (e) => await createExercise({title: e, userId: user.id}))
-  
-  return user
+  base_exercices.map(
+    async (e) => await createExercise({ title: e, userId: user.id })
+  );
+
+  return user;
 }
 
 export async function deleteUserByEmail(email: User["email"]) {

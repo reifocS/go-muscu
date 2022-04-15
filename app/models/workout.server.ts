@@ -4,15 +4,22 @@ import { prisma } from "~/db.server";
 
 export type { Workout } from "@prisma/client";
 
-
-export function getDailyWorkout({ dateEnd, dateStart, userId }: { userId: User["id"], dateStart: Date, dateEnd: Date }) {
+export function getDailyWorkout({
+  dateEnd,
+  dateStart,
+  userId,
+}: {
+  userId: User["id"];
+  dateStart: Date;
+  dateEnd: Date;
+}) {
   return prisma.workout.findFirst({
     where: {
       userId,
       date: {
         gte: dateStart,
-        lt: dateEnd
-      }
+        lt: dateEnd,
+      },
     },
     include: {
       set: {
@@ -24,7 +31,7 @@ export function getDailyWorkout({ dateEnd, dateStart, userId }: { userId: User["
         },
       },
     },
-  })
+  });
 }
 
 export function getWorkout({
@@ -80,7 +87,6 @@ export function createWorkout({
           id: userId,
         },
       },
-
     },
     select: {
       id: true,
@@ -91,13 +97,11 @@ export function createWorkout({
           exercise: {
             select: { title: true },
           },
-        }
-      }
-
-    }
+        },
+      },
+    },
   });
 }
-
 
 export function deleteWorkout({
   id,
