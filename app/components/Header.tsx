@@ -1,6 +1,6 @@
-import { User } from ".prisma/client";
-import { useState } from "react";
-import { Form, NavLink } from "remix";
+import {User} from ".prisma/client";
+import {useState} from "react";
+import {Form, LinksFunction, NavLink} from "remix";
 
 export function Header({ user }: { user?: User }) {
   return <Nav loggedIn={user !== undefined} />;
@@ -9,8 +9,16 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const links = ["Exercise", "Calendar", "Daily"];
-
+const linksNav = ["Exercise", "Calendar", "Daily"];
+export const links: LinksFunction = () => {
+    return [
+        {
+            rel: "prefetch",
+            as: "image",
+            href: "/icons/go-muscu-transparent-petit.png"
+        },
+    ];
+};
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
 
@@ -29,7 +37,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
               <img
                 className="mx-2 h-8 w-8"
                 alt="icon"
-                src="icons/go-muscu-transparent-petit.png"
+                src={"/icons/go-muscu-transparent-petit.png"}
               />
               Go muscu
             </NavLink>
@@ -59,7 +67,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
           <div className="border-t-2 text-sm md:flex-grow md:border-0">
             {loggedIn ? (
               <>
-                {links.map((l) => (
+                {linksNav.map((l) => (
                   <NavLink
                     key={l}
                     style={({ isActive }) => (isActive ? activeStyle : {})}

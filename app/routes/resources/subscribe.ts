@@ -27,8 +27,12 @@ export const loader: LoaderFunction = async () => {
 
   const publicKey = process.env.VAPID_PUBLIC_KEY;
 
-  return new Response(publicKey, {
-    status: 202,
-    statusText: "Successful Operation",
-  });
+  try {
+      return new Response(publicKey, {
+          status: 202,
+          statusText: "Successful Operation",
+      });
+  } catch(e) {
+      console.error(e)
+  }
 };
