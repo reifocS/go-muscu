@@ -193,6 +193,7 @@ interface NotificationOptions {
   icon?: string;
   image?: string;
   silent: boolean | false;
+  vibrate?: Array<number>;
 }
 
 export async function SendNotification(

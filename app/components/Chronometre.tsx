@@ -30,7 +30,7 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
         SendNotification("Go muscu!", {
           body: "Back to work!",
           badge: "/icons/icon-192x192.png",
-          silent: false,
+          silent: false, vibrate: [200, 100, 200]
         });
         isFinished.current = true;
       }
@@ -39,7 +39,7 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
 
   return (
     <div className="flex w-full content-center items-center justify-center p-6">
-      <h1>{count ? prettyPrint(count) : "<no timer>"}</h1>
+      <h1>{count != null ? prettyPrint(count) : "<no timer>"}</h1>
       {lastTime && (
         <button
           onClick={() => {

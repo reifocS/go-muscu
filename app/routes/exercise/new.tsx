@@ -55,7 +55,7 @@ export default function NewExercisePage() {
           <input
             ref={titleRef}
             name="title"
-            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose text-black"
             aria-invalid={actionData?.errors?.title ? true : undefined}
             aria-errormessage={
               actionData?.errors?.title ? "title-error" : undefined
