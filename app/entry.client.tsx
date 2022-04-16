@@ -65,7 +65,7 @@ navigator.serviceWorker.ready
     });
   })
   .then(async (subscription) => {
-    await fetch("./resources/subscribe", {
+    await fetch("/resources/subscribe", {
       method: "POST",
       body: JSON.stringify({
         subscription: subscription,
