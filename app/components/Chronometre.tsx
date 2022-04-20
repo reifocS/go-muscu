@@ -1,6 +1,7 @@
 import { useInterval } from "../../hooks/useInterval";
 import { useRef } from "react";
 import { SendNotification } from "~/utils/client/pwa-utils.client";
+import {MdReplay} from "react-icons/md";
 
 type Props = {
   setCount: (number: number) => void;
@@ -42,11 +43,12 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
       <h1>{count != null ? prettyPrint(count) : "<no timer>"}</h1>
       {lastTime && (
         <button
+            className="mx-2"
           onClick={() => {
             setCount(lastTime);
           }}
         >
-          🔁
+          <MdReplay/>
         </button>
       )}
     </div>

@@ -10,7 +10,7 @@ import {useState} from "react";
 import Popover from "~/components/Popover";
 import Chronometre from "~/components/Chronometre";
 import {Fetcher} from "@remix-run/react/transition";
-
+import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
 type WorkoutSet = Set & {
     series: Series[];
     exercise: {
@@ -148,12 +148,12 @@ const TableRow = ({series, deleteSeriesFetcher}: { series: Series, deleteSeriesF
                     />
 
                     <button
-                        className="h-[50px] w-full font-bold"
+                        className="h-[50px] w-full font-bold flex items-center justify-center"
                         type="submit"
                         name="_action"
                         value="delete_series"
                     >
-                        x
+                        <AiFillDelete/>
                     </button>
                 </deleteSeriesFetcher.Form>
             </td>
@@ -193,9 +193,9 @@ function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
                     form={set.id}
                     disabled={disabled}
                     value="add_series"
-                    className="text-lg font-bold w-full"
+                    className="text-lg font-bold w-full flex items-center justify-center"
                 >
-                    +
+                    <AiOutlinePlus/>
                 </button>
             </td>
         </tr>
@@ -251,12 +251,14 @@ export default function WorkoutDetailsPage() {
                                     <deleteSetFetcher.Form method="post">
                                         <input type="hidden" value={s.id} name="setId"/>{" "}
                                         <button
-                                            className=" focus:shadow-outline h-[60px] w-[60px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                                            className=" focus:shadow-outline
+                                             flex items-center justify-center
+                                             h-full h-[60px] w-[60px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
                                             type="submit"
                                             name="_action"
                                             value="delete_set"
                                         >
-                                            x
+                                            <AiFillDelete/>
                                         </button>
                                     </deleteSetFetcher.Form>
                                 </summary>
