@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import {ActionFunction, Form, json, LoaderFunction, redirect, useCatch, useLoaderData, useTransition,} from "remix";
-import {createWorkout, deleteWorkout, getDailyWorkout, getWorkout, Workout,} from "~/models/workout.server";
+import {ActionFunction, json, LoaderFunction, useCatch, useFetcher, useLoaderData, useTransition,} from "remix";
+import {createWorkout, getDailyWorkout, getWorkout, Workout,} from "~/models/workout.server";
 import {requireUserId} from "~/session.server";
 import {createSet, deleteSet, Set} from "~/models/set.server";
 import {createSeries, deleteSeries, Series} from "~/models/series.server";
@@ -9,6 +9,7 @@ import Carrousel from "~/components/Carrousel";
 import {useState} from "react";
 import Popover from "~/components/Popover";
 import Chronometre from "~/components/Chronometre";
+import {Fetcher} from "@remix-run/react/transition";
 
 type WorkoutSet = Set & {
     series: Series[];
@@ -70,13 +71,6 @@ export const action: ActionFunction = async ({request}) => {
     const userId = await requireUserId(request);
     const formData = await request.formData();
     const {_action} = Object.fromEntries(formData);
-    if (_action === "delete_workout") {
-        const workoutId = formData.get("workoutId");
-        if (!workoutId || typeof workoutId !== "string")
-            throw new Error("No workout id");
-        await deleteWorkout({userId, id: workoutId});
-        return redirect("/daily");
-    }
     if (_action === "delete_set") {
         const setId = formData.get("setId");
 
@@ -99,7 +93,6 @@ export const action: ActionFunction = async ({request}) => {
         }
         return deleteSeries({id});
     }
-
     if (_action === "add_series") {
         const setId = formData.get("setId");
         const repetitions = formData.get("repetitions");
@@ -139,13 +132,13 @@ export const action: ActionFunction = async ({request}) => {
     }
 };
 
-const TableRow = ({series}: { series: Series }) => {
+const TableRow = ({series, deleteSeriesFetcher}: { series: Series, deleteSeriesFetcher: any }) => {
     return (
         <tr className="h-10">
             <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
             <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
             <td className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
-                <Form method="post">
+                <deleteSeriesFetcher.Form method="post">
                     <input
                         type="text"
                         className="hidden"
@@ -162,7 +155,7 @@ const TableRow = ({series}: { series: Series }) => {
                     >
                         x
                     </button>
-                </Form>
+                </deleteSeriesFetcher.Form>
             </td>
         </tr>
     );
@@ -200,7 +193,7 @@ function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
                     form={set.id}
                     disabled={disabled}
                     value="add_series"
-                    className="text-lg font-bold "
+                    className="text-lg font-bold w-full"
                 >
                     +
                 </button>
@@ -219,6 +212,14 @@ export default function WorkoutDetailsPage() {
     const open = () => setShowDialog(true);
     const close = () => setShowDialog(false);
     const transition = useTransition();
+    //delete set
+    //delete series
+    //create series
+    //create exercise
+    const deleteSetFetcher = useFetcher();
+    const deleteSeriesFetcher = useFetcher();
+    const createSeriesFetcher = useFetcher();
+    const createExerciseFetcher = useFetcher();
 
     const setTimeAndStore = (time: number) => {
         setTime(time);
@@ -233,6 +234,7 @@ export default function WorkoutDetailsPage() {
                 <Carrousel
                     workoutId={data.workout.id}
                     elementList={data.exerciseList}
+                    createExerciseFetcher={createExerciseFetcher}
                 />
             </div>
 
@@ -246,7 +248,7 @@ export default function WorkoutDetailsPage() {
                                     <h3 className="px-5 text-lg font-bold">
                                         {i}. {s.exercise.title}
                                     </h3>
-                                    <Form method="post">
+                                    <deleteSetFetcher.Form method="post">
                                         <input type="hidden" value={s.id} name="setId"/>{" "}
                                         <button
                                             className=" focus:shadow-outline h-[60px] w-[60px] bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
@@ -256,10 +258,10 @@ export default function WorkoutDetailsPage() {
                                         >
                                             x
                                         </button>
-                                    </Form>
+                                    </deleteSetFetcher.Form>
                                 </summary>
 
-                                <Form className="hidden" method="post" id={s.id}/>
+                                <createSeriesFetcher.Form className="hidden" method="post" id={s.id}/>
                                 <div className="flex items-center justify-center">
                                     <table className="w-full table-auto divide-y border-none">
                                         <TableHead/>
@@ -267,6 +269,7 @@ export default function WorkoutDetailsPage() {
                                             optimistSeries={s.series}
                                             disabled={transition.submission != null}
                                             set={s}
+                                            deleteSeriesFetcher={deleteSeriesFetcher}
                                         />
                                     </table>
                                 </div>
@@ -402,15 +405,17 @@ const TableBody = ({
                        optimistSeries,
                        disabled,
                        set,
+                       deleteSeriesFetcher
                    }: {
     optimistSeries: Series[];
     disabled: boolean;
     set: WorkoutSet;
+    deleteSeriesFetcher: Fetcher;
 }) => {
     return (
         <tbody className="text-center">
         {optimistSeries.map((series) => (
-            <TableRow series={series} key={series.id}/>
+            <TableRow series={series} key={series.id} deleteSeriesFetcher={deleteSeriesFetcher}/>
         ))}
         <AddSeries set={set} disabled={disabled}/>
         </tbody>

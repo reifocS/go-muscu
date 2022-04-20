@@ -2,7 +2,7 @@ import dayjs, {Dayjs} from "dayjs";
 import {useState} from "react";
 import {colors} from "~/utils";
 import type {LoaderFunction} from "remix";
-import {ActionFunction, json, Link, NavLink, Outlet, redirect, useLoaderData,} from "remix";
+import {ActionFunction, Form, json, Link, NavLink, Outlet, redirect, useLoaderData,} from "remix";
 
 import {requireUserId} from "~/session.server";
 import {createWorkout, getWorkoutList, Workout,} from "~/models/workout.server";
@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({request}) => {
 
     const workout = await createWorkout({date: new Date(date), userId});
 
-    return redirect(`/calendar/${workout.id}`);
+    return redirect(`../daily?workoutId=${workout.id}`);
 };
 
 const DATE_FORMAT = "MM/DD/YYYY";
@@ -168,9 +168,16 @@ const Cell = ({
                     </div>
                 </NavLink>
             ) : (
-                <div className="md:text-lg">
-                    {day?.format("DD") ?? ""}
-                </div>
+                <Form method="post">
+                    <input
+                        name="date"
+                        type="hidden"
+                        value={day.format("MM/DD/YYYY")}
+                    ></input>
+                    <button className="md:text-lg" type="submit">
+                        {day?.format("DD") ?? ""}
+                    </button>
+                </Form>
             )}
         </td>
     );
