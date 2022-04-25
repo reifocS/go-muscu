@@ -30,7 +30,7 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
       if (!isFinished.current) {
         SendNotification("Go muscu!", {
           body: "Back to work!",
-          badge: "/icons/icon-192x192.png",
+          badge: "/icons/icon-192x192.png", icon: "/icons/icon-192x192.png",
           silent: false, vibrate: [200, 100, 200]
         });
         isFinished.current = true;
