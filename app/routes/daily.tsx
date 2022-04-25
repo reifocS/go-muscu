@@ -25,6 +25,7 @@ type LoaderData = {
         title: string;
         id: string;
     }[];
+    isPastWorkout: boolean;
 };
 
 type ActionData = {
@@ -64,11 +65,11 @@ export const loader: LoaderFunction = async ({request}) => {
 
     const exerciseList = await getExerciseList({userId});
 
-    return json<LoaderData>({workout, exerciseList});
+    return json<LoaderData>({workout, exerciseList, isPastWorkout: !!workoutId && !todayMidnight.isSame(workout.date, "day")});
 };
 
 export const action: ActionFunction = async ({request}) => {
-    const userId = await requireUserId(request);
+    await requireUserId(request);
     const formData = await request.formData();
     const {_action} = Object.fromEntries(formData);
     if (_action === "delete_set") {
@@ -281,12 +282,12 @@ export default function WorkoutDetailsPage() {
                 })}
             </div>
 
-            <div
+            {!data.isPastWorkout && <div
                 className="focus:shadow-outline flex w-full items-center justify-center bg-gray-700 font-bold text-white transition-colors duration-150">
                 <button className="h-[70px] w-full text-lg font-bold" onClick={open}>
                     Démarrer
                 </button>
-            </div>
+            </div>}
             <Popover isOpen={showDialog}>
                 <div className="flex flex-col items-center justify-center">
                     <button

@@ -147,9 +147,9 @@ const Cell = ({
         >
             {workout ? (
                 <NavLink to={`../daily?workoutId=${workout.id}`}>
-          <span className="font-bold md:text-lg">
+          <div className="font-bold md:text-lg w-full h-full">
             {day?.format("DD") ?? ""}
-          </span>
+          </div>
                     <div className="flex justify-center">
                         {workout.set.map((s, i) => (
                             <div
@@ -163,7 +163,7 @@ const Cell = ({
                                             )
                                             ],
                                 }}
-                            ></div>
+                            />
                         ))}
                     </div>
                 </NavLink>
@@ -173,8 +173,8 @@ const Cell = ({
                         name="date"
                         type="hidden"
                         value={day.format("MM/DD/YYYY")}
-                    ></input>
-                    <button className="md:text-lg" type="submit">
+                    />
+                    <button className="md:text-lg w-full h-full" type="submit">
                         {day?.format("DD") ?? ""}
                     </button>
                 </Form>
