@@ -228,9 +228,12 @@ export default function WorkoutDetailsPage() {
     };
     return (
         <div className="w-full overflow-hidden">
-            <div className={"flex items-center justify-center"}>
-                <Chronometre count={time} setCount={setTime} lastTime={lastTime}/>
+            <div className="text-center mt-2">
+                <h2>{dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
             </div>
+            {!data.isPastWorkout && <div className={"flex items-center justify-center"}>
+                <Chronometre count={time} setCount={setTime} lastTime={lastTime}/>
+            </div>}
             <div className="overflow-hidden p-2">
                 <Carrousel
                     workoutId={data.workout.id}
@@ -285,7 +288,7 @@ export default function WorkoutDetailsPage() {
             {!data.isPastWorkout && <div
                 className="focus:shadow-outline flex w-full items-center justify-center bg-gray-700 font-bold text-white transition-colors duration-150">
                 <button className="h-[70px] w-full text-lg font-bold" onClick={open}>
-                    Démarrer
+                    Timer
                 </button>
             </div>}
             <Popover isOpen={showDialog}>
