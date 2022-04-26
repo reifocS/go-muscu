@@ -535,16 +535,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 1rem;
 }
 
-.mx-3 {
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
-}
-
-.my-3 {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
 .mr-6 {
   margin-right: 1.5rem;
 }
@@ -575,10 +565,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .ml-2 {
   margin-left: 0.5rem;
-}
-
-.mt-3 {
-  margin-top: 0.75rem;
 }
 
 .block {
@@ -755,6 +741,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .list-inside {
   list-style-position: inside;
+}
+
+.list-outside {
+  list-style-position: outside;
+}
+
+.list-disc {
+  list-style-type: disc;
+}
+
+.list-decimal {
+  list-style-type: decimal;
 }
 
 .appearance-none {
@@ -1190,6 +1188,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.visited\:text-purple-600:visited {
+  color: rgb(147 51 234 );
 }
 
 .hover\:border-white:hover {

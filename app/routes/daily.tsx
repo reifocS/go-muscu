@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {ActionFunction, json, LoaderFunction, useCatch, useFetcher, useLoaderData, useTransition,} from "remix";
+import {ActionFunction, json, Link, LoaderFunction, useCatch, useFetcher, useLoaderData, useTransition,} from "remix";
 import {createWorkout, getDailyWorkout, getWorkout, Workout,} from "~/models/workout.server";
 import {requireUserId} from "~/session.server";
 import {createSet, deleteSet, Set} from "~/models/set.server";
@@ -279,6 +279,10 @@ export default function WorkoutDetailsPage() {
                                         />
                                     </table>
                                 </div>
+                                <div className={"flex items-center justify-center"}>
+                                <Link className={"p-3 text-blue-600 visited:text-purple-600 underline"}  to={`/exercise/${s.exerciseId}`}>Go to exercise</Link>
+                                </div>
+
                             </details>
                         </div>
                     );
