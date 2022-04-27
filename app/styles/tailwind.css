@@ -687,6 +687,38 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: calc(100vh - 180px);
 }
 
+.h-\[100px\] {
+  height: 100px;
+}
+
+.h-\[calc\(100vh-300px\)\] {
+  height: calc(100vh - 300px);
+}
+
+.h-\[calc\(100vh-100px\)\] {
+  height: calc(100vh - 100px);
+}
+
+.h-\[calc\(100vh-50px\)\] {
+  height: calc(100vh - 50px);
+}
+
+.h-\[calc\(100vh-60px\)\] {
+  height: calc(100vh - 60px);
+}
+
+.h-\[calc\(100vh-40px\)\] {
+  height: calc(100vh - 40px);
+}
+
+.h-\[calc\(100vh-20px\)\] {
+  height: calc(100vh - 20px);
+}
+
+.h-\[calc\(100vh\)\] {
+  height: calc(100vh);
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -737,6 +769,34 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-4 {
   width: 1rem;
+}
+
+.w-\[80px\] {
+  width: 80px;
+}
+
+.w-\[100px\] {
+  width: 100px;
+}
+
+.w-\[200px\] {
+  width: 200px;
+}
+
+.w-\[600px\] {
+  width: 600px;
+}
+
+.w-\[20px\] {
+  width: 20px;
+}
+
+.w-\[180px\] {
+  width: 180px;
+}
+
+.w-\[150px\] {
+  width: 150px;
 }
 
 .max-w-md {

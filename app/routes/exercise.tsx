@@ -17,12 +17,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function WorkoutPage() {
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
 
   return (
     <div className="flex h-full min-h-screen flex-col">
-      <main className="flex h-full">
-        <div className="h-full w-80 border-r">
+      <main className="flex h-[calc(100vh-40px)] border-r">
+        <div className="h-full w-[200px] overflow-auto">
           <Link to="new" className="block p-4 text-blue-500 lg:text-xl">
             + New exercise
           </Link>
@@ -49,7 +48,7 @@ export default function WorkoutPage() {
           )}
         </div>
 
-        <div className="flex-1 p-6">
+        <div className="overflow-auto p-6">
           <Outlet />
         </div>
       </main>
