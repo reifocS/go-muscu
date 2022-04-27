@@ -15,6 +15,7 @@ import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import tailwindGlobalCss from "./styles/global.css";
+import reactResizableCss from "react-resizable/css/styles.css";
 
 import { getUser } from "./session.server";
 import { Header } from "./components/Header";
@@ -22,6 +23,7 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: tailwindGlobalCss },
+      {rel: "stylesheet", href: reactResizableCss}
   ];
 };
 export const meta: MetaFunction = () => ({

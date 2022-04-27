@@ -218,10 +218,6 @@ export default function WorkoutDetailsPage() {
     const open = () => setShowDialog(true);
     const close = () => setShowDialog(false);
     const transition = useTransition();
-    //delete set
-    //delete series
-    //create series
-    //create exercise
     const deleteSetFetcher = useFetcher();
     const deleteSeriesFetcher = useFetcher();
     const createSeriesFetcher = useFetcher();
