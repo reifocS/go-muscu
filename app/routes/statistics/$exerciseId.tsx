@@ -47,36 +47,8 @@ export default function StatisticsDetailsPage() {
     const data = useLoaderData() as LoaderData;
 
     return (
-        <div>
-            {/*<ul className="list-outside">
-                {data.exercise.set.map((s) => {
-                    return (
-                        <li className="list-item" key={s.id}>
-                            <div className="font-bold flex justify-between">
-                                <div>
-                                    {dayjs(s.workout.date).format("DD/MM")}
-
-                                </div>
-                                <div>
-                                    {s.series.reduce((acc, s) => {
-                                        return acc + s.weigth * s.repetitions
-                                    }, 0)}kg
-                                </div>
-                            </div>
-                            <ul className="list-inside">
-                                {s.series.map((series) => {
-                                    return (
-                                        <li className="list-item list-decimal" key={series.id}>
-                                            {series.repetitions}*{series.weigth}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                            <hr/>
-                        </li>
-                    );
-                })}
-            </ul>*/}
+        <div className="h-[400px]">
+            <h1 className="text-center text-2xl font-bold">{data.exercise.title}</h1>
             {data.graphData[0].data.length > 0 ? <Line data={data.graphData}/> : "No data"}
         </div>
     );

@@ -1,11 +1,12 @@
 import type {ActionFunction, LoaderFunction} from "remix";
-import {Form, json, redirect, useCatch, useLoaderData} from "remix";
+import {Form, json, Link, redirect, useCatch, useLoaderData} from "remix";
 import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
 import {deleteExercise, Exercise, getExercise, updateExercise,} from "~/models/exercise.server";
 import type {Series} from "~/models/series.server";
 import {requireUserId} from "~/session.server";
 import dayjs from "dayjs";
+import {FcStatistics} from "react-icons/fc";
 
 type LoaderData = {
     exercise: Exercise & {
@@ -72,6 +73,11 @@ export default function ExerciseDetailsPage() {
                         edit
                     </button>
                 </div>
+                <Link to={`../../statistics/${data.exercise.id}`}>
+                    <div className="flex justify-center items-center underline">
+                        statistics <FcStatistics className="ml-1"/>
+                    </div>
+                </Link>
             </Form>
             <hr className="my-4"/>
             <ul className="list-outside">

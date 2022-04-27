@@ -9,7 +9,7 @@ const activeStyle = {
   textDecoration: "underline",
 };
 
-const linksNav = ["Exercise", "Calendar", "Daily", "Statistics"];
+const linksNav = ["Exercise", "Calendar", "Daily"];
 export const links: LinksFunction = () => {
     return [
         {
