@@ -1,12 +1,10 @@
 import { useInterval } from "../../hooks/useInterval";
 import { useRef } from "react";
 import { SendNotification } from "~/utils/client/pwa-utils.client";
-import {MdReplay} from "react-icons/md";
 
 type Props = {
   setCount: (number: number) => void;
   count: number | null;
-  lastTime: number | null;
 };
 
 function str_pad_left(string: number, pad: string, length: number) {
@@ -19,7 +17,7 @@ function prettyPrint(time: number) {
   return str_pad_left(minutes, "0", 2) + ":" + str_pad_left(seconds, "0", 2);
 }
 
-export default function Chronometre({ setCount, count, lastTime }: Props) {
+export default function Chronometre({ setCount, count }: Props) {
   const isFinished = useRef(true);
   useInterval(() => {
     if (count === null) return;
@@ -30,8 +28,10 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
       if (!isFinished.current) {
         SendNotification("Go muscu!", {
           body: "Back to work!",
-          badge: "/icons/icon-192x192.png", icon: "/icons/icon-192x192.png",
-          silent: false, vibrate: [200, 100, 200]
+          badge: "/icons/icon-192x192.png",
+          icon: "/icons/icon-192x192.png",
+          silent: false,
+          vibrate: [200, 100, 200],
         });
         isFinished.current = true;
       }
@@ -40,17 +40,7 @@ export default function Chronometre({ setCount, count, lastTime }: Props) {
 
   return (
     <div className="flex w-full content-center items-center justify-center p-6">
-      <h1>{count != null ? prettyPrint(count) : "<no timer>"}</h1>
-      {lastTime && (
-        <button
-            className="mx-2"
-          onClick={() => {
-            setCount(lastTime);
-          }}
-        >
-          <MdReplay/>
-        </button>
-      )}
+      <h1>{count != null ? prettyPrint(count) : "Pause"}</h1>
     </div>
   );
 }
