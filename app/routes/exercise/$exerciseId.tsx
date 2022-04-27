@@ -78,8 +78,16 @@ export default function ExerciseDetailsPage() {
                 {data.exercise.set.map((s) => {
                     return (
                         <li className="list-item" key={s.id}>
-                            <div className="font-bold">
-                                {dayjs(s.workout.date).format("DD/MM")}
+                            <div className="font-bold flex justify-between">
+                                <div>
+                                    {dayjs(s.workout.date).format("DD/MM")}
+
+                                </div>
+                                <div>
+                                    {s.series.reduce((acc, s) => {
+                                        return acc + s.weigth * s.repetitions
+                                    }, 0)}kg
+                                </div>
                             </div>
                             <ul className="list-inside">
                                 {s.series.map((series) => {
