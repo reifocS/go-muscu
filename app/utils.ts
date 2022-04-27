@@ -46,26 +46,23 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
-export const colors: ReadonlyArray<string> = [
-  "blue",
-  "green",
-  "yellow",
-  "orange",
-  "purple",
-  "lightblue",
-  "gray",
-  "pink",
-];
+export const getColors = function (n: number, angle: number = 360 / 6.5): ReadonlyArray<string> {
+  return [...Array(n).keys()].map(i => hsl2hex((i * angle) % 360, 0.5, 0.6))
+}
 
-export function stringToColour(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  let colour = "#";
-  for (let i = 0; i < 3; i++) {
-    let value = (hash >> (i * 8)) & 0xff;
-    colour += ("00" + value.toString(16)).substr(-2);
-  }
-  return colour;
+// input: h in [0,360] and s,v in [0,1] - output: r,g,b in [0,1]
+export const hsl2rgb = function (h: number, s: number, l: number): Array<number> {
+  let a = s * Math.min(l, 1-l)
+  let f = (n: number, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k-3, 9-k, 1), -1);
+  return [f(0),f(8),f(4)];
+} 
+
+export const rangetoHex = function(x: number): string {
+  const hex = Math.round(x * 255).toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+};
+
+export const hsl2hex = function (h: number, s: number, l: number): string {
+  const rgb = hsl2rgb(h, s, l)
+  return "#" + rangetoHex(rgb[0]) + rangetoHex(rgb[1]) + rangetoHex(rgb[2])
 }
