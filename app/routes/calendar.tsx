@@ -168,20 +168,18 @@ const Cell = ({
             {day?.format("DD") ?? ""}
           </div>
           <div className="flex justify-center">
-            {workout.set.map((s, i) => (
-              <div
-                key={i}
-                className="mx-[1px] h-2.5 w-2.5 rounded-full"
-                style={{
-                  backgroundColor:
-                    colors[
-                      exerciseList.findIndex(
-                        (e) => e.title === s.exercise.title
-                      )
-                    ],
-                }}
-              />
-            ))}
+            {[...new Set([...workout.set.map((e) => e.exercise.title)])].map(
+              (s, i) => (
+                <div
+                  key={i}
+                  className="mx-[1px] h-2.5 w-2.5 rounded-full"
+                  style={{
+                    backgroundColor:
+                      colors[exerciseList.findIndex((e) => e.title === s)],
+                  }}
+                />
+              )
+            )}
           </div>
         </NavLink>
       ) : (
