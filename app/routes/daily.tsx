@@ -11,6 +11,7 @@ import Popover from "~/components/Popover";
 import Chronometre from "~/components/Chronometre";
 import {Fetcher} from "@remix-run/react/transition";
 import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
+
 type WorkoutSet = Set & {
     series: Series[];
     exercise: {
@@ -65,7 +66,11 @@ export const loader: LoaderFunction = async ({request}) => {
 
     const exerciseList = await getExerciseList({userId});
 
-    return json<LoaderData>({workout, exerciseList, isPastWorkout: !!workoutId && !todayMidnight.isSame(workout.date, "day")});
+    return json<LoaderData>({
+        workout,
+        exerciseList,
+        isPastWorkout: !!workoutId && !todayMidnight.isSame(workout.date, "day")
+    });
 };
 
 export const action: ActionFunction = async ({request}) => {
@@ -280,7 +285,8 @@ export default function WorkoutDetailsPage() {
                                     </table>
                                 </div>
                                 <div className={"flex items-center justify-center"}>
-                                <Link className={"p-3 text-blue-600 visited:text-purple-600 underline"}  to={`/exercise/${s.exerciseId}`}>Go to exercise</Link>
+                                    <Link className={"p-3 text-blue-600 visited:text-purple-600 underline"}
+                                          to={`/exercise/${s.exerciseId}`}>Go to exercise</Link>
                                 </div>
 
                             </details>
@@ -375,7 +381,7 @@ export default function WorkoutDetailsPage() {
                                 type="button"
                                 className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white hover:bg-blue-700"
                                 onClick={() => {
-                                    setTime(3 * 60 + 30);
+                                    setTimeAndStore(3 * 60 + 30);
                                     close();
                                 }}
                             >
