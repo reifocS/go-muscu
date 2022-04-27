@@ -229,23 +229,19 @@ function AddSeries({ set, disabled }: { set: Set; disabled: boolean }) {
 }
 
 export default function WorkoutDetailsPage() {
-  const data = useLoaderData() as LoaderData;
-  const [showDialog, setShowDialog] = useState(false);
-  const [time, setTime] = useState<null | number>(null);
-  const [min, setMin] = useState(0);
-  const [sec, setSeconds] = useState(0);
-  const [lastTime, setLastTime] = useState<number | null>(null);
-  const open = () => setShowDialog(true);
-  const close = () => setShowDialog(false);
-  const transition = useTransition();
-  //delete set
-  //delete series
-  //create series
-  //create exercise
-  const deleteSetFetcher = useFetcher();
-  const deleteSeriesFetcher = useFetcher();
-  const createSeriesFetcher = useFetcher();
-  const createExerciseFetcher = useFetcher();
+    const data = useLoaderData() as LoaderData;
+    const [showDialog, setShowDialog] = useState(false);
+    const [time, setTime] = useState<null | number>(null);
+    const [min, setMin] = useState(0);
+    const [sec, setSeconds] = useState(0);
+    const [lastTime, setLastTime] = useState<number | null>(null);
+    const open = () => setShowDialog(true);
+    const close = () => setShowDialog(false);
+    const transition = useTransition();
+    const deleteSetFetcher = useFetcher();
+    const deleteSeriesFetcher = useFetcher();
+    const createSeriesFetcher = useFetcher();
+    const createExerciseFetcher = useFetcher();
 
   const setTimeAndStore = (time: number) => {
     setTime(time);

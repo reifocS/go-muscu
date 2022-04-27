@@ -46,7 +46,7 @@ export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
 
-export const getColors = function (n: number, angle: number = 360 / 6.5): ReadonlyArray<string> {
+export const getColors = function (n: number, angle: number = 360 / 6.5): Array<string> {
   return [...Array(n).keys()].map(i => hsl2hex((i * angle) % 360, 0.5, 0.6))
 }
 
