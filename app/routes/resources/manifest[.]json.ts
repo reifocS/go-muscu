@@ -9,7 +9,7 @@ export let loader: LoaderFunction = () => {
       start_url: "/",
       display: "standalone",
       background_color: "#d3d7dd",
-      theme_color: "#c34138",
+      theme_color: "#374151",
       shortcuts: [
         {
           name: "Homepage",
