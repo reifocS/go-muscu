@@ -409,7 +409,7 @@ export default function WorkoutDetailsPage() {
               </button>
               <button
                 type="button"
-                className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white hover:bg-blue-700"
+                className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white hover:bg-gray-800"
                 onClick={() => {
                   setTimeAndStore(3 * 60 + 30);
                   close();
