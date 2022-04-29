@@ -248,18 +248,19 @@ export default function WorkoutDetailsPage() {
     setLastTime(time);
   };
   return (
-    <div className="mt-2 w-full overflow-hidden">
+    <div className="w-full overflow-hidden">
       {data.isPastWorkout && (
-        <div className="text-center font-bold">
+        <div className="mt-2 text-center font-bold">
           <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
         </div>
       )}
 
-      <div className="overflow-hidden p-2">
+      <div className="p-2">
         <Carrousel
           workoutId={data.workout.id}
           elementList={data.exerciseList}
           createExerciseFetcher={createExerciseFetcher}
+          Card={Card}
         />
       </div>
 
@@ -279,9 +280,7 @@ export default function WorkoutDetailsPage() {
                   <deleteSetFetcher.Form method="post">
                     <input type="hidden" value={s.id} name="setId" />{" "}
                     <button
-                      className=" focus:shadow-outline
-                                             flex h-full h-[60px]
-                                             w-[60px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                      className="focus:shadow-outline flex h-full h-[60px] w-[60px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
                       type="submit"
                       name="_action"
                       value="delete_set"
@@ -471,6 +470,39 @@ const TableBody = ({
     </tbody>
   );
 };
+
+function Card({
+  el,
+  itemId,
+  workoutId,
+  createExerciseFetcher,
+}: {
+  el: { title: string; id: string };
+  itemId: string;
+  workoutId: string;
+  createExerciseFetcher: any;
+}) {
+  return (
+    <createExerciseFetcher.Form
+      key={itemId}
+      method="post"
+      tabIndex={0}
+      className="flex"
+    >
+      <input type="hidden" name="exerciseId" value={el.id} />
+      <input type="hidden" name="workoutId" value={workoutId} />
+      <button
+        type="submit"
+        name="_action"
+        className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
+          text-white transition-colors duration-150 hover:bg-gray-800"
+        value="add_exercise"
+      >
+        {el.title}
+      </button>
+    </createExerciseFetcher.Form>
+  );
+}
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);

@@ -5,10 +5,12 @@ export default function Carrousel({
   elementList,
   workoutId,
   createExerciseFetcher,
+  Card,
 }: {
   elementList: Array<{ title: string; id: string }>;
-  workoutId: string;
+  workoutId?: string;
   createExerciseFetcher: any;
+  Card: React.FC<any>;
 }) {
   return (
     <ScrollMenu
@@ -30,46 +32,13 @@ export default function Carrousel({
   );
 }
 
-function Card({
-  el,
-  itemId,
-  workoutId,
-  createExerciseFetcher,
-}: {
-  el: { title: string; id: string };
-  itemId: string;
-  workoutId: string;
-  createExerciseFetcher: any;
-}) {
-  return (
-    <createExerciseFetcher.Form
-      key={itemId}
-      method="post"
-      tabIndex={0}
-      className="flex"
-    >
-      <input type="hidden" name="exerciseId" value={el.id} />
-      <input type="hidden" name="workoutId" value={workoutId} />
-      <button
-        type="submit"
-        name="_action"
-        className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
-          text-white transition-colors duration-150 hover:bg-gray-800"
-        value="add_exercise"
-      >
-        {el.title}
-      </button>
-    </createExerciseFetcher.Form>
-  );
-}
-
 function LeftArrow() {
   const { isFirstItemVisible, scrollPrev } =
     React.useContext(VisibilityContext);
 
   return (
     <button
-      className="bg-transparent py-5 px-1"
+      className="bg-transparent py-5 px-2"
       disabled={isFirstItemVisible}
       onClick={() => scrollPrev()}
     >
@@ -83,7 +52,7 @@ function RightArrow() {
 
   return (
     <button
-      className="bg-transparent py-5 px-1"
+      className="bg-transparent py-5 px-2"
       disabled={isLastItemVisible}
       onClick={() => scrollNext()}
     >

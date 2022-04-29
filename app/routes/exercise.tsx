@@ -1,9 +1,9 @@
 import type { LoaderFunction } from "remix";
-import { json, Link, NavLink, Outlet, useLoaderData } from "remix";
+import { json, Link, useFetcher, Outlet, useLoaderData } from "remix";
 
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
 import { getExerciseList } from "~/models/exercise.server";
+import Carrousel from "~/components/Carrousel";
 
 type LoaderData = {
   exerciseList: Awaited<ReturnType<typeof getExerciseList>>;
@@ -12,46 +12,51 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
   const exerciseList = await getExerciseList({ userId });
+
   return json<LoaderData>({ exerciseList });
 };
 
 export default function WorkoutPage() {
   const data = useLoaderData() as LoaderData;
+  const createExerciseFetcher = useFetcher();
 
   return (
-    <div className="flex h-full min-h-screen flex-col">
-      <main className="flex h-[calc(100vh-40px)] border-r">
-        <div className="h-full w-[200px] overflow-auto">
-          <Link to="new" className="block p-4 text-blue-500 lg:text-xl">
-            + New exercise
-          </Link>
-
-          <hr />
-
-          {data.exerciseList.length === 0 ? (
-            <p className="p-4">No exercise yet</p>
-          ) : (
-            <ol>
-              {data.exerciseList.map((exercise) => (
-                <li key={exercise.id}>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 lg:text-xl`
-                    }
-                    to={exercise.id}
-                  >
-                    {exercise.title}
-                  </NavLink>
-                </li>
-              ))}
-            </ol>
-          )}
+    <div className="h-full min-h-screen">
+      <main className="h-[calc(100vh-40px)] overflow-auto">
+        <div className="p-2">
+          <Carrousel
+            elementList={data.exerciseList}
+            createExerciseFetcher={createExerciseFetcher}
+            Card={Card}
+          />
         </div>
 
-        <div className="overflow-auto p-6">
+        <div className="overflow-auto">
           <Outlet />
         </div>
       </main>
     </div>
+  );
+}
+
+function Card({
+  el,
+  itemId,
+}: {
+  el: { title: string; id: string };
+  itemId: string;
+  workoutId: string;
+  createExerciseFetcher: any;
+}) {
+  return (
+    <Link to={itemId} className="flex">
+      <button
+        className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
+          text-white transition-colors duration-150 hover:bg-gray-800"
+        value="add_exercise"
+      >
+        {el.title}
+      </button>
+    </Link>
   );
 }
