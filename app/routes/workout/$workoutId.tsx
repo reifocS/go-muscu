@@ -154,7 +154,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
-  const transition = useTransition();
   return (
     <div>
       <h3 className="font-bold">

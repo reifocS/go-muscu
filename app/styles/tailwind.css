@@ -747,6 +747,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 45px;
 }
 
+.w-\[55px\] {
+  width: 55px;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
@@ -872,6 +876,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .border-t-2 {
   border-top-width: 2px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-none {
@@ -1032,6 +1040,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-top: 0.25rem;
 }
 
+.pt-2 {
+  padding-top: 0.5rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1089,6 +1101,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-medium {
   font-weight: 500;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .leading-none {

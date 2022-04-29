@@ -271,53 +271,51 @@ export default function WorkoutDetailsPage() {
       >
         {data.workout.set.map((s, i) => {
           return (
-            <div className="0" key={s.id}>
-              <details open={i === data.workout.set.length - 1}>
-                <summary className="flex h-[60px] cursor-pointer items-center justify-between border-t-2 border-gray-500 bg-gray-700">
-                  <h3 className="px-5 text-lg font-bold">
-                    {i}. {s.exercise.title}
-                  </h3>
-                  <deleteSetFetcher.Form method="post">
-                    <input type="hidden" value={s.id} name="setId" />{" "}
-                    <button
-                      className="focus:shadow-outline flex h-full h-[60px] w-[60px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                      type="submit"
-                      name="_action"
-                      value="delete_set"
-                    >
-                      <AiFillDelete />
-                    </button>
-                  </deleteSetFetcher.Form>
-                </summary>
-
-                <createSeriesFetcher.Form
-                  className="hidden"
-                  method="post"
-                  id={s.id}
-                />
-                <div className="flex items-center justify-center">
-                  <table className="w-full table-auto divide-y border-none">
-                    <TableHead />
-                    <TableBody
-                      optimistSeries={s.series}
-                      disabled={transition.submission != null}
-                      set={s}
-                      deleteSeriesFetcher={deleteSeriesFetcher}
-                    />
-                  </table>
-                </div>
-                <div className={"flex items-center justify-center"}>
-                  <Link
-                    className={
-                      "p-3 text-blue-600 underline visited:text-purple-600"
-                    }
-                    to={`/exercise/${s.exerciseId}`}
+            <details open={i === data.workout.set.length - 1} key={s.id}>
+              <summary className="flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700">
+                <h3 className="px-5 font-bold">
+                  {i}. {s.exercise.title}
+                </h3>
+                <deleteSetFetcher.Form method="post">
+                  <input type="hidden" value={s.id} name="setId" />{" "}
+                  <button
+                    className="focus:shadow-outline flex h-full h-[40px] w-[55px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                    type="submit"
+                    name="_action"
+                    value="delete_set"
                   >
-                    Go to exercise
-                  </Link>
-                </div>
-              </details>
-            </div>
+                    <AiFillDelete />
+                  </button>
+                </deleteSetFetcher.Form>
+              </summary>
+
+              <createSeriesFetcher.Form
+                className="hidden"
+                method="post"
+                id={s.id}
+              />
+              <div className="flex items-center justify-center">
+                <table className="w-full table-auto divide-y border-none">
+                  <TableHead />
+                  <TableBody
+                    optimistSeries={s.series}
+                    disabled={transition.submission != null}
+                    set={s}
+                    deleteSeriesFetcher={deleteSeriesFetcher}
+                  />
+                </table>
+              </div>
+              <div className={"flex items-center justify-center"}>
+                <Link
+                  className={
+                    "p-3 text-blue-600 underline visited:text-purple-600"
+                  }
+                  to={`/exercise/${s.exerciseId}`}
+                >
+                  Go to exercise
+                </Link>
+              </div>
+            </details>
           );
         })}
       </div>

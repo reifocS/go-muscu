@@ -69,8 +69,8 @@ export default function ExerciseDetailsPage() {
         <AiOutlinePlus className="mr-1" /> New exercise
       </Link>
 
-      <div className="p-2">
-        <div className="flex inline-flex w-full">
+      <div>
+        <div className="flex inline-flex w-full p-2">
           <Form method="post">
             <button
               type="submit"
@@ -99,39 +99,60 @@ export default function ExerciseDetailsPage() {
         </div>
 
         <Link to={`../../statistics/${data.exercise.id}`}>
-          <div className="flex items-center justify-center underline">
+          <div className="flex items-center justify-center p-2 underline">
             statistics <FcStatistics className="ml-1" />
           </div>
         </Link>
 
-        <hr className="my-4" />
-        <ul className="list-outside">
-          {data.exercise.set.map((s) => {
+        <div className="pt-2">
+          {data.exercise.set.map((s, i) => {
             return (
-              <li className="list-item" key={s.id}>
-                <div className="flex justify-between font-bold">
-                  <div>{dayjs(s.workout.date).format("DD/MM")}</div>
-                  <div>
-                    {s.series.reduce((acc, s) => {
-                      return acc + s.weigth * s.repetitions;
-                    }, 0)}
-                    kg
+              <details key={s.id} open={i === 0}>
+                <summary className="flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700 px-5">
+                  <div className="font-bold">
+                    {dayjs(s.workout.date).format("DD/MM")}
                   </div>
-                </div>
-                <ul className="list-inside">
-                  {s.series.map((series) => {
-                    return (
-                      <li className="list-item list-decimal" key={series.id}>
-                        {series.repetitions}*{series.weigth}
-                      </li>
-                    );
-                  })}
-                </ul>
-                <hr />
-              </li>
+                  <div className="text-sm italic">
+                    {`Total: ${s.series.reduce(
+                      (acc, s) => acc + s.weigth * s.repetitions,
+                      0
+                    )} kg`}
+                  </div>
+                </summary>
+
+                <table className="w-full table-auto divide-y border-none">
+                  <thead className="bg-gray-800">
+                    <tr>
+                      <th className="px-2 py-2 text-xs text-gray-500">
+                        Repetitions
+                      </th>
+                      <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
+                      <th className="px-2 py-2 text-xs text-gray-500">Total</th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="text-center">
+                    {s.series.map((series) => {
+                      return (
+                        <tr className="h-10" key={series.id}>
+                          <td className="h-full px-2 py-2 text-xs">
+                            {series.repetitions}
+                          </td>
+                          <td className="h-full px-2 py-2 text-xs">
+                            {series.weigth} kg
+                          </td>
+                          <td className="h-full px-2 py-2 text-xs">
+                            {series.repetitions * series.weigth} kg
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </details>
             );
           })}
-        </ul>
+        </div>
       </div>
     </div>
   );
