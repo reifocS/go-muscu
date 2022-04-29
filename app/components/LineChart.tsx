@@ -1,16 +1,18 @@
-import React from "react";
+import React, {useRef} from "react";
 import {AxisOptions, Chart} from "react-charts";
 import dayjs from "dayjs";
 
 export type GraphData = {
     label: string,
     data: {
-        date: dayjs.Dayjs,
-        volume: number
+        date: Date,
+        secondary: number
     }[]
 }[]
 
 export default function Line({data}: { data: GraphData }) {
+
+    const hackyRef = useRef<HTMLButtonElement>(null);
     const primaryAxis = React.useMemo<AxisOptions<typeof data[number]["data"][number]>>(
         () => ({
             getValue: (datum) => dayjs(datum.date).format("MM/DD") as unknown as string,
@@ -22,7 +24,7 @@ export default function Line({data}: { data: GraphData }) {
     const secondaryAxes = React.useMemo<AxisOptions<typeof data[number]["data"][number]>[]>(
         () => [
             {
-                getValue: (datum) => datum.volume,
+                getValue: (datum) => datum.secondary,
                 elementType: "line"
             },
         ],
@@ -36,7 +38,7 @@ export default function Line({data}: { data: GraphData }) {
                     data,
                     primaryAxis,
                     secondaryAxes,
-                    dark: true
+                    dark: true,
                 }}
             />
         </>

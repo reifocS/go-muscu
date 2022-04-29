@@ -6,6 +6,7 @@ import {Exercise, getExercise,} from "~/models/exercise.server";
 import type {Series} from "~/models/series.server";
 import {requireUserId} from "~/session.server";
 import Line, {GraphData} from "~/components/LineChart";
+import {useState} from "react";
 
 type LoaderData = {
     exercise: Exercise & {
@@ -28,28 +29,56 @@ export const loader: LoaderFunction = async ({request, params}) => {
     if (!ex) {
         throw new Response("Not Found", {status: 404});
     }
-    let data = ex.set.reduceRight((acc, s) => {
+    let averageWeightOverTime = [];
+    let totalVolumeOverTime = [];
+    let repetitions = [];
+    let reversedSet = [...ex.set].reverse();
+    for (const set of reversedSet) {
         let totalVolume = 0;
-        for (const series of s.series) {
+        let totalRep = 0;
+        let averageWeight = 0;
+        for (const series of set.series) {
             totalVolume += series.weigth * series.repetitions;
+            totalRep += series.repetitions;
+            averageWeight += series.weigth;
         }
-        if (s.series.length > 0) acc.push({
-            date: s.workout.date,
-            volume: totalVolume
+        averageWeight /= set.series.length ?? 1;
+        totalVolumeOverTime.push({
+            date: set.workout.date,
+            secondary: totalVolume
         })
-        return acc;
-    }, [] as Array<any>)
-    let graphData: GraphData = [{label: ex.title, data}]
+        repetitions.push({
+            date: set.workout.date,
+            secondary: totalRep
+        })
+        averageWeightOverTime.push({
+            date: set.workout.date,
+            secondary: averageWeight
+        })
+    }
+    let graphData: GraphData = [{label: "volume total", data: totalVolumeOverTime},
+        {label: "repetitions", data: repetitions},
+        {label: "poids moyen", data: averageWeightOverTime}
+    ]
     return json<LoaderData>({exercise: ex, graphData});
 };
 
 export default function StatisticsDetailsPage() {
     const data = useLoaderData() as LoaderData;
+    const [graphToShow, setGraphToShow] = useState(0);
 
     return (
         <div className="h-[400px]">
+            <select
+                className="m-3 text-black"
+                value={graphToShow} onChange={(event => setGraphToShow(+event.target.value))}>
+                {data.graphData.map((d, i) => {
+                    return <option value={i} key={i}>{d.label}</option>
+                })}
+            </select>
             <h1 className="text-center text-2xl font-bold">{data.exercise.title}</h1>
-            {data.graphData[0].data.length > 0 ? <Line data={data.graphData}/> : "No data"}
+            {data.graphData[0].data.length > 0 ? <Line
+                data={[data.graphData[graphToShow]]}/> : "No data"}
         </div>
     );
 }
