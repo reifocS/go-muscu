@@ -1,6 +1,6 @@
-import {User} from ".prisma/client";
-import {useState} from "react";
-import {Form, LinksFunction, NavLink} from "remix";
+import { User } from ".prisma/client";
+import { useState } from "react";
+import { Form, LinksFunction, NavLink } from "remix";
 
 export function Header({ user }: { user?: User }) {
   return <Nav loggedIn={user !== undefined} />;
@@ -11,13 +11,13 @@ const activeStyle = {
 
 const linksNav = ["Exercise", "Calendar", "Daily"];
 export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "prefetch",
-            as: "image",
-            href: "/icons/go-muscu-transparent-petit.png"
-        },
-    ];
+  return [
+    {
+      rel: "prefetch",
+      as: "image",
+      href: "/icons/go-muscu-transparent-petit.png",
+    },
+  ];
 };
 const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [display, setDisplay] = useState(false);
@@ -101,11 +101,11 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
             )}
           </div>
           {loggedIn && (
-            <div>
+            <div className="text-right">
               <Form action="/logout" method="post">
                 <button
                   type="submit"
-                  className="mx-5 my-2 inline-block rounded border border-white px-4 py-2 text-sm leading-none text-white hover:border-transparent hover:bg-white hover:text-gray-500 md:my-0 md:mt-0"
+                  className="text-red-100hover:border-transparent mx-5 my-2 inline-block rounded border border-white bg-red-700 px-4 py-2 text-sm leading-none text-white hover:bg-red-800 md:my-0 md:mt-0"
                 >
                   Logout
                 </button>

@@ -23,7 +23,7 @@ export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
     { rel: "stylesheet", href: tailwindGlobalCss },
-      {rel: "stylesheet", href: reactResizableCss}
+    { rel: "stylesheet", href: reactResizableCss },
   ];
 };
 export const meta: MetaFunction = () => ({
@@ -82,7 +82,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="relative overflow-hidden bg-gray-800 font-mono text-white">
+      <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
         <Header user={user} /> <Outlet /> <ScrollRestoration /> <Scripts />
         <LiveReload />
       </body>

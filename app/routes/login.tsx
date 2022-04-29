@@ -93,7 +93,7 @@ export default function LoginPage() {
   }, [actionData]);
 
   return (
-    <div className="mt-10  flex min-h-full flex-col justify-center">
+    <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
           <div>
@@ -153,7 +153,7 @@ export default function LoginPage() {
           <input type="hidden" name="redirectTo" value={redirectTo} />
           <button
             type="submit"
-            className="w-full rounded bg-gray-700 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            className="w-full rounded bg-gray-700 py-2 px-4 text-white hover:bg-gray-800 focus:bg-gray-800"
           >
             Log in
           </button>

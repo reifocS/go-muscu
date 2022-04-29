@@ -248,77 +248,74 @@ export default function WorkoutDetailsPage() {
     setLastTime(time);
   };
   return (
-    <div className="mt-2 w-full overflow-hidden">
+    <div className="w-full overflow-hidden">
       {data.isPastWorkout && (
-        <div className="text-center font-bold">
+        <div className="mt-2 text-center font-bold">
           <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
         </div>
       )}
 
-      <div className="overflow-hidden p-2">
+      <div className="p-2">
         <Carrousel
           workoutId={data.workout.id}
           elementList={data.exerciseList}
           createExerciseFetcher={createExerciseFetcher}
+          Card={Card}
         />
       </div>
 
       <div
         className={`${
-          data.isPastWorkout ? "h-[calc(100vh-180px)]" : "h-[calc(100vh-220px)]"
+          data.isPastWorkout ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-240px)]"
         } overflow-auto`}
       >
         {data.workout.set.map((s, i) => {
           return (
-            <div className="0" key={s.id}>
-              <details open={i === data.workout.set.length - 1}>
-                <summary className="flex h-[60px] cursor-pointer items-center justify-between border-t-2 border-gray-500 bg-gray-700">
-                  <h3 className="px-5 text-lg font-bold">
-                    {i}. {s.exercise.title}
-                  </h3>
-                  <deleteSetFetcher.Form method="post">
-                    <input type="hidden" value={s.id} name="setId" />{" "}
-                    <button
-                      className=" focus:shadow-outline
-                                             flex h-full h-[60px]
-                                             w-[60px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                      type="submit"
-                      name="_action"
-                      value="delete_set"
-                    >
-                      <AiFillDelete />
-                    </button>
-                  </deleteSetFetcher.Form>
-                </summary>
-
-                <createSeriesFetcher.Form
-                  className="hidden"
-                  method="post"
-                  id={s.id}
-                />
-                <div className="flex items-center justify-center">
-                  <table className="w-full table-auto divide-y border-none">
-                    <TableHead />
-                    <TableBody
-                      optimistSeries={s.series}
-                      disabled={transition.submission != null}
-                      set={s}
-                      deleteSeriesFetcher={deleteSeriesFetcher}
-                    />
-                  </table>
-                </div>
-                <div className={"flex items-center justify-center"}>
-                  <Link
-                    className={
-                      "p-3 text-blue-600 underline visited:text-purple-600"
-                    }
-                    to={`/exercise/${s.exerciseId}`}
+            <details open={i === data.workout.set.length - 1} key={s.id}>
+              <summary className="flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700">
+                <h3 className="px-5 font-bold">
+                  {i}. {s.exercise.title}
+                </h3>
+                <deleteSetFetcher.Form method="post">
+                  <input type="hidden" value={s.id} name="setId" />{" "}
+                  <button
+                    className="focus:shadow-outline flex h-full h-[40px] w-[55px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                    type="submit"
+                    name="_action"
+                    value="delete_set"
                   >
-                    Go to exercise
-                  </Link>
-                </div>
-              </details>
-            </div>
+                    <AiFillDelete />
+                  </button>
+                </deleteSetFetcher.Form>
+              </summary>
+
+              <createSeriesFetcher.Form
+                className="hidden"
+                method="post"
+                id={s.id}
+              />
+              <div className="flex items-center justify-center">
+                <table className="w-full table-auto divide-y border-none">
+                  <TableHead />
+                  <TableBody
+                    optimistSeries={s.series}
+                    disabled={transition.submission != null}
+                    set={s}
+                    deleteSeriesFetcher={deleteSeriesFetcher}
+                  />
+                </table>
+              </div>
+              <div className={"flex items-center justify-center"}>
+                <Link
+                  className={
+                    "p-3 text-blue-600 underline visited:text-purple-600"
+                  }
+                  to={`/exercise/${s.exerciseId}`}
+                >
+                  Go to exercise
+                </Link>
+              </div>
+            </details>
           );
         })}
       </div>
@@ -409,7 +406,7 @@ export default function WorkoutDetailsPage() {
               </button>
               <button
                 type="button"
-                className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white hover:bg-blue-700"
+                className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white hover:bg-gray-800"
                 onClick={() => {
                   setTimeAndStore(3 * 60 + 30);
                   close();
@@ -471,6 +468,39 @@ const TableBody = ({
     </tbody>
   );
 };
+
+function Card({
+  el,
+  itemId,
+  workoutId,
+  createExerciseFetcher,
+}: {
+  el: { title: string; id: string };
+  itemId: string;
+  workoutId: string;
+  createExerciseFetcher: any;
+}) {
+  return (
+    <createExerciseFetcher.Form
+      key={itemId}
+      method="post"
+      tabIndex={0}
+      className="flex"
+    >
+      <input type="hidden" name="exerciseId" value={el.id} />
+      <input type="hidden" name="workoutId" value={workoutId} />
+      <button
+        type="submit"
+        name="_action"
+        className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
+          text-white transition-colors duration-150 hover:bg-gray-800"
+        value="add_exercise"
+      >
+        {el.title}
+      </button>
+    </createExerciseFetcher.Form>
+  );
+}
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
