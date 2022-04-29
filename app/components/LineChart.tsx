@@ -15,7 +15,7 @@ export default function Line({data}: { data: GraphData }) {
     const hackyRef = useRef<HTMLButtonElement>(null);
     const primaryAxis = React.useMemo<AxisOptions<typeof data[number]["data"][number]>>(
         () => ({
-            getValue: (datum) => dayjs(datum.date).format("MM/DD") as unknown as string,
+            getValue: (datum) => dayjs(datum.date).toDate() as unknown as Date,
             elementType: "line"
         }),
         []
