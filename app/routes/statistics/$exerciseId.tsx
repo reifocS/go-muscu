@@ -78,7 +78,7 @@ export default function StatisticsDetailsPage() {
             </select>
             <h1 className="text-center text-2xl font-bold">{data.exercise.title}</h1>
             {data.graphData[0].data.length > 0 ? <Line
-                data={[data.graphData[graphToShow]]}/> : "No data"}
+                data={[data.graphData[graphToShow]]}/> : <div className="text-center m-3">No data 😱😱😱 </div>}
         </div>
     );
 }
