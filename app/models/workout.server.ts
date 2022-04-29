@@ -18,7 +18,7 @@ export function getDailyWorkout({
       userId,
       date: {
         gte: dateStart,
-        lt: dateEnd,
+        lte: dateEnd,
       },
     },
     include: {

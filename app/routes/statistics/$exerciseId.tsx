@@ -1,5 +1,5 @@
 import type {LoaderFunction} from "remix";
-import {json, useCatch, useLoaderData} from "remix";
+import {json, Link, useCatch, useLoaderData} from "remix";
 import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
 import {Exercise, getExercise,} from "~/models/exercise.server";
@@ -7,6 +7,7 @@ import type {Series} from "~/models/series.server";
 import {requireUserId} from "~/session.server";
 import Line, {GraphData} from "~/components/LineChart";
 import {useState} from "react";
+import {IoIosArrowBack} from "react-icons/io";
 
 type LoaderData = {
     exercise: Exercise & {
@@ -69,13 +70,18 @@ export default function StatisticsDetailsPage() {
 
     return (
         <div className="h-[400px]">
-            <select
-                className="m-3 text-black"
-                value={graphToShow} onChange={(event => setGraphToShow(+event.target.value))}>
-                {data.graphData.map((d, i) => {
-                    return <option value={i} key={i}>{d.label}</option>
-                })}
-            </select>
+            <div className="flex justify-between">
+                <Link to="/exercise" className={"p-4"}>
+                    <IoIosArrowBack/>
+                </Link>
+                <select
+                    className="m-3 text-black"
+                    value={graphToShow} onChange={(event => setGraphToShow(+event.target.value))}>
+                    {data.graphData.map((d, i) => {
+                        return <option value={i} key={i}>{d.label}</option>
+                    })}
+                </select>
+            </div>
             <h1 className="text-center text-2xl font-bold">{data.exercise.title}</h1>
             {data.graphData[0].data.length > 0 ? <Line
                 data={[data.graphData[graphToShow]]}/> : <div className="text-center m-3">No data 😱😱😱 </div>}
