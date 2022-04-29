@@ -83,7 +83,10 @@ export default function App() {
         <Links />
       </head>
       <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
-        <Header user={user} /> <Outlet /> <ScrollRestoration /> <Scripts />
+        <Header user={user} />
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
         <LiveReload />
       </body>
     </html>

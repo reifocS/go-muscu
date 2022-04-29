@@ -64,7 +64,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
             !display && "hidden md:block"
           } block w-full flex-grow bg-gray-700 md:flex md:w-auto md:items-center`}
         >
-          <div className="border-t-2 text-sm md:flex-grow md:border-0">
+          <div className="border-t text-sm md:flex-grow md:border-0">
             {loggedIn ? (
               <>
                 {linksNav.map((l) => (
@@ -72,7 +72,7 @@ const Nav = ({ loggedIn }: { loggedIn: boolean }) => {
                     key={l}
                     style={({ isActive }) => (isActive ? activeStyle : {})}
                     onClick={() => setDisplay(false)}
-                    className="block px-3 py-1 text-white md:inline-block md:py-3 "
+                    className="block max-h-10 px-3 py-1 text-white md:inline-block md:py-3"
                     to={`/${l.toLowerCase()}`}
                   >
                     {l}

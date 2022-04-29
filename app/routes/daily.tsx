@@ -266,7 +266,7 @@ export default function WorkoutDetailsPage() {
 
       <div
         className={`${
-          data.isPastWorkout ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-240px)]"
+          data.isPastWorkout ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-220px)]"
         } overflow-auto`}
       >
         {data.workout.set.map((s, i) => {
@@ -329,9 +329,9 @@ export default function WorkoutDetailsPage() {
       )}
 
       <Popover isOpen={showDialog}>
-        <div className="flex flex-col items-center justify-center">
+        <div className="w-full flex-col items-center justify-center text-right">
           <button
-            className="h-8 w-8 self-end rounded-full bg-red-800 pt-0.5 text-center text-xl font-bold text-white hover:bg-red-900"
+            className="h-8 w-8 self-end rounded-full pt-0.5 text-center text-xl font-bold text-white"
             onClick={close}
           >
             <span aria-hidden>x</span>
@@ -383,7 +383,7 @@ export default function WorkoutDetailsPage() {
               </div>
             </div>
 
-            <div className="flex gap-1">
+            <div className="text-center">
               <button
                 type="button"
                 className="m-2 rounded-full bg-gray-700 py-2 px-2 font-bold text-white"

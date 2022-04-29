@@ -11,7 +11,7 @@ const Minuteur: FC<Props> = ({ children, isOpen }) => {
         !isOpen && "hidden"
       }`}
     >
-      <div className="h-[100%] w-full rounded-lg bg-gray-800 p-2">
+      <div className="m-auto flex h-[100%] max-w-[400px] rounded-lg bg-gray-800 p-2">
         {children}
       </div>
     </div>
