@@ -40,7 +40,7 @@ export default function Chronometre({ setCount, count }: Props) {
 
   return (
     <div className="flex w-full content-center items-center justify-center p-6">
-      <h1>{count != null ? prettyPrint(count) : "Pause"}</h1>
+      <h1>{count != null ? prettyPrint(count) : "Timer"}</h1>
     </div>
   );
 }

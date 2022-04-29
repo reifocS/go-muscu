@@ -266,7 +266,7 @@ export default function WorkoutDetailsPage() {
 
       <div
         className={`${
-          data.isPastWorkout ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-240px)]"
+          data.isPastWorkout ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-220px)]"
         } overflow-auto`}
       >
         {data.workout.set.map((s, i) => {
