@@ -24,19 +24,23 @@ async function seed() {
             },
         },
     });
-
-    const benchPress = await prisma.exercise.create({
-        data: {
-            title: "Bench press",
-            userId: user.id,
-        },
-    });
-
+    const exercises = [{title: "Bench press", start: 80, id: "0"}, {title: "Deadlift", start: 130, id: "0"}, {
+        title: "Curl",
+        start: 20, id: "0"
+    }, {title: "Squat", start: 100, id: "0"}, {title: "Rowing", start: 60, id: "0"},]
+    for (const ex of exercises) {
+        const exercise = await prisma.exercise.create({
+            data: {
+                title: ex.title,
+                userId: user.id,
+            },
+        });
+        ex["id"] = exercise.id
+    }
     const daysOfTraining = 60;
-    let date = dayjs();
+    let date = dayjs().subtract(1, "month");
     const maxRep = 12;
     const minRep = 6;
-    let currentWeigth = 80;
     let currentRep = minRep;
     const nbOfSeries = 5;
     for (let i = 0; i < daysOfTraining; ++i) {
@@ -47,28 +51,32 @@ async function seed() {
                 duration: 0,
             },
         });
-        const setBench = await prisma.set.create({
-            data: {
-                exerciseId: benchPress.id,
-                workoutId: workout.id,
-            },
-        });
-        for (let j = 0; j < nbOfSeries; ++j) {
-            await prisma.series.create({
+        for (const ex of exercises) {
+            const set = await prisma.set.create({
                 data: {
-                    setId: setBench.id,
-                    repetitions: currentRep,
-                    weigth: currentWeigth,
+                    exerciseId: ex.id,
+                    workoutId: workout.id,
                 },
             });
+            for (let j = 0; j < nbOfSeries; ++j) {
+                await prisma.series.create({
+                    data: {
+                        setId: set.id,
+                        repetitions: currentRep,
+                        weigth: ex.start,
+                    },
+                });
+            }
         }
         currentRep++;
         if (currentRep > maxRep) {
             currentRep = minRep;
-            currentWeigth += 2.5
+            exercises.forEach(ex => ex.start += 2.5)
         }
         date = date.add(2, "day")
     }
+
+
     console.log(`Database has been seeded. 🌱`);
 }
 

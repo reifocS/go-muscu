@@ -1,5 +1,5 @@
 import type {LoaderFunction} from "remix";
-import {json, Link, useCatch, useLoaderData} from "remix";
+import {json, Link, useCatch, useLoaderData, useNavigate} from "remix";
 import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
 import {Exercise, getExercise,} from "~/models/exercise.server";
@@ -57,9 +57,9 @@ export const loader: LoaderFunction = async ({request, params}) => {
             secondary: averageWeight
         })
     }
-    let graphData: GraphData = [{label: "volume total", data: totalVolumeOverTime},
-        {label: "repetitions", data: repetitions},
-        {label: "poids moyen", data: averageWeightOverTime}
+    let graphData: GraphData = [{label: "volume total", data: totalVolumeOverTime, color: "#6a89cc"},
+        {label: "repetitions", data: repetitions, color: "#e55039"},
+        {label: "poids moyen", data: averageWeightOverTime, color: "#60a3bc"}
     ]
     return json<LoaderData>({exercise: ex, graphData});
 };
@@ -71,9 +71,6 @@ export default function StatisticsDetailsPage() {
     return (
         <div className="h-[400px]">
             <div className="flex justify-between">
-                <Link to="/exercise" className={"p-4"}>
-                    <IoIosArrowBack/>
-                </Link>
                 <select
                     className="m-3 text-black"
                     value={graphToShow} onChange={(event => setGraphToShow(+event.target.value))}>

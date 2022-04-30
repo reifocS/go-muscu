@@ -4,15 +4,16 @@ import dayjs from "dayjs";
 
 export type GraphData = {
     label: string,
+    color: string,
     data: {
         date: Date,
-        secondary: number
+        secondary: number,
     }[]
 }[]
 
 export default function Line({data}: { data: GraphData }) {
 
-    const hackyRef = useRef<HTMLButtonElement>(null);
+    const color = data[0].color;
     const primaryAxis = React.useMemo<AxisOptions<typeof data[number]["data"][number]>>(
         () => ({
             getValue: (datum) => dayjs(datum.date).toDate() as unknown as Date,
@@ -35,10 +36,12 @@ export default function Line({data}: { data: GraphData }) {
         <>
             <Chart
                 options={{
+                    initialHeight: 400,
                     data,
                     primaryAxis,
                     secondaryAxes,
                     dark: true,
+                    defaultColors: [color]
                 }}
             />
         </>

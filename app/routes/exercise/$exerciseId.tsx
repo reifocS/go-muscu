@@ -66,7 +66,7 @@ export default function ExerciseDetailsPage() {
         to=".."
         className="inline-flex w-full items-center justify-center bg-blue-500 p-2 font-bold text-blue-100 transition-colors duration-150 hover:bg-blue-600"
       >
-        <AiOutlinePlus className="mr-1" /> New exercise
+        <AiOutlinePlus className="mr-1" /> Nouvel exercice
       </Link>
 
       <div>
@@ -98,7 +98,7 @@ export default function ExerciseDetailsPage() {
           </Form>
         </div>
 
-        <Link to={`../../statistics/${data.exercise.id}`}>
+        <Link prefetch={"intent"} to={`../../statistics/${data.exercise.id}`}>
           <div className="flex items-center justify-center p-2 underline">
             statistics <FcStatistics className="ml-1" />
           </div>
@@ -116,7 +116,10 @@ export default function ExerciseDetailsPage() {
                     {`Total: ${s.series.reduce(
                       (acc, s) => acc + s.weigth * s.repetitions,
                       0
-                    )} kg`}
+                    )} kg (${s.series.reduce(
+                        (acc, s) => acc + s.repetitions,
+                        0
+                    )} rep)`}
                   </div>
                 </summary>
 

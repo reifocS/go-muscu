@@ -49,7 +49,7 @@ function Card({
   createExerciseFetcher: any;
 }) {
   return (
-    <Link to={itemId} className="flex">
+    <Link to={itemId} prefetch={"intent"} className="flex">
       <button
         className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
           text-white transition-colors duration-150 hover:bg-gray-800"

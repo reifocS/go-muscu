@@ -1,24 +1,27 @@
+import type {LinksFunction, LoaderFunction, MetaFunction} from "remix";
 import {
-  json,
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLocation,
-  useMatches,
+    json,
+    Links,
+    LiveReload,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    useLocation,
+    useMatches,
+    useNavigate,
 } from "remix";
 import React from "react";
-import { useOptionalUser } from "~/utils";
-import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
+import {useOptionalUser} from "~/utils";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import tailwindGlobalCss from "./styles/global.css";
 import reactResizableCss from "react-resizable/css/styles.css";
 
-import { getUser } from "./session.server";
-import { Header } from "./components/Header";
+import {getUser} from "./session.server";
+import {Header} from "./components/Header";
+import {IoIosArrowBack} from "react-icons/io";
+
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
@@ -39,6 +42,7 @@ export default function App() {
   const user = useOptionalUser();
   let location = useLocation();
   let matches = useMatches();
+  let navigate = useNavigate();
 
   let isMount = true;
   React.useEffect(() => {
@@ -84,6 +88,9 @@ export default function App() {
       </head>
       <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
         <Header user={user} />
+        <button onClick={() => navigate(-1)} className={"p-2 md:hidden"}>
+            <IoIosArrowBack/>
+        </button>
         <Outlet />
         <ScrollRestoration />
         <Scripts />

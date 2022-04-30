@@ -59,7 +59,7 @@ export default function NewExercisePage() {
       }}
     >
       <div className="p-3">
-        <h2 className="text-center font-bold">New exercice</h2>
+        <h2 className="text-center font-bold">Ajouter un exercice</h2>
         <label className="flex w-full flex-col py-2">
           <span>Label: </span>
           <input
