@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useEffect, useState} from "react";
 import {AxisOptions, Chart} from "react-charts";
 import dayjs from "dayjs";
 

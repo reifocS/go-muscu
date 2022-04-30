@@ -1,6 +1,7 @@
 import { useInterval } from "../../hooks/useInterval";
 import { useRef } from "react";
 import { SendNotification } from "~/utils/client/pwa-utils.client";
+import {toast} from "react-toastify";
 
 type Props = {
   setCount: (number: number) => void;
@@ -26,14 +27,23 @@ export default function Chronometre({ setCount, count }: Props) {
       isFinished.current = false;
     } else {
       if (!isFinished.current) {
-        SendNotification("Go muscu!", {
-          body: "Back to work!",
+        SendNotification("Go muscu", {
+          body: "Allez hop !",
           badge: "/icons/icon-192x192.png",
           icon: "/icons/icon-192x192.png",
           silent: false,
           vibrate: [200, 100, 200],
         });
         isFinished.current = true;
+          toast.warning('Au boulot 💪 !!!!', {
+              position: "top-right",
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              autoClose: false,
+              progress: undefined,
+          });
       }
     }
   }, 1000);
