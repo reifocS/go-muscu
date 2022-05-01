@@ -1,7 +1,5 @@
-import {useInterval} from "../../hooks/useInterval";
-import {SendNotification} from "~/utils/client/pwa-utils.client";
-import {toast} from "react-toastify";
-import {useCountState, useCountUpdater} from "~/contexts/useTimer";
+import {useCountState} from "~/contexts/useTimer";
+import {RiTimerLine} from "react-icons/ri";
 
 type Props = {};
 
@@ -17,10 +15,8 @@ export function prettyPrint(time: number) {
 
 export default function Chronometre({}: Props) {
     const count = useCountState();
-
+    const isTimer = count != null && !count.finished;
     return (
-        <div className="flex w-full content-center items-center justify-center p-6">
-            <h1>{count != null ? prettyPrint(count.timer) : "Timer"}</h1>
-        </div>
+        <div className={isTimer ? "text-lg": "text-2xl"}>{isTimer? prettyPrint(count.timer) : <RiTimerLine/>}</div>
     );
 }

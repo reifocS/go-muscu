@@ -309,12 +309,17 @@ export default function WorkoutDetailsPage() {
             </div>
 
             {!data.isPastWorkout && (
-                <div
-                    className="focus:shadow-outline flex w-full items-center justify-center bg-gray-700 font-bold text-white transition-colors duration-150">
-                    <button className="h-[70px] w-full text-lg font-bold" onClick={open}>
-                        <Chronometre/>
-                    </button>
-                </div>
+
+                <button
+                    style={{
+                        position: "absolute",
+                        bottom: 10,
+                        right: 10
+                    }}
+                    className="w-[60px] h-[60px] bg-blue-500 p-4 flex items-center justify-center font-bold text-white transition-colors duration-150 font-bold rounded-full"
+                    onClick={open}>
+                    <Chronometre/>
+                </button>
             )}
 
             <Popover isOpen={showDialog}>
