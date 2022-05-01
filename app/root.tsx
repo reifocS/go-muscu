@@ -22,6 +22,7 @@ import {getUser} from "./session.server";
 import {Header} from "./components/Header";
 import {IoIosArrowBack} from "react-icons/io";
 import {ToastContainer} from "react-toastify";
+import {CountProvider} from "~/contexts/useTimer";
 
 export const links: LinksFunction = () => {
     return [
@@ -89,11 +90,13 @@ export default function App() {
             <Links/>
         </head>
         <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
+        <CountProvider>
         <Header user={user}/>
         <button onClick={() => navigate(-1)} className={"p-2 md:hidden"}>
             <IoIosArrowBack/>
         </button>
-        <Outlet/>
+            <Outlet/>
+        </CountProvider>
         <ScrollRestoration/>
         <Scripts/>
         <LiveReload/>

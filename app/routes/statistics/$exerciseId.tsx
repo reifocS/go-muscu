@@ -1,5 +1,5 @@
 import type {LoaderFunction} from "remix";
-import {json, Link, useCatch, useLoaderData, useNavigate} from "remix";
+import {json, useCatch, useLoaderData} from "remix";
 import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
 import {Exercise, getExercise,} from "~/models/exercise.server";
@@ -7,7 +7,6 @@ import type {Series} from "~/models/series.server";
 import {requireUserId} from "~/session.server";
 import Line, {GraphData} from "~/components/LineChart";
 import {useState} from "react";
-import {IoIosArrowBack} from "react-icons/io";
 
 type LoaderData = {
     exercise: Exercise & {
