@@ -235,7 +235,7 @@ export default function WorkoutDetailsPage() {
         //setLastTime(time);
     };
     return (
-        <div className="w-full overflow-hidden">
+        <div className="w-full h-full overflow-hidden">
             {data.isPastWorkout && (
                 <div className="mt-2 text-center font-bold">
                     <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
@@ -253,7 +253,7 @@ export default function WorkoutDetailsPage() {
 
             <div
                 className={`${
-                    data.isPastWorkout ? "h-[calc(100vh-225px)] lg:h-[calc(100vh-190px)]" : "h-[calc(100vh-255px)] lg:h-[calc(100vh-220px)]"
+                    "h-[calc(100vh-225px)]"
                 } overflow-auto`}
             >
                 {data.workout.set.map((s, i) => {
