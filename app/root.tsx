@@ -23,7 +23,7 @@ import { Header } from "./components/Header";
 import { IoIosArrowBack } from "react-icons/io";
 import { ToastContainer } from "react-toastify";
 import { CountProvider } from "~/contexts/useTimer";
-import Chrono from "./components/Chrono";
+import Chronometre from "./components/Chronometre";
 
 export const links: LinksFunction = () => {
   return [
@@ -98,7 +98,7 @@ export default function App() {
           </button>
 
           <Outlet />
-          <Chrono />
+          <Chronometre />
         </CountProvider>
 
         <ScrollRestoration />
