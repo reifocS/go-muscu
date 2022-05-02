@@ -93,10 +93,6 @@ export default function App() {
       <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
         <CountProvider>
           <Header user={user} />
-          <button onClick={() => navigate(-1)} className={"p-2 md:hidden"}>
-            <IoIosArrowBack />
-          </button>
-
           <Outlet />
           <Chronometre />
         </CountProvider>

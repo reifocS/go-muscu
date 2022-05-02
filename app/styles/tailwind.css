@@ -795,10 +795,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 55px;
 }
 
-.w-\[60px\] {
-  width: 60px;
-}
-
 .w-\[85px\] {
   width: 85px;
 }
@@ -1154,6 +1150,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-base {
