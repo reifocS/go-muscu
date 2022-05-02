@@ -17,7 +17,7 @@ export function prettyPrint(time: number) {
 }
 
 export default function Chrono({}: Props) {
-  const [showDialog, setShowDialog] = useState(true);
+  const [showDialog, setShowDialog] = useState(false);
   const setTime = useCountUpdater();
   const [min, setMin] = useState<string | null>("01:30");
 
