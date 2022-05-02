@@ -7,11 +7,11 @@ type Props = {
 const Minuteur: FC<Props> = ({ children, isOpen }) => {
   return (
     <div
-      className={`absolute top-0 z-10 h-screen w-full overflow-hidden bg-[#00000080] px-[20px] pt-[100px] ${
+      className={`absolute top-0 z-10 h-screen w-full overflow-hidden bg-[#00000080] pt-[calc(50vh-100px)] ${
         !isOpen && "hidden"
       }`}
     >
-      <div className="m-auto flex h-[100%] max-w-[400px] rounded-lg bg-gray-800 p-2">
+      <div className="m-auto flex max-w-[400px] rounded-lg bg-gray-800">
         {children}
       </div>
     </div>
