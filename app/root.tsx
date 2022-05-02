@@ -1,16 +1,5 @@
 import type {LinksFunction, LoaderFunction, MetaFunction} from "remix";
-import {
-    json,
-    Links,
-    LiveReload,
-    Meta,
-    Outlet,
-    Scripts,
-    ScrollRestoration,
-    useLocation,
-    useMatches,
-    useNavigate,
-} from "remix";
+import {json, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocation, useMatches,} from "remix";
 import React from "react";
 import {useOptionalUser} from "~/utils";
 import reactToastifyCss from 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +9,6 @@ import reactResizableCss from "react-resizable/css/styles.css";
 
 import {getUser} from "./session.server";
 import {Header} from "./components/Header";
-import {IoIosArrowBack} from "react-icons/io";
 import {ToastContainer} from "react-toastify";
 import {CountProvider} from "~/contexts/useTimer";
 
@@ -45,7 +33,6 @@ export default function App() {
     const user = useOptionalUser();
     let location = useLocation();
     let matches = useMatches();
-    let navigate = useNavigate();
 
     let isMount = true;
     React.useEffect(() => {
@@ -91,10 +78,7 @@ export default function App() {
         </head>
         <body className="relative h-screen overflow-hidden bg-gray-800 font-mono text-white">
         <CountProvider>
-        <Header user={user}/>
-        <button onClick={() => navigate(-1)} className={"p-2 md:hidden"}>
-            <IoIosArrowBack/>
-        </button>
+            <Header user={user}/>
             <Outlet/>
         </CountProvider>
         <ScrollRestoration/>
@@ -110,6 +94,7 @@ export default function App() {
             pauseOnFocusLoss
             draggable
             pauseOnHover
+            theme={"dark"}
         />
         </body>
         </html>
