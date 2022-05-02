@@ -75,7 +75,6 @@ export default function Calendar() {
                 colors={colors}
             />
             <Legend exercises={data.exerciseList} colors={colors}/>
-            <div className="text-xs">Seul les trois premiers exo sont affichés</div>
             <div className="flex items-center">
                 <button
                     className="px-2 py-2"
