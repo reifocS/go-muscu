@@ -16,7 +16,7 @@ export default function Line({data}: { data: GraphData }) {
     const color = data[0].color;
     const primaryAxis = React.useMemo<AxisOptions<typeof data[number]["data"][number]>>(
         () => ({
-            getValue: (datum) => dayjs(datum.date).toDate() as unknown as Date,
+            getValue: (datum) => dayjs(datum.date).toDate(),
             elementType: "line"
         }),
         []
@@ -41,7 +41,7 @@ export default function Line({data}: { data: GraphData }) {
                     primaryAxis,
                     secondaryAxes,
                     dark: true,
-                    defaultColors: [color]
+                    defaultColors: [color],
                 }}
             />
         </>

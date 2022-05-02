@@ -1,5 +1,5 @@
 import type {ActionFunction, LoaderFunction} from "remix";
-import {Form, json, Link, redirect, useCatch, useFetcher, useLoaderData} from "remix";
+import {Form, json, Link, redirect, useCatch, useFetcher, useLoaderData, useSubmit} from "remix";
 import type {Set} from "~/models/set.server";
 import invariant from "tiny-invariant";
 import {deleteExercise, Exercise, getExercise, updateExercise,} from "~/models/exercise.server";
@@ -58,7 +58,7 @@ export default function ExerciseDetailsPage() {
     const data = useLoaderData() as LoaderData;
     const editFetcher = useFetcher();
     useEffect(() => {
-        if(editFetcher.submission) {
+        if (editFetcher.submission) {
             toast.success('Exercice édité 💪', {
                 position: "top-right",
                 hideProgressBar: false,
@@ -69,6 +69,8 @@ export default function ExerciseDetailsPage() {
             });
         }
     }, [editFetcher.submission])
+
+    const submit = useSubmit();
 
     return (
         <div>
@@ -81,7 +83,13 @@ export default function ExerciseDetailsPage() {
 
             <div>
                 <div className="flex inline-flex w-full p-2">
-                    <Form method="post">
+                    <Form method="post" onSubmit={(e) => {
+                        if (confirm("Supprimer définitivement cet exercice ?")) {
+                            submit(e.currentTarget)
+                        } else {
+                            e.preventDefault();
+                        }
+                    }}>
                         <button
                             type="submit"
                             className="focus:shadow-outline flex h-full h-[40px] w-[40px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
