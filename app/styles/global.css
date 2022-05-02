@@ -38,3 +38,16 @@ details > summary::marker {
 ::-webkit-scrollbar-corner {
     background: #232a34;
 }
+
+input[type="time"] {
+    position: absolute;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display:block;
+    top: 0;
+    left: 0;
+    background: transparent;
+    position:absolute;
+    width: 100%;
+}

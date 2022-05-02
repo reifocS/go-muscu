@@ -17,10 +17,9 @@ export function prettyPrint(time: number) {
 }
 
 export default function Chrono({}: Props) {
-  const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(true);
   const setTime = useCountUpdater();
-  const [min, setMin] = useState(0);
-  const [sec, setSeconds] = useState(0);
+  const [min, setMin] = useState<string | null>("01:30");
 
   const count = useCountState();
   const isTimer = count != null && !count.finished;
@@ -37,10 +36,10 @@ export default function Chrono({}: Props) {
   return (
     <div>
       <button
-        className="absolute bottom-3 right-3 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-blue-500 p-4 font-bold font-bold text-white transition-colors duration-150"
+        className="absolute bottom-3 right-3 flex h-[60px] w-[60px] flex-col items-center justify-center rounded-full bg-blue-500 p-4 font-bold font-bold text-white transition-colors duration-150"
         onClick={open}
       >
-        <RiTimerLine className="text-2xl " />
+        <RiTimerLine className="h-full min-h-[20px] w-full min-w-[20px] text-2xl " />
         <p className="text-sm">{isTimer && prettyPrint(count?.timer)}</p>
       </button>
 
@@ -55,47 +54,33 @@ export default function Chrono({}: Props) {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              setTimeAndStore(min * 60 + sec);
+
+              const minsec = min?.split(":");
+
+              if (!minsec) {
+                setTimeAndStore(0);
+              } else {
+                setTimeAndStore(Number(minsec[0]) * 60 + Number(minsec[1]));
+              }
               close();
             }}
           >
-            <div className="flex w-full items-center justify-center text-center text-5xl">
-              <div className="w-25 mx-1 rounded-lg p-2">
+            <div className="w-full">
+              <div className="flex flex-col items-center justify-center text-center ">
                 <label
-                  htmlFor="minutes"
-                  className="block text-sm font-medium text-gray-200"
+                  htmlFor="appt-time"
+                  className="mb-[70px] text-sm font-medium text-gray-200"
                 >
-                  Minutes
+                  min:sec
                 </label>
                 <input
-                  name="minutes"
-                  value={String(min).padStart(2, "0")}
-                  onChange={(e) => setMin(+e.target.value)}
-                  type="number"
-                  min={0}
-                  className="w-full rounded bg-gray-900 text-center font-mono leading-none"
-                  max={60}
-                  placeholder="min"
-                />
-              </div>
-              <div className="mx-1 text-2xl">:</div>
-              <div className="w-25 mx-1 rounded-lg p-2">
-                <label
-                  htmlFor="seconds"
-                  className="block text-sm font-medium text-gray-200"
-                >
-                  Seconds
-                </label>
-                <input
-                  name="seconds"
-                  value={String(sec).padStart(2, "0")}
-                  onChange={(e) => setSeconds(+e.target.value)}
-                  type="number"
-                  className="w-full bg-gray-900 text-center font-mono leading-none"
-                  min={0}
-                  max={60}
-                  placeholder="seconds"
-                />
+                  className="rounded bg-gray-900 text-center font-mono text-5xl leading-none"
+                  id="appt-time"
+                  type="time"
+                  name="appt-time"
+                  value={String(min)}
+                  onChange={(e) => setMin(e.target.value)}
+                ></input>
               </div>
             </div>
 
@@ -135,7 +120,7 @@ export default function Chrono({}: Props) {
             <button
               className="
               mt-2 flex 
-              w-full items-center justify-center rounded bg-gray-700 py-2 px-4
+              w-full items-center justify-center rounded bg-gray-700 py-3 px-4
               font-bold text-white text-white"
               type="submit"
             >

@@ -20,12 +20,8 @@ import { createSet, deleteSet, Set } from "~/models/set.server";
 import { createSeries, deleteSeries, Series } from "~/models/series.server";
 import { getExerciseList } from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
-import { useState } from "react";
-import Popover from "~/components/Popover";
-import Chronometre from "~/components/Chronometre";
 import { Fetcher } from "@remix-run/react/transition";
 import { AiFillDelete, AiOutlinePlus } from "react-icons/ai";
-import { useCountUpdater } from "~/contexts/useTimer";
 
 type WorkoutSet = Set & {
   series: Series[];
@@ -231,23 +227,12 @@ function AddSeries({ set, disabled }: { set: Set; disabled: boolean }) {
 
 export default function WorkoutDetailsPage() {
   const data = useLoaderData() as LoaderData;
-  const [showDialog, setShowDialog] = useState(false);
-  const setTime = useCountUpdater();
-  const [min, setMin] = useState(0);
-  const [sec, setSeconds] = useState(0);
-  //const [lastTime, setLastTime] = useState<number | null>(null);
-  const open = () => setShowDialog(true);
-  const close = () => setShowDialog(false);
   const transition = useTransition();
   const deleteSetFetcher = useFetcher();
   const deleteSeriesFetcher = useFetcher();
   const createSeriesFetcher = useFetcher();
   const createExerciseFetcher = useFetcher();
 
-  const setTimeAndStore = (time: number) => {
-    setTime({ timer: time, finished: false });
-    //setLastTime(time);
-  };
   return (
     <div className="h-full w-full overflow-hidden">
       {data.isPastWorkout && (

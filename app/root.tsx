@@ -109,6 +109,7 @@ export default function App() {
           autoClose={1500}
           hideProgressBar={false}
           newestOnTop={false}
+          theme="dark"
           closeOnClick
           rtl={false}
           pauseOnFocusLoss
