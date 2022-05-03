@@ -74,13 +74,14 @@ export default function Chrono({}: Props) {
                                     min:sec
                                 </label>
                                 <input
-                                    className="rounded bg-gray-900 text-center font-mono text-5xl leading-none"
+                                    className="rounded bg-gray-900 text-center font-mono text-5xl"
                                     id="appt-time"
                                     type="time"
                                     name="appt-time"
+                                    style={{maxWidth: 300}}
                                     value={String(min)}
                                     onChange={(e) => setMin(e.target.value)}
-                                ></input>
+                                />
                             </div>
                         </div>
 
