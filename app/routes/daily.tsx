@@ -9,7 +9,7 @@ import Carrousel from "~/components/Carrousel";
 import {Fetcher} from "@remix-run/react/transition";
 import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
 import {GiNotebook} from "react-icons/gi"
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Dialog} from "@reach/dialog";
 import {toast} from "react-toastify";
 
@@ -239,7 +239,7 @@ export default function WorkoutDetailsPage() {
     const createExerciseFetcher = useFetcher();
     const [showDialog, setShowDialog] = useState<{ open: boolean, set?: Set }>({open: false, set: undefined});
     const open = (s: Set) => setShowDialog({open: true, set: s});
-    const close = () => setShowDialog({open: false, set: undefined});
+    const close = useCallback(() => setShowDialog({open: false, set: undefined}), []);
 
     return (
         <div className="h-full w-full overflow-hidden">
@@ -407,7 +407,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
             });
 
         }
-    }, [fetcher.state])
+    }, [fetcher.state, close])
 
     return <Dialog
         aria-label="edit_note"
