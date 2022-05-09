@@ -17,13 +17,12 @@ import reactToastifyCss from "react-toastify/dist/ReactToastify.css";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import tailwindGlobalCss from "./styles/global.css";
 import reactResizableCss from "react-resizable/css/styles.css";
-
 import { getUser } from "./session.server";
 import { Header } from "./components/Header";
-import { IoIosArrowBack } from "react-icons/io";
 import { ToastContainer } from "react-toastify";
 import { CountProvider } from "~/contexts/useTimer";
 import Chronometre from "./components/Chronometre";
+import dialogCss from "@reach/dialog/styles.css";
 
 export const links: LinksFunction = () => {
   return [
@@ -31,6 +30,7 @@ export const links: LinksFunction = () => {
     { rel: "stylesheet", href: tailwindGlobalCss },
     { rel: "stylesheet", href: reactResizableCss },
     { rel: "stylesheet", href: reactToastifyCss },
+    { rel: "stylesheet", href: dialogCss },
   ];
 };
 export const meta: MetaFunction = () => ({
