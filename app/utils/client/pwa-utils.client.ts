@@ -194,6 +194,7 @@ interface NotificationOptions {
   image?: string;
   silent: boolean | false;
   vibrate?: Array<number>;
+  url?: string
 }
 
 export async function SendNotification(

@@ -177,6 +177,22 @@ self.addEventListener("fetch", (event) => {
     return appHandleFetch(event, result);
   })());
 });
+self.addEventListener("notificationclick", function(event) {
+  console.log("On notification click: ", event.notification.tag);
+  event.notification.close();
+  event.waitUntil(clients.matchAll({
+    type: "window"
+  }).then(function(clientList) {
+    for (let client of clientList) {
+      if (client.url.includes("/daily") && "focus" in client) {
+        return client.focus();
+      }
+    }
+    if (clients.openWindow) {
+      return clients.openWindow("/daily");
+    }
+  }));
+});
 async function appHandleFetch(event, {
   error,
   response

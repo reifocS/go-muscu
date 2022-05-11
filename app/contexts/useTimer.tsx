@@ -27,6 +27,7 @@ function CountProvider(props: any) {
                     icon: "/icons/icon-192x192.png",
                     silent: false,
                     vibrate: [200, 100, 200],
+                    url: "https://go-muscu-f62a.fly.dev/daily"
                 });
                 toast.success('Au boulot 💪 !!!!', {
                     position: "top-right",
