@@ -189,7 +189,9 @@ const TableRow = ({
     );
 };
 
-function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
+function AddSeries({set, disabled}: { set: WorkoutSet ; disabled: boolean }) {
+    const lastSeries = set.series[set.series.length - 1];
+
     return (
         <tr className="h-10">
             <td className="h-full px-2 py-2 text-xs">
@@ -199,6 +201,7 @@ function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
                     placeholder="rep"
                     type="number"
                     form={set.id}
+                    defaultValue={lastSeries?.repetitions}
                     className="w-full rounded bg-gray-900 py-1 px-1 text-base text-gray-200 outline-none transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-200"
                     min={0}
                 />
@@ -209,6 +212,7 @@ function AddSeries({set, disabled}: { set: Set; disabled: boolean }) {
                     placeholder="poids"
                     type="number"
                     step="0.01"
+                    defaultValue={lastSeries?.weigth}
                     className="w-full rounded bg-gray-900 py-1 px-1 text-base text-gray-200 outline-none transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-200"
                     form={set.id}
                     min={0}
