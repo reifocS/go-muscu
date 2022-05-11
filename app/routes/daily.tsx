@@ -411,10 +411,18 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
 
     return <Dialog
         aria-label="edit_note"
-        className="text-black w-full"
+        style={{
+            maxWidth: '450px',
+            borderRadius: '3px',
+            paddingBottom: '3.5em',
+            boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
+            margin: '10vh auto',
+            width: "100%",
+            backgroundColor: "#00000080"
+        }}
         isOpen={open} onDismiss={close}>
         <div className="flex">
-            <button className="ml-auto" onClick={close}>X</button>
+            <button className="ml-auto font-bold" onClick={close}>x</button>
         </div>
         <h1 className="font-bold">Ajouter une note 📝</h1>
         <fetcher.Form method={"post"}>
