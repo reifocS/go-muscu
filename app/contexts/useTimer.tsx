@@ -35,7 +35,6 @@ function CountProvider(props: any) {
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
-                    autoClose: false,
                     progress: undefined,
                 });
                 setCount(prev => prev ? ({...prev, finished: true, endTime: undefined}) : prev)
