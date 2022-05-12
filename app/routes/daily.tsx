@@ -12,6 +12,7 @@ import {GiNotebook} from "react-icons/gi"
 import {useCallback, useEffect, useState} from "react";
 import {Dialog} from "@reach/dialog";
 import {toast} from "react-toastify";
+import {GoLinkExternal} from "react-icons/go";
 
 type WorkoutSet = Set & {
     series: Series[];
@@ -309,11 +310,11 @@ export default function WorkoutDetailsPage() {
                             <div className={"flex items-center justify-center"}>
                                 <Link
                                     className={
-                                        "p-3 text-blue-600 underline visited:text-purple-600"
+                                        "p-3 flex items-center justify-center font-bold"
                                     }
                                     to={`/exercise/${s.exerciseId}`}
                                 >
-                                    Go to exercise
+                                    Exercice{" "}<GoLinkExternal className="ml-2"/>
                                 </Link>
                             </div>
                         </details>
@@ -422,13 +423,13 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
             boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
             margin: '10vh auto',
             width: "100%",
-            backgroundColor: "#00000080"
+            backgroundColor: "#374151"
         }}
         isOpen={open} onDismiss={close}>
         <div className="flex">
-            <button className="ml-auto font-bold" onClick={close}>x</button>
+            <button className="ml-auto font-bold bg-red-500 px-3 py-1 rounded" onClick={close}>x</button>
         </div>
-        <h1 className="font-bold">Ajouter une note 📝</h1>
+        <h1 className="font-bold mb-2">Ajouter une note 📝</h1>
         <fetcher.Form method={"post"}>
             <input
                 type="text"
@@ -438,6 +439,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
                 readOnly
             />
             <textarea
+                required
                 className="w-full px-3
                             py-1.5
                             text-base
