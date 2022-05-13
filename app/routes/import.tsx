@@ -9,6 +9,8 @@ import {
 } from "remix";
 import {requireUserId} from "~/session.server";
 import {exportEverything} from "~/models/user.server";
+import {Exercise} from "@prisma/client";
+import {createExercise} from "~/models/exercise.server";
 
 type DataFormat = Awaited<ReturnType<typeof exportEverything>>
 
@@ -19,7 +21,7 @@ export const loader: LoaderFunction = async ({request}) => {
 };
 
 export const action: ActionFunction = async ({request}) => {
-    await requireUserId(request);
+    const userId = await requireUserId(request);
     const uploadHandler = unstable_createMemoryUploadHandler({
         maxFileSize: 500_000,
         filter: (f) => {
@@ -40,6 +42,12 @@ export const action: ActionFunction = async ({request}) => {
     const rawText = await file.text();
     try {
         const j = JSON.parse(rawText) as DataFormat;
+        const exerciseMap: Map<Exercise, Exercise> = new Map;
+        const exPromises = j!.exercices.map((src) =>
+            createExercise({title: src.title, userId}).then(ex => exerciseMap.set(src, ex))
+        )
+        await Promise.allSettled(exPromises);
+
         return {json: j}
     } catch (e) {
         return {
