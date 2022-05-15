@@ -248,6 +248,7 @@ export default function WorkoutDetailsPage() {
 
     return (
         <div className="h-full w-full overflow-hidden">
+
             {data.isPastWorkout && (
                 <div className="mt-2 text-center font-bold">
                     <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
