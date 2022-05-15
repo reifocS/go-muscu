@@ -1,5 +1,16 @@
 import type {LinksFunction, LoaderFunction, MetaFunction} from "remix";
-import {json, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLocation, useMatches,} from "remix";
+import {
+    json,
+    Links,
+    LiveReload,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    useLocation,
+    useMatches,
+    useNavigate,
+} from "remix";
 import React from "react";
 import {useOptionalUser} from "~/utils";
 import reactToastifyCss from "react-toastify/dist/ReactToastify.css";
@@ -12,7 +23,6 @@ import {ToastContainer} from "react-toastify";
 import {CountProvider} from "~/contexts/useTimer";
 import Chronometre from "./components/Chronometre";
 import dialogCss from "@reach/dialog/styles.css";
-import swiperCss from 'swiper/swiper-bundle.min.css';
 
 export const links: LinksFunction = () => {
     return [
@@ -21,7 +31,6 @@ export const links: LinksFunction = () => {
         {rel: "stylesheet", href: reactResizableCss},
         {rel: "stylesheet", href: reactToastifyCss},
         {rel: "stylesheet", href: dialogCss},
-        {rel: "stylesheet", href: swiperCss},
     ];
 };
 export const meta: MetaFunction = () => ({
