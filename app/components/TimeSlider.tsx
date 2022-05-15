@@ -2,7 +2,7 @@ import {Swiper, SwiperSlide} from "swiper/react";
 
 export default function Slider({setSec, setMin} : {setSec: (n: number) => void, setMin: (n: number) => void}) {
     return (
-        <div className="flex p-5 justify-center h-[100px]">
+        <div className="flex p-5 justify-center h-[150px] border-2 border-gray-400 rounded">
             <Swiper
                 loop={true}
                 slidesPerView={1}

@@ -57,13 +57,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .mySwiper {
-    color: black;
 }
 
 .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
 
     /* Center slide text vertically */
     display: -webkit-box;

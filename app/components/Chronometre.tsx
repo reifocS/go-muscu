@@ -4,6 +4,7 @@ import {RiTimerLine} from "react-icons/ri";
 import dayjs from "dayjs";
 import TimeSlider from "./TimeSlider";
 import {Dialog} from "@reach/dialog";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 type Props = {};
 
@@ -22,7 +23,8 @@ export default function Chrono({}: Props) {
     const setTime = useCountUpdater();
     const [min, setMin] = useState(0);
     const [sec, setSec] = useState(0);
-
+    const [customTimers, setCustomTimers] = useLocalStorage<number[]>("gm-custom-timers", []);
+    const [customTimerValue, setCustomTimerValue] = useState(60);
     const count = useCountState();
     const isTimer = count != null && !count.finished;
 
@@ -68,6 +70,10 @@ export default function Chrono({}: Props) {
                         <span aria-hidden>x</span>
                     </button>
                     <div className="w-full">
+                        <div className="flex justify-around">
+                            <div>min</div>
+                            <div>sec</div>
+                        </div>
                         <TimeSlider setMin={setMin} setSec={setSec}/>
                     </div>
 
@@ -80,7 +86,7 @@ export default function Chrono({}: Props) {
                                 close();
                             }}
                         >
-                            1:30
+                            01:30
                         </button>
                         <button
                             type="button"
@@ -90,7 +96,7 @@ export default function Chrono({}: Props) {
                                 close();
                             }}
                         >
-                            2:30
+                            02:30
                         </button>
                         <button
                             type="button"
@@ -100,10 +106,38 @@ export default function Chrono({}: Props) {
                                 close();
                             }}
                         >
-                            3:30
+                            03:30
                         </button>
+                        {customTimers.map(c => <button
+                            type="button"
+                            className="m-2 rounded-full bg-blue-700 py-2 px-2 font-bold text-white hover:bg-blue-800"
+                            onClick={() => {
+                                setTimeAndStore(c);
+                                close();
+                            }}
+                        >
+                            {prettyPrint(c)}
+                        </button>)}
                     </div>
-
+                    <div className="flex flex-col items-center w-full">
+                        <label htmlFor={"custom-timer"}>Add custom timer (seconds)</label>
+                        <div className="flex gap-1">
+                            <input
+                                value={customTimerValue}
+                                onChange={(e) => setCustomTimerValue(+e.target.value)}
+                                className={"text-black w-[70px]"} id={"custom-timer"} name={"custom-timer"} type={"number"}/>
+                            <button className="p-3 bg-blue-700 hover:bg-blue-800" onClick={() => {
+                                if (customTimerValue <= 0) return;
+                                setCustomTimers((prevState) => [...prevState, customTimerValue]);
+                                setCustomTimerValue(0);
+                            }}>+
+                            </button>
+                            <button className="p-3 bg-red-500 hover:bg-red-800 text-sm" onClick={() => {
+                                setCustomTimers([]);
+                            }}>clear
+                            </button>
+                        </div>
+                    </div>
                     <button
                         className="
               mt-2 flex hover:bg-blue-800

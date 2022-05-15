@@ -632,8 +632,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 1.25rem;
 }
 
-.h-\[100px\] {
-  height: 100px;
+.h-\[200px\] {
+  height: 200px;
 }
 
 .h-2\.5 {
@@ -678,6 +678,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-\[400px\] {
   height: 400px;
+}
+
+.h-\[150px\] {
+  height: 150px;
 }
 
 .max-h-10 {
@@ -748,6 +752,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 40px;
 }
 
+.w-\[80px\] {
+  width: 80px;
+}
+
+.w-\[70px\] {
+  width: 70px;
+}
+
 .min-w-\[20px\] {
   min-width: 20px;
 }
@@ -796,8 +808,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   justify-content: space-between;
 }
 
+.justify-around {
+  justify-content: space-around;
+}
+
 .gap-\[1px\] {
   gap: 1px;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
@@ -845,6 +865,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-width: 1px;
 }
 
+.border-2 {
+  border-width: 2px;
+}
+
 .border-t {
   border-top-width: 1px;
 }
@@ -865,6 +889,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }
 
 .bg-gray-800 {
@@ -918,6 +947,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
 }
 
 .bg-clip-padding {
@@ -1200,6 +1234,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .hover\:bg-gray-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-green-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 101 52 / var(--tw-bg-opacity));
 }
 
 .focus\:border-blue-600:focus {
