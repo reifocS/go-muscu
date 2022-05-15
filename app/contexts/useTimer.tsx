@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useInterval} from "../../hooks/useInterval";
 import {SendNotification} from "~/utils/client/pwa-utils.client";
 import {toast} from "react-toastify";
@@ -13,6 +13,19 @@ const CountUpdaterContext = React.createContext<CounterDispatch>(() => {
 function CountProvider(props: any) {
     const [count, setCount] = React.useState<CounterState>(null);
 
+    useEffect(() => {
+            let id = () => {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.getNotifications().then(notifications =>
+                        notifications.forEach(notification => notification.close()));
+                });
+            }
+            window.addEventListener("focus", id)
+            return () => window.removeEventListener("focus", id);
+        },
+        []
+    )
+
     useInterval(() => {
         if (count === null || count.endTime == null) return;
         const now = dayjs();
@@ -21,14 +34,16 @@ function CountProvider(props: any) {
             setCount(prev => prev ? ({...prev, finished: false, timer: elapsedTime}) : prev);
         } else {
             if (!count.finished) {
-                SendNotification("Go muscu", {
-                    body: "Allez hop !",
-                    badge: "/icons/icon-192x192.png",
-                    icon: "/icons/icon-192x192.png",
-                    silent: false,
-                    vibrate: [200, 100, 200],
-                    url: "https://go-muscu-f62a.fly.dev/daily"
-                });
+                if (!document.hasFocus()) {
+                    SendNotification("Go muscu", {
+                        body: "Allez hop !",
+                        badge: "/icons/icon-192x192.png",
+                        icon: "/icons/icon-192x192.png",
+                        silent: false,
+                        vibrate: [200, 100, 200],
+                        url: "https://go-muscu-f62a.fly.dev/daily"
+                    });
+                }
                 toast.success('Au boulot 💪 !!!!', {
                     position: "top-right",
                     hideProgressBar: false,
