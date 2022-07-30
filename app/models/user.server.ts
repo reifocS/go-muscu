@@ -46,7 +46,7 @@ export async function exportEverything(userId: string) {
                         include: {
                             series: true
                         }
-                    }
+                    },
                 }
             },
             exercices: true

@@ -111,3 +111,7 @@ export function deleteWorkout({
     where: { id, userId },
   });
 }
+
+export function deleteAllWorkout(){
+    return prisma.workout.deleteMany({});
+}
