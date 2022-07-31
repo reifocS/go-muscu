@@ -3,7 +3,6 @@ import {json, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLo
 import React from "react";
 import {useOptionalUser} from "~/utils";
 import reactToastifyCss from "react-toastify/dist/ReactToastify.css";
-import tailwindStylesheetUrl from "./styles/tailwind.css";
 import tailwindGlobalCss from "./styles/global.css";
 import reactResizableCss from "react-resizable/css/styles.css";
 import {getUser} from "./session.server";
@@ -13,15 +12,16 @@ import {CountProvider} from "~/contexts/useTimer";
 import Chronometre from "./components/Chronometre";
 import dialogCss from "@reach/dialog/styles.css";
 import swiperCss from 'swiper/swiper-bundle.min.css';
+import styles from "./tailwind.css";
 
 export const links: LinksFunction = () => {
     return [
-        {rel: "stylesheet", href: tailwindStylesheetUrl},
         {rel: "stylesheet", href: tailwindGlobalCss},
         {rel: "stylesheet", href: reactResizableCss},
         {rel: "stylesheet", href: reactToastifyCss},
         {rel: "stylesheet", href: dialogCss},
         {rel: "stylesheet", href: swiperCss},
+        { rel: "stylesheet", href: styles },
     ];
 };
 export const meta: MetaFunction = () => ({
