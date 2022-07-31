@@ -109,6 +109,7 @@ export default function Chrono({}: Props) {
                             03:30
                         </button>
                         {customTimers.map(c => <button
+                            key={c}
                             type="button"
                             className="m-2 rounded-full bg-blue-700 py-2 px-2 font-bold text-white hover:bg-blue-800"
                             onClick={() => {
