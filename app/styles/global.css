@@ -1,11 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.menu-item {
-    @apply block text-gray-200 hover:text-white lg:mt-0 lg:inline-block;
-}
-
 details > summary::marker {
     content: "";
 }
@@ -83,21 +75,4 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.container {
-    position: absolute;
-    transform-origin: 0 0;
-    left: 50%;
-    top: 50%;
-    width: 10px;
-    height: 10px;
-    background: #eee;
-}
-
-.dot {
-    position: absolute;
-    font: normal 15px sans-serif;
-    text-align: center;
-    cursor: pointer;
 }
