@@ -40,7 +40,6 @@ export const loader: LoaderFunction = async ({request}) => {
 
 export default function Rapport() {
     const data = useLoaderData();
-    console.log(data)
     return (
         <>
             <Form
