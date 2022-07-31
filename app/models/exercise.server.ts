@@ -84,3 +84,8 @@ export function deleteExercise({
         where: {id, userId},
     });
 }
+
+
+export function deleteAllExercise(){
+    return prisma.exercise.deleteMany({});
+}

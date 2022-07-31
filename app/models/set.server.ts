@@ -48,3 +48,7 @@ export function deleteSet({id}: Pick<Set, "id">) {
         where: {id},
     });
 }
+
+export function deleteAllSet() {
+    return prisma.set.deleteMany({});
+}
