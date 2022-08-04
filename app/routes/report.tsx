@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({request}) => {
             if (exerciseWithAmount[s.exercise.title] !== undefined) {
                 exerciseWithAmount[s.exercise.title] = exerciseWithAmount[s.exercise.title] + s.series.length;
             } else {
-                exerciseWithAmount[s.exercise.title] = 0;
+                exerciseWithAmount[s.exercise.title] = s.series.length;
             }
         }
     }
