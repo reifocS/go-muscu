@@ -268,7 +268,7 @@ export default function WorkoutDetailsPage() {
                     return (
                         <details open={i === data.workout.set.length - 1} key={s.id}>
                             <summary
-                                className="flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700">
+                                className="daily__summary flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700">
                                 <h3 className="px-5 font-bold">
                                     {i}. {s.exercise.title}
                                 </h3>

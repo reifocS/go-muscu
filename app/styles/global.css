@@ -36,13 +36,14 @@ input[type="time"] {
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
-    display:block;
+    display: block;
     top: 0;
     left: 0;
     background: transparent;
-    position:absolute;
+    position: absolute;
     width: 100%;
 }
+
 .swiper {
     width: 100%;
     height: 100%;
@@ -75,4 +76,32 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.daily__summary {
+    display: block;
+    padding-left: 1rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.daily__summary:before {
+    content: '';
+    border-width: .4rem;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+    position: absolute;
+    left: 1rem;
+    transform: rotate(0);
+    transform-origin: .2rem 50%;
+    transition: .25s transform ease;
+}
+
+details[open] > .daily__summary:before {
+    transform: rotate(90deg);
+}
+
+
+details .daily__summary::-webkit-details-marker {
+    display:none;
 }
