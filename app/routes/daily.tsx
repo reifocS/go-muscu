@@ -247,7 +247,7 @@ export default function WorkoutDetailsPage() {
     const close = useCallback(() => setShowDialog({open: false, set: undefined}), []);
 
     return (
-        <div className="h-full w-full overflow-hidden">
+        <div className="w-full overflow-hidden">
 
             {data.isPastWorkout && (
                 <div className="mt-2 text-center font-bold">
