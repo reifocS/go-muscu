@@ -263,12 +263,12 @@ export default function WorkoutDetailsPage() {
                     Card={Card}
                 />
             </div>
-            <div className={`h-[calc(100vh-225px)] overflow-auto`}>
+            <div className={`h-[calc(100vh-225px)] overflow-auto gap-1 flex flex-col`}>
                 {data.workout.set.map((s, i) => {
                     return (
                         <details open={i === data.workout.set.length - 1} key={s.id}>
                             <summary
-                                className="daily__summary flex h-[40px] cursor-pointer items-center justify-between border-t bg-gray-700">
+                                className="daily__summary flex h-[40px] cursor-pointer items-center justify-between bg-gray-700">
                                 <h3 className="px-5 font-bold">
                                     {i}. {s.exercise.title}
                                 </h3>
