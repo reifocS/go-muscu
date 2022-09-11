@@ -256,6 +256,11 @@ export default function WorkoutDetailsPage() {
     const [showDialog, setShowDialog] = useState<{ open: boolean, set?: Set }>({open: false, set: undefined});
     const open = (s: Set) => setShowDialog({open: true, set: s});
     const close = useCallback(() => setShowDialog({open: false, set: undefined}), []);
+    const transitions = useSpringTransition(data.workout.set, {
+        keys: (s: WorkoutSet) => s.id,
+        from: {opacity: 0},
+        enter: {opacity: 1},
+    });
 
     return (
         <div className="w-full overflow-hidden">
@@ -275,9 +280,9 @@ export default function WorkoutDetailsPage() {
                 />
             </div>
             <div className={`h-[calc(100vh-225px)] overflow-auto gap-1 flex flex-col`}>
-                {data.workout.set.map((s, i) => {
+                {transitions((style, s, _, i) => {
                     return (
-                        <details open={i === data.workout.set.length - 1} key={s.id}>
+                        <a.details style={style} open={i === data.workout.set.length - 1} key={s.id}>
                             <summary
                                 className="daily__summary flex h-[40px] cursor-pointer items-center justify-between bg-gray-700">
                                 <h3 className="px-5 font-bold">
@@ -327,7 +332,7 @@ export default function WorkoutDetailsPage() {
                                     Exercice{" "}<GoLinkExternal className="ml-2"/>
                                 </Link>
                             </div>
-                        </details>
+                        </a.details>
                     );
                 })}
             </div>
