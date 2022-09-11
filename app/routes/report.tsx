@@ -63,10 +63,21 @@ export default function Rapport() {
         form.end.value = end;
         submit(form, {method: "get"});
     }
+
+    const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
+        const form = e.currentTarget as (typeof formRef.current & {
+            start: { value: string };
+            end: { value: string };
+        });
+        if(!form.start.value || !form.end.value) return;
+        submit(e.currentTarget, { method: "get", replace: true });
+    }
+
     return (
         <>
             <Form
                 ref={formRef}
+                onChange={handleChange}
                 method="get"
                 style={{
                     display: "flex",
@@ -127,12 +138,6 @@ export default function Rapport() {
                            required
                            defaultValue={data.end}/>
                 </div>
-                <button
-                    type="submit"
-                    className="my-2 inline-flex items-center justify-center bg-blue-500 p-2 font-bold text-blue-100 transition-colors duration-150 hover:bg-blue-600"
-                >
-                    Get report
-                </button>
 
                 <ul>
                     {Object.entries(data.exerciseWithAmount).map(([k, v]) => <li key={k}>
