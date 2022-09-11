@@ -105,3 +105,12 @@ details[open] > .daily__summary:before {
 details .daily__summary::-webkit-details-marker {
     display:none;
 }
+
+details summary {
+    cursor: pointer;
+    transition: margin 150ms ease-out;
+}
+
+details[open] summary {
+    margin-bottom: 6px;
+}

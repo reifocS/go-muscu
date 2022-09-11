@@ -198,10 +198,11 @@ function AddSeries({set, disabled}: { set: WorkoutSet; disabled: boolean }) {
     return (
         <div className="px-2" style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+            gridTemplateColumns: 'repeat(2, 1fr) 0.3fr',
             gridTemplateRows: '1fr',
             gridColumnGap: '16px',
-            gridRowGap: '16px'
+            gridRowGap: '16px',
+            height: 30
         }}>
             <div style={{gridArea: '1 / 1 / 2 / 2'}}>
                 <input type="hidden" name="setId" value={set.id} form={set.id}/>
@@ -339,7 +340,7 @@ const TableHead = () => {
     return (
         <div className="px-2" style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+            gridTemplateColumns: 'repeat(2, 1fr) 0.3fr',
             gridTemplateRows: '1fr',
             gridColumnGap: '16px',
             gridRowGap: '16px'
@@ -365,7 +366,7 @@ const TableBody = ({
     const transitions = useSpringTransition(optimistSeries, {
         keys: (s: Series) => s.id,
         from: {opacity: 0, height: 0},
-        enter: {opacity: 1, height: 40},
+        enter: {opacity: 1, height: 30},
         leave: {opacity: 0, height: 0},
         config: {mass: 1, tension: 500, friction: 0, clamp: true}
     });
@@ -376,7 +377,7 @@ const TableBody = ({
                 <a.div className="px-2" style={{
                     ...style,
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+                    gridTemplateColumns: 'repeat(2, 1fr) 0.3fr',
                     gridTemplateRows: '1fr',
                     gridColumnGap: '16px',
                     gridRowGap: '16px',
