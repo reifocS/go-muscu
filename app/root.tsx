@@ -81,9 +81,9 @@ export default function App() {
             <Links/>
         </head>
         <body className="relative h-screen bg-gray-800 font-mono text-white">
-        <CountProvider>
             <Header user={user}/>
             <Outlet/>
+        <CountProvider>
             {user && <Chronometre/>}
         </CountProvider>
 

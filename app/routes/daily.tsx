@@ -10,9 +10,10 @@ import {Fetcher} from "@remix-run/react/transition";
 import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
 import {GiNotebook} from "react-icons/gi"
 import {useCallback, useEffect, useState} from "react";
-import {Dialog} from "@reach/dialog";
+import {Dialog as ReachDialog} from "@reach/dialog";
 import {toast} from "react-toastify";
 import {GoLinkExternal} from "react-icons/go";
+import {a, useTransition as useSpringTransition} from "@react-spring/web";
 
 type WorkoutSet = Set & {
     series: Series[];
@@ -79,7 +80,6 @@ export const action: ActionFunction = async ({request}) => {
     await requireUserId(request);
     const formData = await request.formData();
     const {_action} = Object.fromEntries(formData);
-    console.log(_action)
 
     if (_action === "delete_set") {
         const setId = formData.get("setId");
@@ -163,11 +163,13 @@ const TableRow = ({
     deleteSeriesFetcher: any;
 }) => {
     return (
-        <tr className="h-10">
-            <td className="h-full px-2 py-2 text-xs">{series.repetitions}</td>
-            <td className="h-full px-2 py-2 text-xs">{series.weigth}</td>
-            <td className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
-                <deleteSeriesFetcher.Form method="post">
+        <>
+            <div style={{gridArea: '1 / 1 / 2 / 2'}}>{series.repetitions}</div>
+            <div style={{gridArea: '1 / 2 / 2 / 3'}}>{series.weigth}</div>
+            <div
+                style={{gridArea: '1 / 3 / 2 / 4'}}
+                className="bg-red-700 text-red-100 transition-colors duration-150 hover:bg-red-800">
+                <deleteSeriesFetcher.Form method="post" className="h-full flex items-center justify-center">
                     <input
                         type="text"
                         className="hidden"
@@ -177,7 +179,7 @@ const TableRow = ({
                     />
 
                     <button
-                        className="flex h-[50px] w-full items-center justify-center font-bold"
+                        className="flex w-full h-full items-center justify-center text-lg font-bold"
                         type="submit"
                         name="_action"
                         value="delete_series"
@@ -185,17 +187,23 @@ const TableRow = ({
                         <AiFillDelete/>
                     </button>
                 </deleteSeriesFetcher.Form>
-            </td>
-        </tr>
+            </div>
+        </>
     );
 };
 
-function AddSeries({set, disabled}: { set: WorkoutSet ; disabled: boolean }) {
+function AddSeries({set, disabled}: { set: WorkoutSet; disabled: boolean }) {
     const lastSeries = set.series[set.series.length - 1];
 
     return (
-        <tr className="h-10">
-            <td className="h-full px-2 py-2 text-xs">
+        <div className="px-2" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+            gridTemplateRows: '1fr',
+            gridColumnGap: '16px',
+            gridRowGap: '16px'
+        }}>
+            <div style={{gridArea: '1 / 1 / 2 / 2'}}>
                 <input type="hidden" name="setId" value={set.id} form={set.id}/>
                 <input
                     name="repetitions"
@@ -206,8 +214,8 @@ function AddSeries({set, disabled}: { set: WorkoutSet ; disabled: boolean }) {
                     className="w-full rounded bg-gray-900 py-1 px-1 text-base text-gray-200 outline-none transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-200"
                     min={0}
                 />
-            </td>
-            <td className="h-full px-2 py-2 text-xs">
+            </div>
+            <div style={{gridArea: '1 / 2 / 2 / 3'}}>
                 <input
                     name="weigth"
                     placeholder="poids"
@@ -218,20 +226,22 @@ function AddSeries({set, disabled}: { set: WorkoutSet ; disabled: boolean }) {
                     form={set.id}
                     min={0}
                 />
-            </td>
-            <td className="bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
+            </div>
+            <div
+                style={{gridArea: '1 / 3 / 2 / 4'}}
+                className="bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600">
                 <button
                     type="submit"
                     name="_action"
                     form={set.id}
                     disabled={disabled}
                     value="add_series"
-                    className="flex w-full items-center justify-center text-lg font-bold"
+                    className="flex w-full h-full items-center justify-center text-lg font-bold"
                 >
                     <AiOutlinePlus/>
                 </button>
-            </td>
-        </tr>
+            </div>
+        </div>
     );
 }
 
@@ -297,16 +307,14 @@ export default function WorkoutDetailsPage() {
                                 method="post"
                                 id={s.id}
                             />
-                            <div className="flex items-center justify-center">
-                                <table className="w-full table-auto divide-y border-none">
-                                    <TableHead/>
-                                    <TableBody
-                                        optimistSeries={s.series}
-                                        disabled={transition.submission != null}
-                                        set={s}
-                                        deleteSeriesFetcher={deleteSeriesFetcher}
-                                    />
-                                </table>
+                            <div className="flex flex-col gap-2">
+                                <TableHead/>
+                                <TableBody
+                                    optimistSeries={s.series}
+                                    disabled={transition.submission != null}
+                                    set={s}
+                                    deleteSeriesFetcher={deleteSeriesFetcher}
+                                />
                             </div>
                             <div className={"flex items-center justify-center"}>
                                 <Link
@@ -329,13 +337,17 @@ export default function WorkoutDetailsPage() {
 
 const TableHead = () => {
     return (
-        <thead className="bg-gray-800">
-        <tr>
-            <th className="px-2 py-2 text-xs text-gray-500">Repetitions</th>
-            <th className="px-2 py-2 text-xs text-gray-500">Poids</th>
-            <th className="px-2 py-2 text-xs text-gray-500">Action</th>
-        </tr>
-        </thead>
+        <div className="px-2" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+            gridTemplateRows: '1fr',
+            gridColumnGap: '16px',
+            gridRowGap: '16px'
+        }}>
+            <div style={{gridArea: '1 / 1 / 2 / 2'}} className="px-2 py-2 text-xs text-gray-500">Repetitions</div>
+            <div style={{gridArea: '1 / 2 / 2 / 3'}} className="px-2 py-2 text-xs text-gray-500">Poids</div>
+            <div style={{gridArea: '1 / 3 / 2 / 4'}} className="px-2 py-2 text-xs text-gray-500">Action</div>
+        </div>
     );
 };
 
@@ -350,17 +362,34 @@ const TableBody = ({
     set: WorkoutSet;
     deleteSeriesFetcher: Fetcher;
 }) => {
+    const transitions = useSpringTransition(optimistSeries, {
+        keys: (s: Series) => s.id,
+        from: {opacity: 0, height: 0},
+        enter: {opacity: 1, height: 40},
+        leave: {opacity: 0, height: 0},
+        config: {mass: 1, tension: 500, friction: 0, clamp: true}
+    });
+
     return (
-        <tbody className="text-center">
-        {optimistSeries.map((series) => (
-            <TableRow
-                series={series}
-                key={series.id}
-                deleteSeriesFetcher={deleteSeriesFetcher}
-            />
-        ))}
-        <AddSeries set={set} disabled={disabled}/>
-        </tbody>
+        <>
+            {transitions((style, s) => (
+                <a.div className="px-2" style={{
+                    ...style,
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr) 0.2fr',
+                    gridTemplateRows: '1fr',
+                    gridColumnGap: '16px',
+                    gridRowGap: '16px',
+                }}>
+                    <TableRow
+                        series={s}
+                        key={s.id}
+                        deleteSeriesFetcher={deleteSeriesFetcher}
+                    />
+                </a.div>
+            ))}
+            <AddSeries set={set} disabled={disabled}/>
+        </>
     );
 };
 
@@ -415,7 +444,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
         }
     }, [fetcher.state, close])
 
-    return <Dialog
+    return <ReachDialog
         aria-label="edit_note"
         style={{
             maxWidth: '450px',
@@ -430,7 +459,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
         <div className="flex">
             <button className="ml-auto font-bold bg-red-500 px-3 py-1 rounded" onClick={close}>x</button>
         </div>
-        <h1 className="font-bold mb-2">Ajouter une note 📝</h1>
+        <label htmlFor="note" className="font-bold mb-2">Ajouter une note 📝</label>
         <fetcher.Form method={"post"}>
             <input
                 type="text"
@@ -441,6 +470,8 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
             />
             <textarea
                 required
+                name="note"
+                id="note"
                 className="w-full px-3
                             py-1.5
                             text-base
@@ -453,7 +484,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
                             ease-in-out
                             m-0
                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                name="note" defaultValue={set?.note ?? ""}/>
+                defaultValue={set?.note ?? ""}/>
             <input name={"_action"} value={"add_note"} className="hidden" readOnly/>
             <button
                 className="flex h-[50px] w-full bg-blue-500 items-center justify-center font-bold text-white"
@@ -461,7 +492,7 @@ function SeriesNote({open, close, set}: { open: boolean, close: () => void, set?
             >{set?.note ? "éditer" : "ajouter"}
             </button>
         </fetcher.Form>
-    </Dialog>
+    </ReachDialog>
 }
 
 export function ErrorBoundary({error}: { error: Error }) {
