@@ -58,6 +58,16 @@ export function getExerciseList({userId}: { userId: User["id"] }) {
     });
 }
 
+export function getExerciseListStartWith({userId, title}: { userId: User["id"], title: string }) {
+    return prisma.exercise.findMany({
+        where: {userId, title: {
+            startsWith: title
+            }},
+        select: {id: true, title: true},
+    });
+}
+
+
 export function createExercise({
                                    title,
                                    userId,

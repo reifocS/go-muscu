@@ -1,14 +1,26 @@
 import dayjs from "dayjs";
-import {ActionFunction, json, Link, LoaderFunction, useCatch, useFetcher, useLoaderData, useTransition,} from "remix";
+import {
+    ActionFunction,
+    Form,
+    json,
+    Link,
+    LoaderFunction,
+    useCatch,
+    useFetcher,
+    useLoaderData,
+    useSubmit,
+    useTransition,
+} from "remix";
 import {createWorkout, getDailyWorkout, getWorkout, Workout,} from "~/models/workout.server";
 import {requireUserId} from "~/session.server";
 import {addNote, createSet, deleteSet, Set} from "~/models/set.server";
 import {createSeries, deleteSeries, Series} from "~/models/series.server";
-import {getExerciseList} from "~/models/exercise.server";
+import {getExerciseList, getExerciseListStartWith} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 import {Fetcher} from "@remix-run/react/transition";
 import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
 import {GiNotebook} from "react-icons/gi"
+import * as React from "react";
 import {useCallback, useEffect, useState} from "react";
 import {Dialog as ReachDialog} from "@reach/dialog";
 import {toast} from "react-toastify";
@@ -30,6 +42,7 @@ type LoaderData = {
         id: string;
     }[];
     isPastWorkout: boolean;
+    exerciseQuery: string | null
 };
 
 type ActionData = {
@@ -47,6 +60,7 @@ export const loader: LoaderFunction = async ({request}) => {
     const userId = await requireUserId(request);
     const url = new URL(request.url);
     const workoutId = url.searchParams.get("workoutId");
+    let exerciseQuery = url.searchParams.get("exerciseQuery");
     const todayMidnight = dayjs().startOf("day");
     const tomorrowMidnight = dayjs(todayMidnight.add(1));
 
@@ -67,12 +81,18 @@ export const loader: LoaderFunction = async ({request}) => {
         })) as LoaderData["workout"];
     }
 
-    const exerciseList = await getExerciseList({userId});
+    let exerciseList;
+    if (exerciseQuery) {
+        exerciseList = await getExerciseListStartWith({userId, title: exerciseQuery});
+    } else {
+        exerciseList = await getExerciseList({userId});
+    }
 
     return json<LoaderData>({
         workout,
         exerciseList,
         isPastWorkout: !!workoutId && !todayMidnight.isSame(workout.date, "day"),
+        exerciseQuery
     });
 };
 
@@ -261,6 +281,11 @@ export default function WorkoutDetailsPage() {
         from: {opacity: 0},
         enter: {opacity: 1},
     });
+    const submit = useSubmit();
+
+    const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
+        submit(e.currentTarget, {method: "get", replace: true});
+    }
 
     return (
         <div className="w-full overflow-hidden">
@@ -270,7 +295,34 @@ export default function WorkoutDetailsPage() {
                     <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
                 </div>
             )}
-
+            <Form
+                onChange={handleChange}
+                method="get"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 8,
+                    color: "black"
+                }}
+            >
+                <label htmlFor="default-search"
+                       className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Search</label>
+                <div className="relative">
+                    <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                        <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                             stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <input type="search" id="default-search" defaultValue={data.exerciseQuery ?? ""}
+                           name={"exerciseQuery"}
+                           className="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Filter exercise.." required/>
+                </div>
+            </Form>
             <div className="p-2">
                 <Carrousel
                     workoutId={data.workout.id}
