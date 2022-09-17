@@ -16,7 +16,7 @@ export default function Carrousel({
     <ScrollMenu
       LeftArrow={LeftArrow}
       RightArrow={RightArrow}
-      scrollContainerClassName="lg:flex lg:justify-center"
+      scrollContainerClassName="flex lg:justify-center"
       itemClassName="flex"
     >
       {elementList.map((el) => (

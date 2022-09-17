@@ -278,7 +278,7 @@ export default function WorkoutDetailsPage() {
     const close = useCallback(() => setShowDialog({open: false, set: undefined}), []);
     const transitions = useSpringTransition(data.workout.set, {
         keys: (s: WorkoutSet) => s.id,
-        from: {opacity: 0},
+        from: {opacity: 0.5},
         enter: {opacity: 1},
     });
     const submit = useSubmit();
