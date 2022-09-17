@@ -293,7 +293,7 @@ function Legend({
   return (
     <Popover
       isOpen={isPopoverOpen}
-      positions={["top", "right", "left", "bottom"]}
+      positions={["bottom", "right", "left", "top"]}
       padding={10}
       onClickOutside={() => setIsPopoverOpen(false)}
       content={({ position, childRect, popoverRect }) => (
