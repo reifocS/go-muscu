@@ -87,11 +87,11 @@ export default function Rapport() {
                     gap: 8,
                 }}
             >
-                <p>
+                <p className={"text-center"}>
                     you trained {data.nbOfWorkouts} times
                     between {dayjs(data.start).format('M/D/YYYY')} and {dayjs(data.end).format('M/D/YYYY')}
                 </p>
-                <div className="inline-flex rounded-md shadow-sm" role="group">
+                <div className="inline-flex rounded-md shadow-sm p-3" role="group">
                     <button type="button"
                             onClick={() => {
                                 handleSubmit(
@@ -126,7 +126,7 @@ export default function Rapport() {
                     </button>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap justify-center items-center">
                     <label htmlFor="start">From </label>{" "}
                     <input type="date" id="start" name="start"
                            className="text-black"
