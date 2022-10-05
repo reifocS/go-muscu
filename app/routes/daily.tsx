@@ -323,7 +323,7 @@ export default function WorkoutDetailsPage() {
                            placeholder="Filter exercise..."/>
                 </div>
             </Form>
-            <div className="p-2 inline">
+            <div className="inline">
                 <Carrousel
                     workoutId={data.workout.id}
                     elementList={data.exerciseList}
