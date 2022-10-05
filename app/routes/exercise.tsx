@@ -64,7 +64,7 @@ export default function WorkoutPage() {
                                    placeholder="Filter exercise..."/>
                         </div>
                     </Form>
-                    <div className="p-1 inline">
+                    <div className="inline">
                         <Carrousel
                             elementList={data.exerciseList}
                             createExerciseFetcher={createExerciseFetcher}
