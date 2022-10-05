@@ -93,8 +93,8 @@ function Card({
     return (
         <Link to={itemId} prefetch={"none"} className="flex">
             <button
-                className="focus:shadow-outline m-1 h-[85px] w-[85px] rounded-lg bg-gray-700 font-bold
-          text-white transition-colors duration-150 hover:bg-gray-800"
+                className="focus:shadow-outline m-1 py-2 h-[85px] w-[85px] rounded-lg bg-gray-700 text-ellipsis
+                font-bold break-words overflow-hidden wordtext-white transition-colors duration-150 hover:bg-gray-800"
                 value="add_exercise"
             >
                 {el.title}
