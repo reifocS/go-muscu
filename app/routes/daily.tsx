@@ -15,7 +15,7 @@ import {createWorkout, getDailyWorkout, getWorkout, Workout,} from "~/models/wor
 import {requireUserId} from "~/session.server";
 import {addNote, createSet, deleteSet, Set} from "~/models/set.server";
 import {createSeries, deleteSeries, Series} from "~/models/series.server";
-import {getExerciseList, getExerciseListStartWith} from "~/models/exercise.server";
+import {getExerciseList, getExerciseListContains} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 import {Fetcher} from "@remix-run/react/transition";
 import {AiFillDelete, AiOutlinePlus} from "react-icons/ai";
@@ -83,7 +83,7 @@ export const loader: LoaderFunction = async ({request}) => {
 
     let exerciseList;
     if (exerciseQuery) {
-        exerciseList = await getExerciseListStartWith({userId, title: exerciseQuery});
+        exerciseList = await getExerciseListContains({userId, title: exerciseQuery});
     } else {
         exerciseList = await getExerciseList({userId});
     }

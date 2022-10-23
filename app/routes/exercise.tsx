@@ -2,7 +2,7 @@ import type {LoaderFunction} from "remix";
 import {Form, json, Link, Outlet, useFetcher, useLoaderData, useSubmit} from "remix";
 
 import {requireUserId} from "~/session.server";
-import {getExerciseList, getExerciseListStartWith} from "~/models/exercise.server";
+import {getExerciseList, getExerciseListContains} from "~/models/exercise.server";
 import Carrousel from "~/components/Carrousel";
 import * as React from "react";
 
@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async ({request}) => {
     let exerciseQuery = url.searchParams.get("exerciseQuery");
     let exerciseList;
     if (exerciseQuery) {
-        exerciseList = await getExerciseListStartWith({userId, title: exerciseQuery});
+        exerciseList = await getExerciseListContains({userId, title: exerciseQuery});
     } else {
         exerciseList = await getExerciseList({userId});
     }
