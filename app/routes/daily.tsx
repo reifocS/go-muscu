@@ -286,7 +286,12 @@ export default function WorkoutDetailsPage() {
     const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
         submit(e.currentTarget, {method: "get", replace: true});
     }
-
+    let volumeTotal = 0;
+    for (const set of data.workout?.set) {
+        for (const ser of set.series) {
+            volumeTotal += ser.repetitions * ser.weigth;
+        }
+    }
     return (
         <div className="w-full overflow-hidden">
 
@@ -389,6 +394,7 @@ export default function WorkoutDetailsPage() {
                 })}
             </div>
             <SeriesNote open={showDialog.open} close={close} set={showDialog.set}/>
+            <div className="flex justify-center">Total volume: {volumeTotal}kg</div>
         </div>
     );
 }
