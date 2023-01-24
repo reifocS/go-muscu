@@ -392,9 +392,9 @@ export default function WorkoutDetailsPage() {
                         </a.details>
                     );
                 })}
+                <div className="flex justify-center font-bold">Total volume: {volumeTotal}kg</div>
             </div>
             <SeriesNote open={showDialog.open} close={close} set={showDialog.set}/>
-            <div className="flex justify-center">Total volume: {volumeTotal}kg</div>
         </div>
     );
 }
