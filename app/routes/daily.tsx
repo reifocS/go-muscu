@@ -33,7 +33,7 @@ import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GoLinkExternal } from "react-icons/go";
 import { a, useTransition as useSpringTransition } from "@react-spring/web";
-import { createTag, getAllTags } from "~/models/tag.server";
+import { createTag, deleteTag, getAllTags } from "~/models/tag.server";
 import { Exercise, Tag } from "@prisma/client";
 import Card from "~/components/Card";
 import TableBody from "~/components/TableWorkoutDaily/TableBody";
@@ -224,6 +224,12 @@ export const action: ActionFunction = async ({ request }) => {
     if (!tagId || typeof tagId !== "string") throw new Error("tagId is empty");
     return addTagToWorkout({ workoutId, tagId });
   }
+  if (_action === "delete_tag") {
+    const tagId = formData.get("tag_id");
+    if (!tagId || typeof tagId !== "string") throw new Error("tagId is empty");
+    console.log("delete", tagId);
+    return deleteTag({ tagId });
+  }
 };
 
 export default function WorkoutDetailsPage() {
@@ -235,6 +241,8 @@ export default function WorkoutDetailsPage() {
   const createExerciseFetcher = useFetcher();
   const associateTagFetcher = useFetcher();
   const createTagFetcher = useFetcher();
+  const deleteTagFetcher = useFetcher();
+
   const [showDialog, setShowDialog] = useState<{ open: boolean; set?: Set }>({
     open: false,
     set: undefined,
@@ -330,6 +338,21 @@ export default function WorkoutDetailsPage() {
                 />
                 <button>{t.label}</button>
               </associateTagFetcher.Form>
+              <deleteTagFetcher.Form method="post">
+                <input
+                  name={"_action"}
+                  value={"delete_tag"}
+                  className="hidden"
+                  readOnly
+                />
+                <input
+                  className="hidden"
+                  name="tag_id"
+                  value={t.id}
+                  readOnly
+                ></input>
+                <button>X</button>
+              </deleteTagFetcher.Form>
             </li>
           ))}
         </ul>
@@ -451,7 +474,8 @@ export default function WorkoutDetailsPage() {
         <div className="flex justify-center font-bold">
           Total volume: {volumeTotal}kg
           <br />
-          {data.lastSeanceWithTheSameTag && `Total volume previous workout
+          {data.lastSeanceWithTheSameTag &&
+            `Total volume previous workout
           (${dayjs(data.lastSeanceWithTheSameTag.date).format(
             "YYYY/MM/DD"
           )}): ${volumeTotalLastSeance}kg`}
