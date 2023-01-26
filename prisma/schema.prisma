@@ -15,6 +15,7 @@ model User {
   exercices Exercise[]
   password  Password?
   workouts  Workout[]
+  tags      Tag[]
 }
 
 model Password {
@@ -32,13 +33,14 @@ model Exercise {
 }
 
 model Workout {
-  id       String         @id @default(cuid())
+  id       String   @id @default(cuid())
   date     DateTime
   userId   String
   duration Float?
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   set      Set[]
-  tags     TagOnWorkout[]
+  tag      Tag?     @relation(fields: [tagId], references: [id])
+  tagId    String?
 }
 
 model Set {
@@ -60,16 +62,9 @@ model Series {
 }
 
 model Tag {
-  id       String         @id @default(cuid())
+  id       String    @id @default(cuid())
   label    String
-  workouts TagOnWorkout[]
-}
-
-model TagOnWorkout {
-  tagId     String
-  workoutId String
-  tag       Tag     @relation(fields: [tagId], references: [id])
-  workout   Workout @relation(fields: [workoutId], references: [id])
-
-  @@id([tagId, workoutId])
+  workouts Workout[]
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
