@@ -153,6 +153,9 @@ export function addTagToWorkout({
     data: {
       tagId,
     },
+    include: {
+      set: true,
+    },
   });
 }
 

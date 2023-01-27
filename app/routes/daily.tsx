@@ -222,7 +222,40 @@ export const action: ActionFunction = async ({ request }) => {
     if (!workoutId || typeof workoutId !== "string")
       throw new Error("No workout id");
     if (!tagId || typeof tagId !== "string") throw new Error("tagId is empty");
-    return addTagToWorkout({ workoutId, tagId });
+
+    const workout = await addTagToWorkout({ workoutId, tagId });
+    let workouts = await getWorkoutList({ userId: id });
+    //Todo make the query in prisma directly
+    const lastSeanceWithTheSameTag = workouts.find(
+      (w) =>
+        w.tagId === tagId &&
+        w.id !== workoutId &&
+        dayjs(w.date).isBefore(dayjs(workout?.date))
+    );
+    if (!lastSeanceWithTheSameTag) return workout;
+    const promises = lastSeanceWithTheSameTag.set.map(async (s) => {
+      if (
+        workout?.set.find(
+          (setCurrent) => setCurrent.exerciseId === s.exerciseId
+        )
+      ) {
+        // Set already in current workout
+        return;
+      }
+      const newSet = await createSet({
+        exerciseId: s.exercise.id,
+        workoutId,
+      });
+      for (const ser of s.series) {
+        await createSeries({
+          setId: newSet.id,
+          weigth: ser.weigth,
+          repetitions: ser.repetitions,
+        });
+      }
+    });
+    await Promise.allSettled(promises);
+    return workout;
   }
   if (_action === "delete_tag") {
     const tagId = formData.get("tag_id");
