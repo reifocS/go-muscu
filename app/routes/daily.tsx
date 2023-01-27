@@ -308,7 +308,7 @@ export default function WorkoutDetailsPage() {
           {!data.workout.tagId && (
             <>
               Workout group{" "}
-              <NavLink className="underline text-purple-600" to={"../groups"}>
+              <NavLink className="text-purple-600 underline" to={"../groups"}>
                 create a group
               </NavLink>
             </>
@@ -318,8 +318,8 @@ export default function WorkoutDetailsPage() {
         </p>
         {data.workout.tagId && (
           <Form method="post">
-            <button className="ml-1 inline-flex rounded border-0 bg-red-700 py-2 px-4 text-lg text-white hover:bg-red-800 focus:outline-none">
-              X
+            <button className="ml-2 inline-flex rounded border-0 bg-red-700 px-2 text-white hover:bg-red-800 focus:outline-none">
+              x{" "}
             </button>
             <input
               name="workout_id"
