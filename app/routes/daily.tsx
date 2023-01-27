@@ -31,10 +31,10 @@ import Carrousel from "~/components/Carrousel";
 import { AiFillDelete } from "react-icons/ai";
 import { GiNotebook } from "react-icons/gi";
 import * as React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { GoLinkExternal } from "react-icons/go";
 import { a, useTransition as useSpringTransition } from "@react-spring/web";
-import { createTag, deleteTag, getAllTags } from "~/models/tag.server";
+import { getAllTags } from "~/models/tag.server";
 import { Exercise, Tag } from "@prisma/client";
 import Card from "~/components/Card";
 import TableBody from "~/components/TableWorkoutDaily/TableBody";
@@ -213,11 +213,6 @@ export const action: ActionFunction = async ({ request }) => {
     if (!note || typeof note !== "string") throw new Error("Note is empty");
     return addNote(setId, note);
   }
-  if (_action === "add_tag") {
-    const label = formData.get("label");
-    if (!label || typeof label !== "string") throw new Error("label is empty");
-    return createTag({ label, userId: id });
-  }
   if (_action === "associate_tag") {
     const tagId = formData.get("tag_id");
     const workoutId = formData.get("workout_id");
@@ -259,11 +254,6 @@ export const action: ActionFunction = async ({ request }) => {
     await Promise.allSettled(promises);
     return workout;
   }
-  if (_action === "delete_tag") {
-    const tagId = formData.get("tag_id");
-    if (!tagId || typeof tagId !== "string") throw new Error("tagId is empty");
-    return deleteTag({ tagId });
-  }
 };
 
 export default function WorkoutDetailsPage() {
@@ -274,8 +264,6 @@ export default function WorkoutDetailsPage() {
   const createSeriesFetcher = useFetcher();
   const createExerciseFetcher = useFetcher();
   const associateTagFetcher = useFetcher();
-  const createTagFetcher = useFetcher();
-  const deleteTagFetcher = useFetcher();
 
   const [showDialog, setShowDialog] = useState<{ open: boolean; set?: Set }>({
     open: false,
@@ -293,17 +281,6 @@ export default function WorkoutDetailsPage() {
   });
   const submit = useSubmit();
 
-  const tagFormRef = useRef<HTMLFormElement | null>(null);
-  let isAddingTag =
-    createTagFetcher.state === "submitting" &&
-    createTagFetcher.submission.formData.get("_action") === "add_tag";
-
-  useEffect(() => {
-    if (!isAddingTag) {
-      tagFormRef.current?.reset();
-    }
-  }, [isAddingTag]);
-
   const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
     submit(e.currentTarget, { method: "get", replace: true });
   };
@@ -319,42 +296,14 @@ export default function WorkoutDetailsPage() {
           <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
         </div>
       )}
-      <p className="flex items-center justify-center font-bold text-xl">
-        Workout type: {data.tags.find((t) => t.id === data.workout.tagId)?.label}
+      <p className="flex items-center justify-center text-xl font-bold">
+        Workout type:{" "}
+        {data.tags.find((t) => t.id === data.workout.tagId)?.label}
       </p>
-      <div className={"flex justify-center"}>
-        <createTagFetcher.Form
-          method="post"
-          ref={tagFormRef}
-          className={
-            "mt-2 flex max-w-[300px] items-center justify-center gap-2 p-2"
-          }
-        >
-          <input
-            required
-            className={
-              "block h-[30px] w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            }
-            name="label"
-          />
-          <input
-            name={"_action"}
-            value={"add_tag"}
-            className="hidden"
-            readOnly
-          />
-          <button className="inline-flex w-[150px] items-center justify-center rounded border-0 bg-indigo-500 py-1 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
-            Add tag{" "}
-          </button>
-        </createTagFetcher.Form>
-      </div>
       <div>
         <ul className="flex flex-wrap items-center justify-center gap-2">
           {data.tags.map((t) => (
-            <li
-              className="flex items-center justify-center"
-              key={t.id}
-            >
+            <li className="flex items-center justify-center" key={t.id}>
               <associateTagFetcher.Form method="post">
                 <input
                   readOnly
@@ -375,37 +324,10 @@ export default function WorkoutDetailsPage() {
                   className="hidden"
                   readOnly
                 />
-                <button className="h-[40px] rounded-l inline-flex items-center border-0 bg-indigo-500 py-2 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
+                <button className="inline-flex h-[40px] items-center rounded-l border-0 bg-indigo-500 py-2 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
                   {t.label}
                 </button>
               </associateTagFetcher.Form>
-              <deleteTagFetcher.Form
-                onSubmit={(e) => {
-                  const confirm = window.confirm(
-                    "All workouts will lose this tag, are you sure?"
-                  );
-                  if (!confirm) {
-                    e.preventDefault();
-                  }
-                }}
-                method="post"
-              >
-                <input
-                  name={"_action"}
-                  value={"delete_tag"}
-                  className="hidden"
-                  readOnly
-                />
-                <input
-                  className="hidden"
-                  name="tag_id"
-                  value={t.id}
-                  readOnly
-                ></input>
-                <button className="h-[40px] inline-flex items-center rounded-r border-0 bg-red-700 py-2 px-4 text-lg text-white hover:bg-red-800 focus:outline-none">
-                  <AiFillDelete />
-                </button>
-              </deleteTagFetcher.Form>
             </li>
           ))}
         </ul>
@@ -534,7 +456,7 @@ export default function WorkoutDetailsPage() {
           <div>Total volume: {volumeTotal}kg</div>
 
           <NavLink
-            className="font-normal text-center text-white underline"
+            className="text-center font-normal text-white underline"
             to={`../daily?workoutId=${data.lastSeanceWithTheSameTag?.id}`}
           >
             {data.lastSeanceWithTheSameTag &&

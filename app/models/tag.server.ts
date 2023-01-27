@@ -12,6 +12,17 @@ export function getTag({ tagId }: { tagId: string }) {
   });
 }
 
+export function updateTag({ id, label }: { id: string; label: string }) {
+  return prisma.tag.update({
+    where: {
+      id,
+    },
+    data: {
+      label,
+    },
+  });
+}
+
 export function deleteTag({ tagId }: { tagId: string }) {
   return prisma.tag.delete({
     where: {
