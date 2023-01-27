@@ -504,7 +504,13 @@ export default function WorkoutDetailsPage() {
             </a.details>
           );
         })}
-        <div className="flex justify-center font-bold">
+        <div
+          className={`flex justify-center font-bold ${
+            volumeTotal > volumeTotalLastSeance
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
           Total volume: {volumeTotal}kg
           <br />
           {data.lastSeanceWithTheSameTag &&
