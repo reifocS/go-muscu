@@ -82,7 +82,7 @@ export default function ExerciseDetailsPage() {
             </Link>
 
             <div>
-                <div className="flex inline-flex w-full p-2">
+                <div className="inline-flex w-full p-2">
                     <Form method="post" onSubmit={(e) => {
                         if (confirm("Supprimer définitivement cet exercice ?")) {
                             submit(e.currentTarget)
@@ -92,22 +92,22 @@ export default function ExerciseDetailsPage() {
                     }}>
                         <button
                             type="submit"
-                            className="focus:shadow-outline flex h-full h-[40px] w-[40px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                            className="focus:shadow-outline rounded-l flex h-[40px] w-[40px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
                         >
                             <AiFillDelete/>
                         </button>
                     </Form>
 
-                    <editFetcher.Form method="post" className="flex inline-flex w-full">
+                    <editFetcher.Form method="post" className="inline-flex w-full">
                         <input
                             name="title"
                             key={data.exercise.id}
-                            className="w-full rounded bg-gray-900 py-1 px-1 text-base text-gray-200 outline-none transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-200"
+                            className="w-full bg-gray-900 py-1 px-1 text-base text-gray-200 outline-none transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-200"
                             defaultValue={data.exercise.title}
                         />
                         <button
                             name="_action"
-                            className="focus:shadow-outline flex h-full h-[40px] w-[50px] items-center justify-center bg-blue-500 text-lg font-bold text-blue-100 transition-colors duration-150 hover:bg-blue-600"
+                            className="focus:shadow-outline rounded-r flex h-[40px] w-[50px] items-center justify-center bg-blue-500 text-lg font-bold text-blue-100 transition-colors duration-150 hover:bg-blue-600"
                             value="edit"
                             type={"submit"}
                         >
