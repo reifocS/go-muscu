@@ -119,6 +119,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   let tags = await getAllTags({ userId });
   let workouts = await getWorkoutList({ userId });
+  //Todo query from prisma directly
   const lastSeanceWithTheSameTag = workouts.find(
     (w) =>
       w.tagId === workout?.tagId &&
@@ -260,7 +261,6 @@ export const action: ActionFunction = async ({ request }) => {
   if (_action === "delete_tag") {
     const tagId = formData.get("tag_id");
     if (!tagId || typeof tagId !== "string") throw new Error("tagId is empty");
-    console.log("delete", tagId);
     return deleteTag({ tagId });
   }
 };
