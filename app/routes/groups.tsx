@@ -100,10 +100,38 @@ export default function TabPage() {
         role="alert"
       >
         <p>
-          Tags allow you to categorize your sessions with a label describing its
+          Groups allow you to categorize your sessions with a label describing its
           content. They are then used to link the workouts together and allow
           you to better understand your progress.
         </p>
+      </div>
+      <div className={"flex justify-center"}>
+        <createTagFetcher.Form
+          method="post"
+          ref={tagFormRef}
+          className={"mt-2 flex items-center justify-center gap-2 p-2"}
+        >
+          <div className="relative mb-4">
+            <label htmlFor="label" className="text-sm leading-7 text-white">
+              Label
+            </label>
+            <input
+              id="label"
+              name="label"
+              required
+              className="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            />
+          </div>
+          <input
+            name={"_action"}
+            value={"add_tag"}
+            className="hidden"
+            readOnly
+          />
+          <button className="mt-2 inline-flex items-center justify-center rounded border-0 bg-indigo-500 py-1 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
+            Create group{" "}
+          </button>
+        </createTagFetcher.Form>
       </div>
       <div className="p-2">
         <ul>
@@ -115,7 +143,7 @@ export default function TabPage() {
                   onSubmit={(e) => {
                     if (
                       confirm(
-                        `All workouts with tag ${t.label} will have no tag. Are you sure?`
+                        `All workouts with group ${t.label} will have no group. Are you sure?`
                       )
                     ) {
                       submit(e.currentTarget);
@@ -170,34 +198,6 @@ export default function TabPage() {
             </li>
           ))}
         </ul>
-        <div className={"flex justify-center"}>
-          <createTagFetcher.Form
-            method="post"
-            ref={tagFormRef}
-            className={"mt-2 flex items-center justify-center gap-2 p-2"}
-          >
-            <div className="relative mb-4">
-              <label htmlFor="label" className="text-sm leading-7 text-white">
-                Label
-              </label>
-              <input
-                id="label"
-                name="label"
-                required
-                className="w-full rounded border border-gray-300 bg-white py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-              />
-            </div>
-            <input
-              name={"_action"}
-              value={"add_tag"}
-              className="hidden"
-              readOnly
-            />
-            <button className="mt-2 inline-flex items-center justify-center rounded border-0 bg-indigo-500 py-1 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
-              Create tag{" "}
-            </button>
-          </createTagFetcher.Form>
-        </div>
       </div>
 
       <div className="overflow-auto">

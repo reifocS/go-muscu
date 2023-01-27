@@ -139,6 +139,19 @@ export function getAllInRange({
   });
 }
 
+export function removeTagFromWorkout({ workoutId }: { workoutId: string }) {
+  return prisma.workout.update({
+    where: {
+      id: workoutId,
+    },
+    data: {
+      tag: {
+        disconnect: true,
+      },
+    },
+  });
+}
+
 export function addTagToWorkout({
   tagId,
   workoutId,

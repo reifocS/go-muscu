@@ -18,6 +18,7 @@ import {
   getDailyWorkout,
   getWorkout,
   getWorkoutList,
+  removeTagFromWorkout,
   Workout,
 } from "~/models/workout.server";
 import { requireUserId } from "~/session.server";
@@ -254,6 +255,12 @@ export const action: ActionFunction = async ({ request }) => {
     await Promise.allSettled(promises);
     return workout;
   }
+  if (_action === "remove_tag") {
+    const workoutId = formData.get("workout_id");
+    if (!workoutId || typeof workoutId !== "string")
+      throw new Error("No workout id");
+    return removeTagFromWorkout({ workoutId });
+  }
 };
 
 export default function WorkoutDetailsPage() {
@@ -296,178 +303,222 @@ export default function WorkoutDetailsPage() {
           <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
         </div>
       )}
-      <p className="flex items-center justify-center text-xl font-bold">
-        Workout type:{" "}
-        {data.tags.find((t) => t.id === data.workout.tagId)?.label}
-      </p>
+      <div className="flex items-center justify-center p-3 text-xl font-bold">
+        <p>
+          {!data.workout.tagId && (
+            <>
+              Workout group{" "}
+              <NavLink className="underline text-purple-600" to={"../groups"}>
+                create a group
+              </NavLink>
+            </>
+          )}
+          {data.workout.tagId &&
+            data.tags.find((t) => t.id === data.workout.tagId)?.label}
+        </p>
+        {data.workout.tagId && (
+          <Form method="post">
+            <button className="ml-1 inline-flex rounded border-0 bg-red-700 py-2 px-4 text-lg text-white hover:bg-red-800 focus:outline-none">
+              X
+            </button>
+            <input
+              name="workout_id"
+              value={data.workout.id}
+              readOnly
+              className="hidden"
+            ></input>
+            <input
+              name="_action"
+              className="hidden"
+              readOnly
+              value="remove_tag"
+            ></input>
+          </Form>
+        )}
+      </div>
       <div>
-        <ul className="flex flex-wrap items-center justify-center gap-2">
-          {data.tags.map((t) => (
-            <li className="flex items-center justify-center" key={t.id}>
-              <associateTagFetcher.Form method="post">
-                <input
-                  readOnly
-                  name="tag_id"
-                  value={t.id}
-                  className="hidden"
-                ></input>
-                <input
-                  name="workout_id"
-                  value={data.workout.id}
-                  readOnly
-                  className="hidden"
-                ></input>
+        {!data.workout.tagId && (
+          <>
+            <ul className="flex flex-wrap items-center justify-center gap-2">
+              {data.tags.map((t) => (
+                <li className="flex items-center justify-center" key={t.id}>
+                  <associateTagFetcher.Form method="post">
+                    <input
+                      readOnly
+                      name="tag_id"
+                      value={t.id}
+                      className="hidden"
+                    ></input>
+                    <input
+                      name="workout_id"
+                      value={data.workout.id}
+                      readOnly
+                      className="hidden"
+                    ></input>
 
-                <input
-                  name={"_action"}
-                  value={"associate_tag"}
-                  className="hidden"
-                  readOnly
-                />
-                <button className="inline-flex h-[40px] items-center rounded-l border-0 bg-indigo-500 py-2 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
-                  {t.label}
-                </button>
-              </associateTagFetcher.Form>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <Form
-        onChange={handleChange}
-        method="get"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 8,
-          color: "black",
-        }}
-      >
-        <label
-          htmlFor="default-search"
-          className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >
-          Search
-        </label>
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5 text-gray-500 dark:text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <input
-            type="search"
-            id="default-search"
-            defaultValue={data.exerciseQuery ?? ""}
-            name={"exerciseQuery"}
-            className="block h-[30px] w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Filter exercise..."
-          />
-        </div>
-      </Form>
-      <div className="inline">
-        <Carrousel
-          workoutId={data.workout.id}
-          elementList={data.exerciseList}
-          createExerciseFetcher={createExerciseFetcher}
-          Card={Card}
-        />
-      </div>
-      <div
-        className={`flex h-[calc(100vh-225px)] flex-col gap-1 overflow-auto`}
-      >
-        {transitions((style, s, _, i) => {
-          return (
-            <a.details
-              style={style}
-              open={i === data.workout.set.length - 1}
-              key={s.id}
-            >
-              <summary className="daily__summary flex h-[40px] cursor-pointer items-center justify-between bg-gray-700">
-                <h3 className="px-5 font-bold">
-                  {i}. {s.exercise.title}
-                </h3>
-                <div className="flex">
-                  <button
-                    onClick={() => open(s)}
-                    className="flex h-[40px] w-[50px] items-center justify-center bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600"
-                  >
-                    <GiNotebook />
-                  </button>
-                  <deleteSetFetcher.Form method="post">
-                    <input type="hidden" value={s.id} name="setId" />{" "}
-                    <button
-                      className="focus:shadow-outline flex h-[40px] w-[50px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
-                      type="submit"
-                      name="_action"
-                      value="delete_set"
-                    >
-                      <AiFillDelete />
+                    <input
+                      name={"_action"}
+                      value={"associate_tag"}
+                      className="hidden"
+                      readOnly
+                    />
+                    <button className="inline-flex h-[40px] items-center rounded-l border-0 bg-indigo-500 py-2 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
+                      {t.label}
                     </button>
-                  </deleteSetFetcher.Form>
-                </div>
-              </summary>
+                  </associateTagFetcher.Form>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
 
-              <createSeriesFetcher.Form
-                className="hidden"
-                method="post"
-                id={s.id}
-              />
-              <div className="flex flex-col gap-2">
-                <TableHead />
-                <TableBody
-                  optimistSeries={s.series}
-                  disabled={transition.submission != null}
-                  set={s}
-                  deleteSeriesFetcher={deleteSeriesFetcher}
-                />
-              </div>
-              <div className={"flex items-center justify-center"}>
-                <Link
-                  className={"flex items-center justify-center p-3 font-bold"}
-                  to={`/exercise/${s.exerciseId}`}
-                >
-                  Exercice <GoLinkExternal className="ml-2" />
-                </Link>
-              </div>
-            </a.details>
-          );
-        })}
-        <div
-          className={`flex flex-col items-center justify-center font-bold ${
-            volumeTotal > volumeTotalLastSeance
-              ? "text-green-500"
-              : "text-red-500"
-          }`}
-        >
-          <div>Total volume: {volumeTotal}kg</div>
-
-          <NavLink
-            className="text-center font-normal text-white underline"
-            to={`../daily?workoutId=${data.lastSeanceWithTheSameTag?.id}`}
+      {data.workout.tagId && (
+        <>
+          <Form
+            onChange={handleChange}
+            method="get"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 8,
+              color: "black",
+            }}
           >
-            {data.lastSeanceWithTheSameTag &&
-              `Total volume previous workout
+            <label
+              htmlFor="default-search"
+              className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg
+                  aria-hidden="true"
+                  className="h-5 w-5 text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                defaultValue={data.exerciseQuery ?? ""}
+                name={"exerciseQuery"}
+                className="block h-[30px] w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Filter exercise..."
+              />
+            </div>
+          </Form>
+          <div className="inline">
+            <Carrousel
+              workoutId={data.workout.id}
+              elementList={data.exerciseList}
+              createExerciseFetcher={createExerciseFetcher}
+              Card={Card}
+            />
+          </div>
+          <div
+            className={`flex h-[calc(100vh-225px)] flex-col gap-1 overflow-auto`}
+          >
+            {transitions((style, s, _, i) => {
+              return (
+                <a.details
+                  style={style}
+                  open={i === data.workout.set.length - 1}
+                  key={s.id}
+                >
+                  <summary className="daily__summary flex h-[40px] cursor-pointer items-center justify-between bg-gray-700">
+                    <h3 className="px-5 font-bold">
+                      {i}. {s.exercise.title}
+                    </h3>
+                    <div className="flex">
+                      <button
+                        onClick={() => open(s)}
+                        className="flex h-[40px] w-[50px] items-center justify-center bg-blue-500 text-blue-100 transition-colors duration-150 hover:bg-blue-600"
+                      >
+                        <GiNotebook />
+                      </button>
+                      <deleteSetFetcher.Form method="post">
+                        <input type="hidden" value={s.id} name="setId" />{" "}
+                        <button
+                          className="focus:shadow-outline flex h-[40px] w-[50px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                          type="submit"
+                          name="_action"
+                          value="delete_set"
+                        >
+                          <AiFillDelete />
+                        </button>
+                      </deleteSetFetcher.Form>
+                    </div>
+                  </summary>
+
+                  <createSeriesFetcher.Form
+                    className="hidden"
+                    method="post"
+                    id={s.id}
+                  />
+                  <div className="flex flex-col gap-2">
+                    <TableHead />
+                    <TableBody
+                      optimistSeries={s.series}
+                      disabled={transition.submission != null}
+                      set={s}
+                      deleteSeriesFetcher={deleteSeriesFetcher}
+                    />
+                  </div>
+                  <div className={"flex items-center justify-center"}>
+                    <Link
+                      className={
+                        "flex items-center justify-center p-3 font-bold"
+                      }
+                      to={`/exercise/${s.exerciseId}`}
+                    >
+                      Exercice <GoLinkExternal className="ml-2" />
+                    </Link>
+                  </div>
+                </a.details>
+              );
+            })}
+            <div
+              className={`flex flex-col items-center justify-center font-bold ${
+                volumeTotal > volumeTotalLastSeance
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              <div>Total volume: {volumeTotal}kg</div>
+
+              <NavLink
+                className="text-center font-normal text-white underline"
+                to={`../daily?workoutId=${data.lastSeanceWithTheSameTag?.id}`}
+              >
+                {data.lastSeanceWithTheSameTag &&
+                  `Total volume previous workout
           (${dayjs(data.lastSeanceWithTheSameTag.date).format(
             "YYYY/MM/DD"
           )}): ${volumeTotalLastSeance}kg`}
-          </NavLink>
-        </div>
-      </div>
-      <SeriesNote open={showDialog.open} close={close} set={showDialog.set} />
+              </NavLink>
+            </div>
+          </div>
+          <SeriesNote
+            open={showDialog.open}
+            close={close}
+            set={showDialog.set}
+          />
+        </>
+      )}
     </div>
   );
 }
