@@ -45,7 +45,7 @@ export default function Chrono({}: Props) {
     return (
         <div>
             <button
-                className="absolute bottom-3 right-3 flex h-[60px] w-[60px] flex-col items-center justify-center rounded-full bg-blue-500 p-4 font-bold font-bold text-white transition-colors duration-150"
+                className="fixed bottom-3 right-3 flex h-[60px] w-[60px] flex-col items-center justify-center rounded-full bg-blue-500 p-4 font-bold font-bold text-white transition-colors duration-150"
                 onClick={open}
             >
                 <RiTimerLine className="h-full min-h-[20px] w-full min-w-[20px] text-2xl "/>

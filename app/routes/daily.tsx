@@ -5,6 +5,7 @@ import {
   json,
   Link,
   LoaderFunction,
+  NavLink,
   useCatch,
   useFetcher,
   useLoaderData,
@@ -318,8 +319,8 @@ export default function WorkoutDetailsPage() {
           <h2>Séance du {dayjs(data.workout.date).format("YYYY/MM/DD")}</h2>
         </div>
       )}
-      <p className="flex items-center justify-center">
-        Tag: {data.tags.find((t) => t.id === data.workout.tagId)?.label}
+      <p className="flex items-center justify-center font-bold text-xl">
+        Workout type: {data.tags.find((t) => t.id === data.workout.tagId)?.label}
       </p>
       <div className={"flex justify-center"}>
         <createTagFetcher.Form
@@ -332,7 +333,7 @@ export default function WorkoutDetailsPage() {
           <input
             required
             className={
-              "block h-[30px] w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              "block h-[30px] w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             }
             name="label"
           />
@@ -342,13 +343,18 @@ export default function WorkoutDetailsPage() {
             className="hidden"
             readOnly
           />
-          <button>Ajouter un nouveau tag</button>
+          <button className="inline-flex w-[150px] items-center justify-center rounded border-0 bg-indigo-500 py-1 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
+            Add tag{" "}
+          </button>
         </createTagFetcher.Form>
       </div>
       <div>
-        <ul className="flex items-center justify-center gap-2">
+        <ul className="flex flex-wrap items-center justify-center gap-2">
           {data.tags.map((t) => (
-            <li key={t.id}>
+            <li
+              className="flex items-center justify-center"
+              key={t.id}
+            >
               <associateTagFetcher.Form method="post">
                 <input
                   readOnly
@@ -369,9 +375,21 @@ export default function WorkoutDetailsPage() {
                   className="hidden"
                   readOnly
                 />
-                <button>{t.label}</button>
+                <button className="h-[40px] rounded-l inline-flex items-center border-0 bg-indigo-500 py-2 px-4 text-lg text-white hover:bg-indigo-600 focus:outline-none">
+                  {t.label}
+                </button>
               </associateTagFetcher.Form>
-              <deleteTagFetcher.Form method="post">
+              <deleteTagFetcher.Form
+                onSubmit={(e) => {
+                  const confirm = window.confirm(
+                    "All workouts will lose this tag, are you sure?"
+                  );
+                  if (!confirm) {
+                    e.preventDefault();
+                  }
+                }}
+                method="post"
+              >
                 <input
                   name={"_action"}
                   value={"delete_tag"}
@@ -384,7 +402,9 @@ export default function WorkoutDetailsPage() {
                   value={t.id}
                   readOnly
                 ></input>
-                <button>X</button>
+                <button className="h-[40px] inline-flex items-center rounded-r border-0 bg-red-700 py-2 px-4 text-lg text-white hover:bg-red-800 focus:outline-none">
+                  <AiFillDelete />
+                </button>
               </deleteTagFetcher.Form>
             </li>
           ))}
@@ -468,7 +488,7 @@ export default function WorkoutDetailsPage() {
                   <deleteSetFetcher.Form method="post">
                     <input type="hidden" value={s.id} name="setId" />{" "}
                     <button
-                      className="focus:shadow-outline flex h-full h-[40px] w-[50px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
+                      className="focus:shadow-outline flex h-[40px] w-[50px] items-center justify-center bg-red-700 text-lg font-bold text-red-100 transition-colors duration-150 hover:bg-red-800"
                       type="submit"
                       name="_action"
                       value="delete_set"
@@ -505,19 +525,24 @@ export default function WorkoutDetailsPage() {
           );
         })}
         <div
-          className={`flex justify-center font-bold ${
+          className={`flex flex-col items-center justify-center font-bold ${
             volumeTotal > volumeTotalLastSeance
               ? "text-green-500"
               : "text-red-500"
           }`}
         >
-          Total volume: {volumeTotal}kg
-          <br />
-          {data.lastSeanceWithTheSameTag &&
-            `Total volume previous workout
+          <div>Total volume: {volumeTotal}kg</div>
+
+          <NavLink
+            className="font-normal text-center text-white underline"
+            to={`../daily?workoutId=${data.lastSeanceWithTheSameTag?.id}`}
+          >
+            {data.lastSeanceWithTheSameTag &&
+              `Total volume previous workout
           (${dayjs(data.lastSeanceWithTheSameTag.date).format(
             "YYYY/MM/DD"
           )}): ${volumeTotalLastSeance}kg`}
+          </NavLink>
         </div>
       </div>
       <SeriesNote open={showDialog.open} close={close} set={showDialog.set} />

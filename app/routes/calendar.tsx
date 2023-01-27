@@ -20,6 +20,7 @@ import {
   Workout,
 } from "~/models/workout.server";
 import { getExerciseTitleOrdered } from "~/models/exercise.server";
+import { getAllTags, Tag } from "~/models/tag.server";
 
 type WorkoutWithExercise = Workout & {
   set: {
@@ -32,6 +33,7 @@ type WorkoutWithExercise = Workout & {
 type LoaderData = {
   dateMap: Record<string, WorkoutWithExercise>;
   exerciseList: Array<{ title: string; id: string }>;
+  tags: Tag[];
 };
 
 type ActionData = {
@@ -67,15 +69,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   const workoutList = await getWorkoutList({ userId });
   const exerciseList = await getExerciseTitleOrdered({ userId });
   const dateMap: Record<string, WorkoutWithExercise> = {};
+  const tags = await getAllTags({ userId });
   for (const w of workoutList) {
     dateMap[getKey(w.date)] = w;
   }
-  return json<LoaderData>({ dateMap, exerciseList });
+  return json<LoaderData>({ dateMap, exerciseList, tags });
 };
 
 export default function Calendar() {
   const data = useLoaderData() as LoaderData;
-  const colors = getColors(data.exerciseList.length);
+  const colors = getColors(data.tags.length);
   const [startDate, setStartDate] = useState(() => dayjs().startOf("month"));
 
   return (
@@ -85,8 +88,9 @@ export default function Calendar() {
         dateMap={data.dateMap}
         exerciseList={data.exerciseList}
         colors={colors}
+        tags={data.tags}
       />
-      <Legend exercises={data.exerciseList} colors={colors} />
+      <Legend tags={data.tags} colors={colors} />
       <div className="text-xs">Seul les trois premiers exo sont affichés</div>
       <div className="flex items-center">
         <button
@@ -131,11 +135,13 @@ const Cell = ({
   workout,
   exerciseList,
   colors,
+  tags,
 }: {
   day?: Dayjs;
   isGray: boolean;
   workout?: WorkoutWithExercise;
   exerciseList: LoaderData["exerciseList"];
+  tags: LoaderData["tags"];
   colors: Array<string>;
 }) => {
   if (!day) {
@@ -154,18 +160,13 @@ const Cell = ({
             {day?.format("DD") ?? ""}
           </div>
           <div className="flex flex-wrap justify-center gap-[1px]">
-            {[...new Set([...workout.set.map((e) => e.exercise.title)])]
-              .slice(0, 3)
-              .map((s, i) => (
-                <div
-                  key={i}
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{
-                    backgroundColor:
-                      colors[exerciseList.findIndex((e) => e.title === s)],
-                  }}
-                />
-              ))}
+            <div
+              className="h-2.5 w-2.5 rounded-full"
+              style={{
+                backgroundColor:
+                  colors[tags.findIndex((e) => e.id === workout.tagId)],
+              }}
+            />
           </div>
         </NavLink>
       ) : (
@@ -188,6 +189,7 @@ const Week = ({
   dateMap,
   exerciseList,
   colors,
+  tags,
 }: {
   weekNumber: number;
   daysInMonth: Array<Dayjs>;
@@ -196,6 +198,7 @@ const Week = ({
   dateMap: LoaderData["dateMap"];
   exerciseList: LoaderData["exerciseList"];
   colors: Array<string>;
+  tags: LoaderData["tags"];
 }) => {
   return (
     <tr className="h-10 md:h-20 lg:h-24">
@@ -212,6 +215,7 @@ const Week = ({
             key={index}
             isGray={isGray}
             workout={workout}
+            tags={tags}
             colors={colors}
           />
         );
@@ -249,11 +253,13 @@ const TableMonth = ({
   dateMap,
   exerciseList,
   colors,
+  tags,
 }: {
   startDate: dayjs.Dayjs;
   dateMap: LoaderData["dateMap"];
   exerciseList: LoaderData["exerciseList"];
   colors: Array<string>;
+  tags: LoaderData["tags"];
 }) => {
   const dayInMonth = startDate.daysInMonth();
   const allDaysInMonth = getAllDaysInMonth(startDate, dayInMonth);
@@ -273,6 +279,7 @@ const TableMonth = ({
               exerciseList={exerciseList}
               dateMap={dateMap}
               colors={colors}
+              tags={tags}
             />
           );
         })}
@@ -282,10 +289,10 @@ const TableMonth = ({
 };
 
 function Legend({
-  exercises,
+  tags,
   colors,
 }: {
-  exercises: LoaderData["exerciseList"];
+  tags: LoaderData["tags"];
   colors: string[];
 }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -310,13 +317,13 @@ function Legend({
             className="flex flex-col bg-gray-900"
             onClick={() => setIsPopoverOpen(!isPopoverOpen)}
           >
-            {exercises.map((e, index) => (
-              <div key={e.title} className="px-2">
+            {tags.map((e, index) => (
+              <div key={e.id} className="px-2">
                 <Link
                   className="flex items-center justify-between underline"
                   to={`../exercise/${e.id}`}
                 >
-                  <div>{e.title}</div>
+                  <div>{e.label}</div>
                   <div
                     className="ml-1.5 h-3.5 w-3.5 rounded-full"
                     style={{ backgroundColor: colors[index] }}
