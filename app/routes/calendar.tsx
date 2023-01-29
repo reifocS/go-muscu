@@ -6,7 +6,6 @@ import {
   ActionFunction,
   Form,
   json,
-  Link,
   NavLink,
   redirect,
   useLoaderData,
@@ -319,16 +318,15 @@ function Legend({
           >
             {tags.map((e, index) => (
               <div key={e.id} className="px-2">
-                <Link
-                  className="flex items-center justify-between underline"
-                  to={`../exercise/${e.id}`}
+                <div
+                  className="flex items-center justify-between"
                 >
                   <div>{e.label}</div>
                   <div
                     className="ml-1.5 h-3.5 w-3.5 rounded-full"
                     style={{ backgroundColor: colors[index] }}
                   ></div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>
