@@ -90,7 +90,6 @@ export default function Calendar() {
         tags={data.tags}
       />
       <Legend tags={data.tags} colors={colors} />
-      <div className="text-xs">Seul les trois premiers exo sont affichés</div>
       <div className="flex items-center">
         <button
           className="px-2 py-2"
@@ -163,7 +162,7 @@ const Cell = ({
               className="h-2.5 w-2.5 rounded-full"
               style={{
                 backgroundColor:
-                  colors[tags.findIndex((e) => e.id === workout.tagId)],
+                  colors[tags.findIndex((e) => e.id === workout.tagId)] ?? "gray",
               }}
             />
           </div>
