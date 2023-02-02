@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import {createExercise} from "~/models/exercise.server";
 
 import {prisma} from "~/db.server";
+import { createTag } from "./tag.server";
 
 export type {User} from "@prisma/client";
 
@@ -34,6 +35,9 @@ export async function createUser(email: User["email"], password: string) {
         async (e) => await createExercise({title: e, userId: user.id})
     );
 
+    const base_tags = ["pectoraux", "dos", "jambes"];
+    base_tags.map(async (e) => await createTag({label: e, userId: user.id}));
+    
     return user;
 }
 
