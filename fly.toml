@@ -15,7 +15,7 @@ cmd = "start.sh"
 entrypoint = "sh"
 
 [mounts]
-source = "data"
+source = "gm_data"
 destination = "/data"
 
 [[services]]
